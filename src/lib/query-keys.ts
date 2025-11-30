@@ -1,0 +1,17 @@
+export const queryKey = {
+	findAllNotifications: () => ["find-all-notifications"],
+	findAllProducts: () => ["find-all-products"],
+	findAllProductsExit: () => ["find-all-products-exit"],
+	findProductById: (id: string) => ["find-product-by-id", id],
+	findProductExitById: (id: string) => ["find-product-exit-by-id", id],
+	createManyProducts: () => ["create-many-products"],
+	deleteProduct: () => ["delete-product"],
+	updateProduct: (id: string) => ["update-product", id],
+	createProdcuctExit: () => ["create-prodcuct-exit"],
+	exportTableProducts: () => ["export-table-products"],
+	exportTableProductsExit: () => ["export-table-products-exit"],
+	buttonDeleteAllNotifications: () => ["button-delete-all-notifications"],
+	buttonReadAllNotifications: () => ["button-read-all-notifications"],
+	deleteNotificationById: () => ["delete-notification-by-id"],
+	readNotificationById: () => ["read-notification-by-id"],
+}

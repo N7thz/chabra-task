@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String     @id @default(uuid())
+  email         String     @unique
+  name          String     @unique
+  emailVerified Boolean    @default(false)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @default(now()) @updatedAt @map("updated_at")
+  password      String?
+  image         String?
+  banned        Boolean?   @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  role          String?
+  task          Task?      @relation(fields: [taskId], references: [id])
+  taskId        String?
+  sessions      Session[]
+  accounts      Account[]
+  comments      Comments[]
+  activities    Activity[]
+  regions       Region[]
+
+  @@map("users")
+}
+
+model Region {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  lists     List[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  @@map("regions")
+}
+
+model List {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  region    Region?  @relation(fields: [regionId], references: [id])
+  regionId  String?
+
+  @@map("lists")
+}
+
+model Card {
+  id          String     @id @default(uuid())
+  title       String
+  cnpj        String
+  description String?
+  status      String
+  term        DateTime
+  coverImage  String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+  labelId     String
+  label       Label[]
+  comments    Comments[]
+
+  @@map("cards")
+}
+
+model Label {
+  id        String   @id @default(uuid())
+  name      String
+  color     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  card      Card?    @relation(fields: [cardId], references: [id])
+  cardId    String?
+
+  @@map("labels")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  completed   Boolean  @default(false)
+  owner       User[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}
+
+model Comments {
+  id        String   @id @default(uuid())
+  message   String
+  author    User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  card      Card?    @relation(fields: [cardId], references: [id])
+  cardId    String?
+
+  @@map("comments")
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+  author    User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@map("activitys")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum Role {
+  ADMIN
+  USER
+  TECHNICIAN
+  ANALYST
+  SUPERVISOR
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
