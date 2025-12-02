@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
 import { Background } from "@/components/background"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 import "./globals.css"
 
 const jetBrains = JetBrains_Mono({
@@ -28,7 +30,10 @@ export default function RootLayout({
 			<body className={cn(jetBrains.className, "antialiased")}>
 				<ThemeProvider attribute="class" defaultTheme="system">
 					<Background>
-						{children}
+						<SidebarProvider>
+							<AppSidebar />
+							{children}
+						</SidebarProvider>
 					</Background>
 				</ThemeProvider>
 				<Toaster />

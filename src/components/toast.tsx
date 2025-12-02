@@ -3,8 +3,8 @@ import { toast as toastPrimitive, type ExternalToast } from "sonner"
 
 type ToastProps = ExternalToast & {
 	title: string
-	description?: string | null
-	variant?: "success" | "error"
+	description?: string
+	variant?: "success" | "destructive"
 }
 
 export const toast = ({
@@ -15,7 +15,11 @@ export const toast = ({
 }: ToastProps) =>
 	toastPrimitive(title, {
 		duration: 2000,
-		description: <span className="text-muted-foreground">{description}</span>,
+		description: (
+			<span className="text-muted-foreground">
+				{description}
+			</span>
+		),
 		icon:
 			variant === "success" ? (
 				<CheckCircle className="size-4 text-primary" />

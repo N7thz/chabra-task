@@ -50,18 +50,11 @@ export const FormSign = () => {
 					toast({
 						title: "Error no login",
 						description: "Senha ou email inválidos.",
-						variant: "error",
+						variant: "destructive",
 					})
 				},
 			}
 		)
-	}
-
-	async function signIn() {
-		await authClient.signIn.social({
-			callbackURL: "/home",
-			provider: "google",
-		})
 	}
 
 	return (

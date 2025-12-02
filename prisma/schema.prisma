@@ -18,7 +18,7 @@ model User {
   banned        Boolean?   @default(false)
   banReason     String?
   banExpires    DateTime?
-  role          String?
+  role          Role       @default(USER)
   task          Task?      @relation(fields: [taskId], references: [id])
   taskId        String?
   sessions      Session[]
@@ -33,11 +33,11 @@ model User {
 model Region {
   id        String   @id @default(uuid())
   name      String   @unique
-  lists     List[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?
+  lists     List[]
 
   @@map("regions")
 }
@@ -49,6 +49,7 @@ model List {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   region    Region?  @relation(fields: [regionId], references: [id])
   regionId  String?
+  cards     Card[]
 
   @@map("lists")
 }
@@ -56,16 +57,19 @@ model List {
 model Card {
   id          String     @id @default(uuid())
   title       String
-  cnpj        String
+  cnpj        String     @unique
   description String?
   status      String
   term        DateTime
-  coverImage  String?
+  coverImage  String?    @map("cover_image")
   createdAt   DateTime   @default(now()) @map("created_at")
+  completedAt DateTime?  @map("completed_at")
   updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
   labelId     String
   label       Label[]
   comments    Comments[]
+  list        List?      @relation(fields: [listId], references: [id])
+  listId      String?
 
   @@map("cards")
 }

@@ -12,17 +12,13 @@ import {
 	SheetTrigger,
 } from "@/components/ui/sheet"
 import { authClient } from "@/lib/auth-client"
-import { Ellipsis, Info, LogOut, Settings, UserCircle2 } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { Ellipsis, UserCircle2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { AnimatedThemeToggler } from "./magicui/animated-theme-toggler"
-import { Button } from "./ui/button"
 
 export const Header = () => {
-	const [open, setOpen] = useState(false)
 
-	const { replace } = useRouter()
+	const [open, setOpen] = useState(false)
 
 	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -41,7 +37,7 @@ export const Header = () => {
 
 	if (error || !data) {
 		return (
-			<header className="bg-card flex items-center justify-between px-4 py-2.5 border border-b-primary">
+			<header className="h-18 flex items-center justify-between px-4 py-2.5 border border-b-primary">
 				<Avatar className="size-8">
 					<AvatarImage />
 					<AvatarFallback>
@@ -60,7 +56,7 @@ export const Header = () => {
 	} = data
 
 	return (
-		<header className="bg-background flex items-center justify-between px-4 py-2.5 border border-b-primary">
+		<header className="bg-background h-18 flex items-center justify-between px-4 py-2.5 border border-b-primary">
 			<Sheet open={open} onOpenChange={setOpen}>
 				<SheetTrigger>
 					<Avatar className="size-8">
