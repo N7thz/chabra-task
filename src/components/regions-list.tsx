@@ -1,19 +1,17 @@
 "use client"
 
 import { findManyRegion } from "@/actions/regions/find-many-region"
-import { Button } from "@/components/ui/button"
 import {
     Card,
     CardAction,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
-import { Ellipsis } from "lucide-react"
+import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 
 export const RegionsList = () => {
 
@@ -70,9 +68,10 @@ export const RegionsList = () => {
                             <Card key={id}>
                                 <CardHeader>
                                     <CardAction>
-                                        <Button variant={"ghost"}>
-                                            <Ellipsis />
-                                        </Button>
+                                        <DropdownMenuEditDialog
+                                            id={id}
+                                            name={name}
+                                        />
                                     </CardAction>
                                     <CardTitle>
                                         {name}

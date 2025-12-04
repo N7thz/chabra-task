@@ -58,7 +58,7 @@ export const Command = () => {
 								<CommandItem
 									onSelect={() => {
 										setTimeout(() => setOpen(false), 800)
-										redirect("/create-update", RedirectType.push)
+										redirect("/home", RedirectType.push)
 									}}>
 									Criar novidades
 									<CommandShortcut>

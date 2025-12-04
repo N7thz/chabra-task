@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
-import { Ellipsis } from "lucide-react"
+import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 
 export const ListContainer = ({ region }: { region: string }) => {
 
@@ -24,6 +24,9 @@ export const ListContainer = ({ region }: { region: string }) => {
     } = useQuery({
         queryKey: ["find-many-lists"],
         queryFn: () => findManyList({
+            orderBy: {
+                createdAt: "asc"
+            },
             where: {
                 region: {
                     name: region
@@ -34,7 +37,8 @@ export const ListContainer = ({ region }: { region: string }) => {
 
     if (error) {
         return (
-            <Card className="w-1/4">
+            <Card className="w-100 pt-0 overflow-hidden">
+                <div className="bg-green-500 w-full h-12" />
                 <CardHeader>
                     <CardTitle>
                         {(error) && "Erro ao carregar listas"}
@@ -62,7 +66,8 @@ export const ListContainer = ({ region }: { region: string }) => {
         <div className="flex space-x-4">
             {
                 Array.from({ length: 3 }).map((_, index) => (
-                    <Card key={index} className="w-100">
+                    <Card key={index} className="w-100 pt-0 overflow-hidden">
+                        <div className="bg-green-500 w-full h-12" />
                         <CardHeader>
                             <CardTitle>
                                 <Skeleton />
@@ -84,14 +89,17 @@ export const ListContainer = ({ region }: { region: string }) => {
             {
                 lists.length === 0 ? (
                     <p>Você ainda não possui listas criadas.</p>
-                ) : lists.map(({ id, name }) => (
+                ) : lists.map(({ id, name, color }) => (
                     <Card key={id} className="w-100 pt-0 overflow-hidden">
-                        <div className="bg-blue-400 w-full h-12" />
+                        <div
+                            style={{
+                                background: color ?? undefined
+                            }}
+                            className="w-full h-12"
+                        />
                         <CardHeader>
                             <CardAction>
-                                <Button variant={"ghost"}>
-                                    <Ellipsis />
-                                </Button>
+                                <DropdownMenuEditDialog id={id} name={name} />
                             </CardAction>
                             <CardTitle className="truncate">
                                 {name}
