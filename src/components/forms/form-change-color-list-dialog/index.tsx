@@ -31,7 +31,6 @@ export const FormChangeColorListDialog = ({
     onOpenChange
 }: {
     id: string
-    name: string,
     open: boolean,
     onOpenChange: (open: boolean) => void
 }) => {

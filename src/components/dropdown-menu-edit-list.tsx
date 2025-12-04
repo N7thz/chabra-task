@@ -73,7 +73,6 @@ export const DropdownMenuEditDialog = ({
             />
             <FormChangeColorListDialog
                 id={id}
-                name={name}
                 open={showChangeColorDialog}
                 onOpenChange={setShowChangeColorDialog}
             />
