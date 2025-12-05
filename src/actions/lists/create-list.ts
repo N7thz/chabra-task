@@ -4,10 +4,10 @@ import { prisma } from "@/lib/prisma";
 
 type CreateListProps = {
     name: string,
-    region: string
+    space: string
 }
 
-export async function createList({ name, region }: CreateListProps) {
+export async function createList({ name, space }: CreateListProps) {
 
     const list = await prisma.list.findUnique({
         where: {
@@ -22,9 +22,9 @@ export async function createList({ name, region }: CreateListProps) {
     return await prisma.list.create({
         data: {
             name,
-            region: {
+            space: {
                 connect: {
-                    name: region
+                    name: space
                 }
             }
         },

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { Plus } from "lucide-react"
 import { Metadata } from "next"
@@ -21,10 +20,10 @@ export const metadata: Metadata = {
 export default async function Home({
 	params,
 }: {
-	params: Promise<{ region: string }>
+	params: Promise<{ space: string }>
 }) {
 
-	const { region } = await params
+	const { space } = await params
 
 	return (
 		<ScrollArea className="h-dvh w-[1560px]">
@@ -36,7 +35,7 @@ export default async function Home({
 				"flex flex-nowrap p-8 gap-4",
 				"max-sm:px-4"
 			)}>
-				<ListContainer region={region} />
+				<ListContainer space={space} />
 				<AlertDialog>
 					<AlertDialogTrigger asChild>
 						<Button>

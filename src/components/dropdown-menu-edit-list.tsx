@@ -11,15 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from "lucide-react"
 import { useState } from "react"
-import { 
-    FormChangeColorListDialog 
+import {
+    FormChangeColorListDialog
 } from "./forms/form-change-color-list-dialog"
 import { FormDeleteListDialog } from "./forms/form-delete-list-dialog"
 import { FormEditListDialog } from "./forms/form-edit-list-dialog"
 
+type DropdownMenuEditDialogProps = {
+    id: string,
+    name: string
+}
+
 export const DropdownMenuEditDialog = ({
     id, name
-}: { id: string, name: string }) => {
+}: DropdownMenuEditDialogProps) => {
 
     const [showEditDialog, setShowEditDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -30,7 +35,7 @@ export const DropdownMenuEditDialog = ({
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         aria-label="Open menu"
                         size="icon"
                     >

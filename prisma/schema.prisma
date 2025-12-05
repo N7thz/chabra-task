@@ -25,12 +25,14 @@ model User {
   accounts      Account[]
   comments      Comments[]
   activities    Activity[]
-  regions       Region[]
+  spaces       Space[]
+  card          Card?      @relation(fields: [cardId], references: [id])
+  cardId        String?
 
   @@map("users")
 }
 
-model Region {
+model Space {
   id        String   @id @default(uuid())
   name      String   @unique
   createdAt DateTime @default(now()) @map("created_at")
@@ -39,7 +41,7 @@ model Region {
   userId    String?
   lists     List[]
 
-  @@map("regions")
+  @@map("spaces")
 }
 
 model List {
@@ -48,9 +50,9 @@ model List {
   color     String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  region    Region?  @relation(fields: [regionId], references: [id])
-  regionId  String?
   cards     Card[]
+  space     Space?   @relation(fields: [spaceId], references: [id])
+  spaceId   String?
 
   @@map("lists")
 }
@@ -67,6 +69,8 @@ model Card {
   completedAt DateTime?  @map("completed_at")
   updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
   labelId     String
+  priority    Priority
+  owner       User[]
   label       Label[]
   comments    Comments[]
   list        List?      @relation(fields: [listId], references: [id])
@@ -183,4 +187,11 @@ enum Status {
   PENDING
   IN_PROGRESS
   COMPLETED
+}
+
+enum Priority {
+  URGENT
+  HIGH
+  MID
+  LOW
 }

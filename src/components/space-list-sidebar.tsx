@@ -1,21 +1,21 @@
 "use client"
 
-import { findManyRegion } from "@/actions/regions/find-many-region"
+import { findManySpace } from "@/actions/spaces/find-many-spaces"
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 import Link from "next/link"
 import { Blend } from "lucide-react"
 
-export const RegionsListSidebar = () => {
+export const SpaceListSidebar = () => {
 
     const {
-        data: regions,
+        data: space,
         isLoading,
         error
     } = useQuery({
-        queryKey: ["find-many-region"],
-        queryFn: () => findManyRegion()
+        queryKey: ["find-many-space"],
+        queryFn: () => findManySpace()
     })
 
     if (error) return (
@@ -24,7 +24,7 @@ export const RegionsListSidebar = () => {
         </div>
     )
 
-    if (isLoading || !regions) return (
+    if (isLoading || !space) return (
         <>
             <SidebarMenuItem>
                 <SidebarMenuButton>
@@ -48,10 +48,10 @@ export const RegionsListSidebar = () => {
     return (
         <>
             {
-                regions.map(({ id, name }) => (
+                space.map(({ id, name }) => (
                     <SidebarMenuItem key={id}>
                         <SidebarMenuButton asChild>
-                            <Link href={`/regions/${name}`}>
+                            <Link href={`/space/${name}`}>
                                 <Blend />
                                 <span>
                                     {name}

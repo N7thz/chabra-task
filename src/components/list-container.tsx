@@ -13,8 +13,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
+import Link from "next/link"
 
-export const ListContainer = ({ region }: { region: string }) => {
+export const ListContainer = ({ space }: { space: string }) => {
 
     const {
         data: lists,
@@ -28,8 +29,8 @@ export const ListContainer = ({ region }: { region: string }) => {
                 createdAt: "asc"
             },
             where: {
-                region: {
-                    name: region
+                space: {
+                    name: space
                 }
             }
         })
@@ -91,23 +92,24 @@ export const ListContainer = ({ region }: { region: string }) => {
                     <p>Você ainda não possui listas criadas.</p>
                 ) : lists.map(({ id, name, color }) => (
                     <Card key={id} className="w-100 pt-0 overflow-hidden">
-                        <div
-                            style={{
-                                background: color ?? undefined
-                            }}
-                            className="w-full h-12"
-                        />
-                        <CardHeader>
-                            <CardAction>
+                        <CardHeader style={{
+                            background: color ?? undefined
+                        }}>
+                            <CardAction className="mt-5">
                                 <DropdownMenuEditDialog id={id} name={name} />
                             </CardAction>
-                            <CardTitle className="truncate">
+                            <CardTitle className="truncate mt-5">
                                 {name}
                             </CardTitle>
                         </CardHeader>
                         <CardFooter>
-                            <Button className="w-full">
-                                Adicionar cartão
+                            <Button
+                                asChild
+                                className="w-full"
+                            >
+                                <Link href={`/${space}/create-card`}>
+                                    Adicionar cartão
+                                </Link>
                             </Button>
                         </CardFooter>
                     </Card>

@@ -57,7 +57,7 @@ export const FormSignUp = () => {
 					toast({
 						title: "Error",
 						description: error.message,
-						variant: "error",
+						variant: "destructive",
 					})
 				},
 			}

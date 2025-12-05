@@ -1,6 +1,6 @@
 "use client"
 
-import { findManyRegion } from "@/actions/regions/find-many-region"
+import { findManySpace } from "@/actions/spaces/find-many-spaces"
 import {
     Card,
     CardAction,
@@ -13,15 +13,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 
-export const RegionsList = () => {
+export const SpaceList = () => {
 
     const {
-        data: regions,
+        data: spaces,
         isLoading,
         error
     } = useQuery({
-        queryKey: ["find-many-region"],
-        queryFn: () => findManyRegion()
+        queryKey: ["find-many-space"],
+        queryFn: () => findManySpace()
     })
 
     if (error) return (
@@ -30,7 +30,7 @@ export const RegionsList = () => {
         </div>
     )
 
-    if (isLoading || !regions) return (
+    if (isLoading || !spaces) return (
         <Card className="w-2/3 bg-background">
             <CardHeader>
                 <CardTitle>
@@ -56,15 +56,15 @@ export const RegionsList = () => {
                     Gerencie as regiões associadas às suas listas de tarefas.
                 </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
                 {
-                    regions.length === 0
+                    spaces.length === 0
                         ? (
                             <span className="text-muted-foreground text-xl italic">
                                 Nenhuma região cadastrada.
                             </span>
                         )
-                        : regions.map(({ id, name }) => (
+                        : spaces.map(({ id, name }) => (
                             <Card key={id}>
                                 <CardHeader>
                                     <CardAction>

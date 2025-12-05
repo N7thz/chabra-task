@@ -35,7 +35,7 @@ export const FormChangeColorListDialog = ({
     onOpenChange: (open: boolean) => void
 }) => {
 
-    const { mutate, isPending, isSuccess } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationKey: ["change-color-list"],
         mutationFn: (color: string) => changeColorList({ id, color }),
         onSuccess: () => {

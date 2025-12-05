@@ -27,7 +27,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { SidebarTrigger } from "./sidebar-trigger"
-import { RegionsListSidebar } from "./regions-list-sidebar"
+import { SpaceListSidebar } from "./space-list-sidebar"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 
@@ -94,11 +94,11 @@ export const AppSidebar = async () => {
                 </SidebarGroup>
                 <SidebarGroup>
                     <SidebarGroupLabel>
-                        Regiões
+                        Espaços
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <RegionsListSidebar />
+                            <SpaceListSidebar />
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>

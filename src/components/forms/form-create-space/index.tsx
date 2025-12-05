@@ -1,32 +1,31 @@
 "use client"
 
-import { createRegion } from "@/actions/regions/create-region"
+import { createSpace } from "@/actions/spaces/create-space"
 import { SpanErrorMessage } from "@/components/span-error"
+import { queryClient } from "@/components/theme-provider"
+import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import {
-    FormCreateRegionProps,
-    createRegionSchema
-} from "@/schemas/create-region-schema"
+    FormCreateSpaceProps, createSpaceSchema
+} from "@/schemas/create-space-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Space } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
-import { toast } from "@/components/toast"
-import { queryClient } from "@/components/theme-provider"
-import { Region } from "@prisma/client"
-import { Spinner } from "@/components/ui/spinner"
 
-export const FormCreateRegion = () => {
+export const FormCreateSpace = () => {
 
     const {
         mutate,
         isPending,
     } = useMutation({
-        mutationKey: ["create-region"],
-        mutationFn: (name: string) => createRegion(name),
+        mutationKey: ["create-Space"],
+        mutationFn: (name: string) => createSpace(name),
         onSuccess: ({ name, ...rest }) => {
 
             toast({
@@ -34,7 +33,7 @@ export const FormCreateRegion = () => {
                 description: "Você já pode usar essa região para organizar suas listas de tarefas."
             })
 
-            queryClient.setQueryData<Region[]>(["find-many-region"],
+            queryClient.setQueryData<Space[]>(["find-many-space"],
                 (oldData) => {
 
                     if (!oldData) return [{ name, ...rest }]
@@ -57,18 +56,18 @@ export const FormCreateRegion = () => {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm<FormCreateRegionProps>({
-        resolver: zodResolver(createRegionSchema)
+    } = useForm<FormCreateSpaceProps>({
+        resolver: zodResolver(createSpaceSchema)
     })
 
-    function onSubmit({ name }: FormCreateRegionProps) {
+    function onSubmit({ name }: FormCreateSpaceProps) {
         mutate(name)
     }
 
     return (
         <>
             <CardContent>
-                <form id="form-create-region" onSubmit={handleSubmit(onSubmit)}>
+                <form id="form-create-Space" onSubmit={handleSubmit(onSubmit)}>
                     <div className="space-y-3">
                         <Label>
                             Nome da região:
@@ -91,7 +90,7 @@ export const FormCreateRegion = () => {
             </CardContent>
             <CardFooter>
                 <Button
-                    form="form-create-region"
+                    form="form-create-Space"
                     type="submit"
                     className="w-full"
                     disabled={isPending}

@@ -24,7 +24,7 @@ export const FormCreateList = () => {
 
     const pathname = usePathname()
 
-    const region = pathname.split("/")[2]
+    const space = pathname.split("/")[2]
 
     const {
         register,
@@ -40,9 +40,8 @@ export const FormCreateList = () => {
         isSuccess
     } = useMutation({
         mutationKey: ["create-list"],
-        mutationFn: (name: string) => createList({ name, region }),
+        mutationFn: (name: string) => createList({ name, space }),
         onSuccess: ({ name, ...rest }) => {
-            console.log("Lista criada com sucesso!")
 
             toast({
                 title: "Lista criada com sucesso!",
@@ -57,7 +56,7 @@ export const FormCreateList = () => {
             })
         },
         onError: (error) => {
-            
+
             console.error("Erro ao criar a lista:", error)
 
             toast({
