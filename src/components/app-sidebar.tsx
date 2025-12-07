@@ -71,7 +71,7 @@ export const AppSidebar = async () => {
             variant="floating"
             collapsible="icon"
         >
-            <SidebarContent>
+            <SidebarContent >
                 <SidebarGroup>
                     <SidebarGroupLabel className="text-primary text-xl mb-4">
                         Chabra Tasks

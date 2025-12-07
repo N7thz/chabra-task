@@ -61,7 +61,7 @@ export const SpaceList = () => {
                     spaces.length === 0
                         ? (
                             <span className="text-muted-foreground text-xl italic">
-                                Nenhuma região cadastrada.
+                                Nenhum espaço cadastrado.
                             </span>
                         )
                         : spaces.map(({ id, name }) => (

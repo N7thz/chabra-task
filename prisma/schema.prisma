@@ -19,14 +19,14 @@ model User {
   banReason     String?
   banExpires    DateTime?
   role          Role       @default(USER)
-  task          Task?      @relation(fields: [taskId], references: [id])
+  task          Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId        String?
   sessions      Session[]
   accounts      Account[]
   comments      Comments[]
   activities    Activity[]
-  spaces       Space[]
-  card          Card?      @relation(fields: [cardId], references: [id])
+  spaces        Space[]
+  card          Card?      @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId        String?
 
   @@map("users")
@@ -37,7 +37,7 @@ model Space {
   name      String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String?
   lists     List[]
 
@@ -46,21 +46,22 @@ model Space {
 
 model List {
   id        String   @id @default(uuid())
-  name      String   @unique
+  name      String
   color     String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   cards     Card[]
-  space     Space?   @relation(fields: [spaceId], references: [id])
+  space     Space?   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   spaceId   String?
 
+  @@unique([spaceId, name])
   @@map("lists")
 }
 
 model Card {
   id          String     @id @default(uuid())
   title       String
-  cnpj        String     @unique
+  cnpj        String
   description String?
   status      String
   term        DateTime
@@ -73,7 +74,8 @@ model Card {
   owner       User[]
   label       Label[]
   comments    Comments[]
-  list        List?      @relation(fields: [listId], references: [id])
+  tasks       Task[]
+  list        List?      @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      String?
 
   @@map("cards")
@@ -85,20 +87,22 @@ model Label {
   color     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  card      Card?    @relation(fields: [cardId], references: [id])
+  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId    String?
 
   @@map("labels")
 }
 
 model Task {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  completed   Boolean  @default(false)
-  owner       User[]
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  id        String    @id @default(uuid())
+  name      String
+  completed Boolean   @default(false)
+  owner     User[]
+  term      DateTime?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  card      Card?     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId    String?
 
   @@map("tasks")
 }
@@ -106,11 +110,11 @@ model Task {
 model Comments {
   id        String   @id @default(uuid())
   message   String
-  author    User     @relation(fields: [userId], references: [id])
+  author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  card      Card?    @relation(fields: [cardId], references: [id])
+  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId    String?
 
   @@map("comments")
@@ -120,7 +124,7 @@ model Activity {
   id        String   @id @default(uuid())
   message   String
   createdAt DateTime @default(now()) @map("created_at")
-  author    User     @relation(fields: [userId], references: [id])
+  author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@map("activitys")

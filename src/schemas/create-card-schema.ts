@@ -1,5 +1,14 @@
 import { z } from "zod"
 
+export const createTaskSchema = z.object({
+    name: z.string().min(1, "O nome da tarefa é obrigatório."),
+    term: z.date(),
+    completed: z.boolean(),
+    ownersId: z.array(z.string())
+})
+
+export type CreateTaskProps = z.infer<typeof createTaskSchema>
+
 export const createCardSchema = z.object({
     title: z
         .string()
@@ -16,6 +25,13 @@ export const createCardSchema = z.object({
     description: z
         .string()
         .nullable(),
+    priority: z
+        .enum([
+            "URGENT",
+            "HIGH",
+            "MID",
+            "LOW",
+        ]),
     status: z
         .enum([
             "ACTIVE",
@@ -30,7 +46,11 @@ export const createCardSchema = z.object({
         }),
     color: z
         .string()
-        .nullable()
+        .nullable(),
+    ownersId: z
+        .array(z.string()),
+    tasks: z
+        .array(createTaskSchema)
 })
 
 export type CreateCardProps = z.infer<typeof createCardSchema>

@@ -1,3 +1,5 @@
+import { findListByName } from "@/actions/lists/find-list-by-name"
+import { findManyList } from "@/actions/lists/find-many-list"
 import { FormCreateCard } from "@/components/forms/form-create-card"
 import {
     Card,
@@ -15,17 +17,18 @@ export const metadata: Metadata = {
 export default async function CreateCard({
     params,
 }: {
-    params: Promise<{ space: string }>
+    params: Promise<{ space: string, list: string }>
 }) {
 
     const { space } = await params
+    const list = decodeURI((await params).list)
 
     return (
         <main className={cn(
             "h-dvh w-full flex justify-center items-center p-8 gap-4",
             "max-sm:px-4"
         )}>
-            <Card className="w-2/5">
+            <Card className="min-w-3/5 max-w-4/6">
                 <CardHeader>
                     <CardTitle>
                         Cadastrar Cartão
@@ -34,7 +37,10 @@ export default async function CreateCard({
                         Cadastre um cartão a lista
                     </CardDescription>
                 </CardHeader>
-                <FormCreateCard space={space} />
+                <FormCreateCard
+                    space={space}
+                    list={list}
+                />
             </Card>
         </main>
     )

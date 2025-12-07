@@ -10,7 +10,7 @@ import { Blend } from "lucide-react"
 export const SpaceListSidebar = () => {
 
     const {
-        data: space,
+        data: spaces,
         isLoading,
         error
     } = useQuery({
@@ -24,7 +24,7 @@ export const SpaceListSidebar = () => {
         </div>
     )
 
-    if (isLoading || !space) return (
+    if (isLoading || !spaces) return (
         <>
             <SidebarMenuItem>
                 <SidebarMenuButton>
@@ -48,18 +48,22 @@ export const SpaceListSidebar = () => {
     return (
         <>
             {
-                space.map(({ id, name }) => (
-                    <SidebarMenuItem key={id}>
-                        <SidebarMenuButton asChild>
-                            <Link href={`/space/${name}`}>
-                                <Blend />
-                                <span>
-                                    {name}
-                                </span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))
+                spaces.length === 0
+                    ? <span className="text-center">
+                        Você ainda não possui espaços
+                    </span>
+                    : spaces.map(({ id, name }) => (
+                        <SidebarMenuItem key={id}>
+                            <SidebarMenuButton asChild>
+                                <Link href={`/space/${name}`}>
+                                    <Blend />
+                                    <span>
+                                        {name}
+                                    </span>
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ))
             }
         </>
     )

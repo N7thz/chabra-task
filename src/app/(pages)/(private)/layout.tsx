@@ -1,10 +1,15 @@
+import { AppSidebar } from "@/components/app-sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
 import { LayoutProps } from "@/types"
-import { headers } from "next/headers"
+import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 export default async function PrivateLayout({ children }: LayoutProps) {
-	
+
+	const cookieStore = await cookies()
+	const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	})
@@ -12,8 +17,10 @@ export default async function PrivateLayout({ children }: LayoutProps) {
 	if (!session) redirect("/sign-in")
 
 	return (
-		<>
+		<SidebarProvider defaultOpen={defaultOpen}>
+			<AppSidebar />
 			{children}
-		</>
+		</SidebarProvider>
+
 	)
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import {
     Card,
     CardAction,
+    CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
@@ -14,6 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 import Link from "next/link"
+import { List } from "@/types"
+import { CardContainer } from "./card-container"
 
 export const ListContainer = ({ space }: { space: string }) => {
 
@@ -24,13 +27,21 @@ export const ListContainer = ({ space }: { space: string }) => {
         refetch
     } = useQuery({
         queryKey: ["find-many-lists"],
-        queryFn: () => findManyList({
+        queryFn: () => findManyList<List[]>({
             orderBy: {
                 createdAt: "asc"
             },
             where: {
                 space: {
                     name: space
+                }
+            },
+            include: {
+                cards: {
+                    include: {
+                        owner: true,
+                        tasks: true,
+                    }
                 }
             }
         })
@@ -90,7 +101,7 @@ export const ListContainer = ({ space }: { space: string }) => {
             {
                 lists.length === 0 ? (
                     <p>Você ainda não possui listas criadas.</p>
-                ) : lists.map(({ id, name, color }) => (
+                ) : lists.map(({ id, name, color, cards }) => (
                     <Card key={id} className="w-100 pt-0 overflow-hidden">
                         <CardHeader style={{
                             background: color ?? undefined
@@ -102,12 +113,22 @@ export const ListContainer = ({ space }: { space: string }) => {
                                 {name}
                             </CardTitle>
                         </CardHeader>
+                        <CardContent className="space-y-4">
+                            {
+                                cards.map(card => (
+                                    <CardContainer
+                                        key={card.id}
+                                        card={card}
+                                    />
+                                ))
+                            }
+                        </CardContent>
                         <CardFooter>
                             <Button
                                 asChild
                                 className="w-full"
                             >
-                                <Link href={`/${space}/create-card`}>
+                                <Link href={`/${space}/${name}/create-card`}>
                                     Adicionar cartão
                                 </Link>
                             </Button>

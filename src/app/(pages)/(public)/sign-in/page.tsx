@@ -16,7 +16,7 @@ export default async function SignInPage() {
 	return (
 		<main
 			className={cn(
-				"h-dvh flex items-center justify-center p-8",
+				"h-dvh w-full flex items-center justify-center p-8",
 				"max-sm:px-4"
 			)}>
 			<Card className={cn("w-full justify-between border-primary", "xl:w-2/5")}>

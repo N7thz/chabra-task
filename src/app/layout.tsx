@@ -25,20 +25,13 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
-
-	const cookieStore = await cookies()
-	const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
-
 	return (
 		<html lang="pt-BR" suppressHydrationWarning>
 			<head />
 			<body className={cn(jetBrains.className, "antialiased")}>
 				<ThemeProvider attribute="class" defaultTheme="system">
 					<Background>
-						<SidebarProvider defaultOpen={defaultOpen}>
-							<AppSidebar />
-							{children}
-						</SidebarProvider>
+						{children}
 					</Background>
 				</ThemeProvider>
 				<Toaster />

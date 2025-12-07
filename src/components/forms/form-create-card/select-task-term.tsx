@@ -9,7 +9,7 @@ import { useFormContext } from "react-hook-form"
 import { CreateCardProps } from "@/schemas/create-card-schema"
 import { ptBR } from "date-fns/locale"
 
-export const SelectTerm = () => {
+export const SelectTaskTerm = ({ index }: { index: number }) => {
 
     const [open, setOpen] = useState(false)
 
@@ -23,7 +23,7 @@ export const SelectTerm = () => {
         if (errors.term) setOpen(true)
     }, [])
 
-    const date = watch("term")
+    const date = watch(`tasks.${index}.term`)
 
     return (
         <Popover
@@ -54,7 +54,7 @@ export const SelectTerm = () => {
                     captionLayout="dropdown"
                     onSelect={(date) => {
 
-                        if (date) setValue("term", date)
+                        if (date) setValue(`tasks.${index}.term`, date)
 
                         setOpen(false)
                     }}
