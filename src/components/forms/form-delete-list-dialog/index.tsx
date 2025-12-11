@@ -1,5 +1,4 @@
 import { deleteList } from "@/actions/lists/delete-list"
-import { editList } from "@/actions/lists/edit-list"
 import { queryClient } from "@/components/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
@@ -13,7 +12,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
-import { EditListProps } from "@/schemas/edit-list-schema"
 import { List } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 

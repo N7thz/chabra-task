@@ -1,22 +1,22 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { findListByName } from "./find-list-by-name"
+import { findListById } from "./find-list-by-id"
 
 export async function editList({
-    oldName, newName
+    id, name
 }: {
-    oldName: string, newName: string
+    id: string, name: string
 }) {
 
-    await findListByName(oldName)
+    await findListById(id)
 
     return await prisma.list.update({
         where: {
-            name: oldName
+            id
         },
         data: {
-            name: newName
+            name
         }
     })
 }

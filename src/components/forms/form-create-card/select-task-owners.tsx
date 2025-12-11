@@ -43,8 +43,6 @@ export const SelectTaskOwners = ({ index }: { index: number }) => {
     label: name
   }))
 
-  console.log(users)
-
   return (
     <MultiSelect
       options={users}

@@ -24,7 +24,7 @@ export const FormCreateList = () => {
 
     const pathname = usePathname()
 
-    const space = pathname.split("/")[2]
+    const space = decodeURI(pathname).slice(7)
 
     const {
         register,

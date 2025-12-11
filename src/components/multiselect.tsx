@@ -17,7 +17,7 @@ type MultiSelectProps = {
   owners: Option[],
   setOwners: Dispatch<SetStateAction<Option[]>>
   setValue: UseFormSetValue<CreateCardProps>
-  setValueInput: "title" | "cnpj" | "description" | "status" | "term" | "color" | "ownersId" | "tasks" | `ownersId.${number}` | `tasks.${number}` | `tasks.${number}.term` | `tasks.${number}.ownersId` | `tasks.${number}.name` | `tasks.${number}.completed` | `tasks.${number}.ownersId.${number}`
+  setValueInput: "title" | "cnpj" | "description" | "priority" | "status" | "term" | "color" | "ownersId" | "tasks" | `ownersId.${number}` | `tasks.${number}` | `tasks.${number}.term` | `tasks.${number}.ownersId` | `tasks.${number}.name` | `tasks.${number}.completed` | `tasks.${number}.ownersId.${number}`
 }
 
 export const MultiSelect = ({

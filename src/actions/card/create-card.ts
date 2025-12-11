@@ -1,25 +1,61 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { Prisma } from "@prisma/client"
-import { findListByName } from "../lists/find-list-by-name"
+import { findListById } from "../lists/find-list-by-id"
+import { CreateTaskProps as Task } from "@/schemas/create-card-schema"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
-type CreateCardProps = {
-    tasks: Prisma.TaskCreateInput[]
-    data: Prisma.CardCreateInput,
-    listName: string
+export type FormDataCreateCard = {
+    title: string
+    cnpj: string
+    description: string | null
+    priority: "URGENT" | "HIGH" | "MID" | "LOW"
+    status: "PENDING" | "IN_PROGRESS" | "COMPLETED"
+    term: Date
+    color: string | null
+    ownersId: string[]
 }
 
-export async function createCard({ tasks, data, listName }: CreateCardProps) {
+type CreateCardProps = {
+    tasks: Task[]
+    formData: FormDataCreateCard,
+    id: string
+}
 
-    await findListByName(listName)
+export async function createCard({
+    tasks, formData, id,
+}: CreateCardProps) {
 
-    return await prisma.card.create({
+    await findListById(id)
+
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    })
+
+    if (!session) {
+        throw new Error("Não foi possivel encontrar a sessão, tente logar novamente.")
+    }
+
+    const {
+        user: {
+            id: userId,
+            name
+        }
+    } = session
+
+    const card = await prisma.card.create({
         data: {
-            ...data,
+            ...formData,
+            activities: {
+                create: {
+                    userId,
+                    message: `O usuario ${name} criou o cartão ${formData.title}.`,
+                }
+            },
             list: {
                 connect: {
-                    name: listName
+                    id
                 }
             },
             tasks: {
@@ -29,9 +65,11 @@ export async function createCard({ tasks, data, listName }: CreateCardProps) {
             }
         },
         include: {
-            tasks: true,
             comments: true,
-            owner: true
+            label: true,
+            tasks: true,
         }
     })
+
+    return { card }
 }

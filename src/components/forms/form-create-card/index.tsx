@@ -1,6 +1,6 @@
 "use client"
 
-import { createCard } from "@/actions/card/create-card"
+import { createCard, FormDataCreateCard } from "@/actions/card/create-card"
 import { SpanErrorMessage } from "@/components/span-error"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
@@ -12,9 +12,12 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
-import { CreateCardProps, createCardSchema } from "@/schemas/create-card-schema"
+import {
+    CreateCardProps,
+    CreateTaskProps,
+    createCardSchema
+} from "@/schemas/create-card-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Prisma } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useFieldArray, useForm } from "react-hook-form"
@@ -24,9 +27,9 @@ import { SelectStatus } from "./select-status"
 import { SelectTerm } from "./select-term"
 import { TaskItem } from "./task-item"
 
-export const FormCreateCard = ({
-    space, list
-}: { space: string, list: string }) => {
+type FormCreateCardProps = { space: string, id: string }
+
+export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
 
     const { push } = useRouter()
 
@@ -40,14 +43,10 @@ export const FormCreateCard = ({
             {
                 formData, tasks
             }: {
-                tasks: Prisma.TaskCreateInput[],
-                formData: Prisma.CardCreateInput
+                tasks: CreateTaskProps[],
+                formData: FormDataCreateCard
             }
-        ) => createCard({
-            tasks: tasks,
-            listName: list,
-            data: formData
-        }),
+        ) => createCard({ id, tasks, formData }),
         onSuccess: () => {
             toast({
                 title: "O cartão foi criado com sucesso.",
@@ -86,24 +85,6 @@ export const FormCreateCard = ({
         control
     })
 
-    console.log(errors)
-
-    function onSubmit({ tasks, ...formData }: CreateCardProps) {
-        mutate({
-            tasks,
-            formData: {
-                cnpj: formData.cnpj,
-                status: formData.status,
-                term: formData.term,
-                title: formData.title,
-                color: formData.color,
-                description: formData.description,
-                priority: formData.priority,
-                labelId: "",
-            }
-        })
-    }
-
     function appendTasks() {
         append({
             name: "",
@@ -112,6 +93,13 @@ export const FormCreateCard = ({
             ownersId: []
         })
     }
+
+    function onSubmit({ tasks, ...formData }: CreateCardProps) {
+        mutate({ tasks, formData })
+        // console.log(formData)
+    }
+
+    console.log(errors)
 
     return (
         <>
@@ -210,7 +198,6 @@ export const FormCreateCard = ({
                                         tasks.map((task, index) => (
                                             <TaskItem
                                                 key={task.id}
-                                                task={task}
                                                 index={index}
                                                 remove={remove}
                                             />

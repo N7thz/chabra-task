@@ -1,5 +1,5 @@
 import { editList } from "@/actions/lists/edit-list"
-import { findListByName } from "@/actions/lists/find-list-by-name"
+import { findListById } from "@/actions/lists/find-list-by-id"
 import { SpanErrorMessage } from "@/components/span-error"
 import { queryClient } from "@/components/theme-provider"
 import { toast } from "@/components/toast"
@@ -23,21 +23,19 @@ import { useForm } from "react-hook-form"
 
 export const FormEditListDialog = ({
     id,
-    name,
     open,
     onOpenChange
 }: {
     id: string
-    name: string,
     open: boolean,
     onOpenChange: (open: boolean) => void
 }) => {
 
     const { mutate, isPending, isSuccess } = useMutation({
         mutationKey: ["edit-list"],
-        mutationFn: ({ oldName, newName }: {
-            oldName: string, newName: string
-        }) => editList({ oldName, newName }),
+        mutationFn: ({ id, name }: {
+            id: string, name: string
+        }) => editList({ id, name }),
         onSuccess: () => {
 
             toast({
@@ -62,7 +60,7 @@ export const FormEditListDialog = ({
         data: list
     } = useQuery({
         queryKey: ["find-list-by-name"],
-        queryFn: () => findListByName(name)
+        queryFn: () => findListById(id)
     })
 
     const {
@@ -73,11 +71,8 @@ export const FormEditListDialog = ({
         resolver: zodResolver(editListSchema)
     })
 
-    function onSubmit(formData: EditListProps) {
-        mutate({
-            oldName: name,
-            newName: formData.name
-        })
+    function onSubmit({ name }: EditListProps) {
+        mutate({  id,  name })
     }
 
     return (

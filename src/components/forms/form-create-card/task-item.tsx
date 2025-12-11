@@ -13,11 +13,10 @@ type Task = {
     name: string
     term: Date
     completed: boolean
-    ownersId: string[]
+    owners: string[]
 }
 
 type TaskItemProps = {
-    task: Task,
     index: number,
     remove: (index: number) => void
 }
@@ -25,13 +24,6 @@ type TaskItemProps = {
 export const TaskItem = ({
     index,
     remove,
-    task: {
-        id,
-        name,
-        term,
-        completed,
-        ownersId
-    }
 }: TaskItemProps) => {
 
     const { register } = useFormContext<CreateCardProps>()

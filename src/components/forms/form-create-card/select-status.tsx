@@ -9,27 +9,24 @@ import {
 } from "@/components/ui/select"
 import { useFormContext } from "react-hook-form"
 import { CreateCardProps } from "@/schemas/create-card-schema"
+import { Status } from "@prisma/client"
+import { cn } from "@/lib/utils";
 
-type Status = "ACTIVE" | "INACTIVE" | "PENDING" | "SUSPENDED"
-
-const statusArray = [
-    {
-        value: "ACTIVE",
-        text: "ativo"
-    },
-    {
-        value: "INACTIVE",
-        text: "inativo"
-    },
+export const statusArray = [
     {
         value: "PENDING",
-        text: "pendente"
+        text: "Pendente"
     },
     {
-        value: "SUSPENDED",
-        text: "suspenso"
+        value: "IN_PROGRESS",
+        text: "Em andamento"
+    },
+    {
+        value: "COMPLETED",
+        text: "Concluída"
     }
-]
+] as const;
+
 
 export const SelectStatus = () => {
 
@@ -53,6 +50,12 @@ export const SelectStatus = () => {
                                 value={value}
                                 className="capitalize"
                             >
+                                <span className={cn(
+                                    "size-2 rounded-full",
+                                    value === "PENDING" && "bg-red-500",
+                                    value === "IN_PROGRESS" && "bg-yellow-500",
+                                    value === "COMPLETED" && "bg-green-500",
+                                )} />
                                 {text}
                             </SelectItem>
                         ))

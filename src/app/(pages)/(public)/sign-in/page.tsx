@@ -9,7 +9,7 @@ import {
 import { cn } from "@/lib/utils"
 
 export const metadata = {
-	title: "Stock App | Login",
+	title: "Chabra Tasks | Login",
 }
 
 export default async function SignInPage() {

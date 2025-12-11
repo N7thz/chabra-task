@@ -1,13 +1,15 @@
 "use client"
 
 import { findManySpace } from "@/actions/spaces/find-many-spaces"
-import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 import Link from "next/link"
 import { Blend } from "lucide-react"
 
 export const SpaceListSidebar = () => {
+
+    const { open } = useSidebar()
 
     const {
         data: spaces,
@@ -48,7 +50,7 @@ export const SpaceListSidebar = () => {
     return (
         <>
             {
-                spaces.length === 0
+                (spaces.length === 0 && open)
                     ? <span className="text-center">
                         Você ainda não possui espaços
                     </span>

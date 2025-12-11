@@ -1,4 +1,3 @@
-import { Card as CardProps } from "@prisma/client"
 import {
     Card,
     CardAction,
@@ -13,16 +12,42 @@ import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Progress } from "./ui/progress"
 import { AvatarGroup } from "./avatar-group"
+import { Card as CardContainerProps } from "@/types"
+import { Task } from "@prisma/client"
+import { useRouter } from "next/navigation"
 
-export const CardContainer = ({ card: {
-    id,
-    title,
-    description,
-    term,
+export const CardContainer = ({
+    space,
+    card: {
+        id,
+        title,
+        description,
+        term,
+        tasks
+    }
+}: {
+    card: CardContainerProps,
+    space: string
+}) => {
 
-} }: { card: CardProps }) => {
+    const { push } = useRouter()
+
+    const tasksCompleteds = tasks.filter(task => task.completed).length
+
+    function getCompletedPercentage(tasks: Task[]) {
+
+        if (tasks.length === 0) return 0;
+
+        const completedCount = tasks.filter(t => t.completed).length;
+
+        return (completedCount / tasks.length) * 100;
+    };
+
     return (
-        <Card>
+        <Card
+            className="hover:scale-95 duration-200 cursor-pointer"
+            onClick={() => push(`/${space}/card/${id}`)}
+        >
             <CardHeader>
                 <CardAction>
                     <Button variant={"ghost"}>
@@ -47,8 +72,11 @@ export const CardContainer = ({ card: {
                     </div>
                     <AvatarGroup />
                 </div>
-                <div>
-                    <Progress value={Math.floor(Math.random() * 100) + 1}/>
+                <div className="space-y-2.5">
+                    <div className="text-sm">
+                        {tasksCompleteds} de {tasks.length}
+                    </div>
+                    <Progress value={getCompletedPercentage(tasks)} />
                 </div>
             </CardContent>
         </Card>

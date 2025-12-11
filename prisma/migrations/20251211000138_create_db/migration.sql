@@ -56,14 +56,15 @@ CREATE TABLE "cards" (
     "title" TEXT NOT NULL,
     "cnpj" TEXT NOT NULL,
     "description" TEXT,
-    "status" TEXT NOT NULL,
     "term" TIMESTAMP(3) NOT NULL,
     "color" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "completed_at" TIMESTAMP(3),
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "labelId" TEXT NOT NULL,
+    "labelId" TEXT,
+    "ownersId" TEXT[],
     "priority" "Priority" NOT NULL,
+    "status" "Status" NOT NULL,
     "listId" TEXT,
 
     CONSTRAINT "cards_pkey" PRIMARY KEY ("id")
@@ -73,7 +74,7 @@ CREATE TABLE "cards" (
 CREATE TABLE "labels" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "color" TEXT NOT NULL,
+    "color" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "cardId" TEXT,
@@ -85,10 +86,11 @@ CREATE TABLE "labels" (
 CREATE TABLE "tasks" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT,
     "completed" BOOLEAN NOT NULL DEFAULT false,
+    "term" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ownersId" TEXT[],
     "cardId" TEXT,
 
     CONSTRAINT "tasks_pkey" PRIMARY KEY ("id")
@@ -107,13 +109,14 @@ CREATE TABLE "comments" (
 );
 
 -- CreateTable
-CREATE TABLE "activitys" (
+CREATE TABLE "activities" (
     "id" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT NOT NULL,
+    "cardId" TEXT,
 
-    CONSTRAINT "activitys_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "activities_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -172,10 +175,7 @@ CREATE UNIQUE INDEX "users_name_key" ON "users"("name");
 CREATE UNIQUE INDEX "spaces_name_key" ON "spaces"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "lists_name_key" ON "lists"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "cards_cnpj_key" ON "cards"("cnpj");
+CREATE UNIQUE INDEX "lists_spaceId_name_key" ON "lists"("spaceId", "name");
 
 -- CreateIndex
 CREATE INDEX "session_userId_idx" ON "session"("userId");
@@ -188,9 +188,6 @@ CREATE INDEX "account_userId_idx" ON "account"("userId");
 
 -- CreateIndex
 CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
-
--- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "tasks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "cards"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -217,7 +214,10 @@ ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "comments" ADD CONSTRAINT "comments_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "cards"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "activitys" ADD CONSTRAINT "activitys_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "activities" ADD CONSTRAINT "activities_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "activities" ADD CONSTRAINT "activities_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "cards"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

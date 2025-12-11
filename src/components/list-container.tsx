@@ -33,13 +33,12 @@ export const ListContainer = ({ space }: { space: string }) => {
             },
             where: {
                 space: {
-                    name: space
+                    name: decodeURI(space)
                 }
             },
             include: {
                 cards: {
                     include: {
-                        owner: true,
                         tasks: true,
                     }
                 }
@@ -95,46 +94,52 @@ export const ListContainer = ({ space }: { space: string }) => {
             }
         </ div>
     )
-
+    
     return (
         <div className="flex space-x-4">
             {
-                lists.length === 0 ? (
-                    <p>Você ainda não possui listas criadas.</p>
-                ) : lists.map(({ id, name, color, cards }) => (
-                    <Card key={id} className="w-100 pt-0 overflow-hidden">
-                        <CardHeader style={{
-                            background: color ?? undefined
-                        }}>
-                            <CardAction className="mt-5">
-                                <DropdownMenuEditDialog id={id} name={name} />
-                            </CardAction>
-                            <CardTitle className="truncate mt-5">
-                                {name}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {
-                                cards.map(card => (
-                                    <CardContainer
-                                        key={card.id}
-                                        card={card}
-                                    />
-                                ))
-                            }
-                        </CardContent>
-                        <CardFooter>
-                            <Button
-                                asChild
-                                className="w-full"
-                            >
-                                <Link href={`/${space}/${name}/create-card`}>
-                                    Adicionar cartão
-                                </Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                ))
+                lists.length === 0
+                    ? (
+                        <p>Você ainda não possui listas criadas.</p>
+                    )
+                    : lists.map(({ id, name, color, cards }) => (
+                        <Card
+                            key={id}
+                            className="w-100 h-min pt-0 overflow-hidden"
+                        >
+                            <CardHeader style={{
+                                background: color ?? undefined
+                            }}>
+                                <CardAction className="mt-5">
+                                    <DropdownMenuEditDialog id={id} name={name} />
+                                </CardAction>
+                                <CardTitle className="truncate mt-5">
+                                    {name}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {
+                                    cards.map(card => (
+                                        <CardContainer
+                                            key={card.id}
+                                            card={card}
+                                            space={space}
+                                        />
+                                    ))
+                                }
+                            </CardContent>
+                            <CardFooter>
+                                <Button
+                                    asChild
+                                    className="w-full"
+                                >
+                                    <Link href={`/${space}/${id}/create-card`}>
+                                        Adicionar cartão
+                                    </Link>
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    ))
             }
         </div>
     )

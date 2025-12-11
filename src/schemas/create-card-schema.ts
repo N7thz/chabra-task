@@ -34,10 +34,9 @@ export const createCardSchema = z.object({
         ]),
     status: z
         .enum([
-            "ACTIVE",
-            "INACTIVE",
             "PENDING",
-            "SUSPENDED"
+            "IN_PROGRESS",
+            "COMPLETED"
         ]),
     term: z
         .date()

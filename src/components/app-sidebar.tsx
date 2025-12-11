@@ -22,14 +22,16 @@ import {
     Home,
     LucideIcon,
     Settings,
-    User2,
-    UserCircle
+    UserCircle,
+    LogOut,
+    Cog
 } from "lucide-react"
 import Link from "next/link"
 import { SidebarTrigger } from "./sidebar-trigger"
 import { SpaceListSidebar } from "./space-list-sidebar"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
+import { SignOutButton } from "./sign-out-button"
 
 type SidebarItem = {
     title: string
@@ -119,24 +121,19 @@ export const AppSidebar = async () => {
                                     <ChevronUp className="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                side="top"
-                                className="w-[--radix-popper-anchor-width]"
-                            >
+                            <DropdownMenuContent side="top">
                                 <DropdownMenuItem>
-                                    <span>Account</span>
+                                    <Cog />
+                                    <span>
+                                        Opções
+                                    </span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Billing</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Sign out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarFooter>
-        </Sidebar>
+                                <SignOutButton />
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarFooter>
+        </Sidebar >
     )
 }
