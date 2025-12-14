@@ -26,6 +26,8 @@ import { SelectPriority } from "./select-priority"
 import { SelectStatus } from "./select-status"
 import { SelectTerm } from "./select-term"
 import { TaskItem } from "./task-item"
+import { Priority, Status } from "@prisma/client"
+import { date } from "zod"
 
 type FormCreateCardProps = { space: string, id: string }
 
@@ -65,14 +67,17 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
     const form = useForm<CreateCardProps>({
         resolver: zodResolver(createCardSchema),
         defaultValues: {
-            color: null
+            color: null,
+            ownersId: []
         }
     })
 
     const {
+        watch,
         control,
         register,
         handleSubmit,
+        setValue,
         formState: { errors }
     } = form
 
@@ -100,6 +105,9 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
     }
 
     console.log(errors)
+
+    const ownersSelected = watch("ownersId")
+    const term = watch("term")
 
     return (
         <>
@@ -152,25 +160,35 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
                                 <span className="self-start">
                                     Status:
                                 </span>
-                                <SelectStatus />
+                                <SelectStatus
+                                    onValueChange={(value) => setValue("status", value as Status)}
+                                />
                             </Label>
                             <Label className="flex flex-col gap-3">
                                 <span className="self-start">
                                     Prazo:
                                 </span>
-                                <SelectTerm />
+                                <SelectTerm
+                                    date={term}
+                                    setDate={(date) => setValue("term", date)}
+                                />
                             </Label>
                             <Label className="flex flex-col gap-3">
                                 <span className="self-start">
                                     Prioridade:
                                 </span>
-                                <SelectPriority />
+                                <SelectPriority
+                                    onValueChange={(value) => setValue("priority", value as Priority)}
+                                />
                             </Label>
                             <Label className="flex flex-col gap-3">
                                 <span className="self-start">
                                     Responsaveis:
                                 </span>
-                                <SelectOwners />
+                                <SelectOwners
+                                    selected={ownersSelected}
+                                    onSelectionChange={(value) => setValue("ownersId", value)}
+                                />
                             </Label>
                             <Label
                                 htmlFor="description"

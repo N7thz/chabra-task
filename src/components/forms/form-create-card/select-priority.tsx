@@ -31,14 +31,19 @@ const priorityArray: { value: Priority, text: string }[] = [
     }
 ]
 
-export const SelectPriority = () => {
-
-    const { setValue } = useFormContext<CreateCardProps>()
+export const SelectPriority = ({
+    onValueChange,
+    defaultValue
+}: {
+    defaultValue?: string,
+    onValueChange: (value: string) => void
+}) => {
 
     return (
-        <Select onValueChange={(value) => setValue("priority", value as Priority)}>
+        <Select onValueChange={onValueChange}>
             <SelectTrigger className="w-full text-muted-foreground">
                 <SelectValue
+                    defaultValue={defaultValue}
                     placeholder="Selecione a prioridade"
                     className="capitalize"
                 />

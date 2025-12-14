@@ -1,13 +1,19 @@
-import { MultiSelect } from '@/components/multiselect'
-import { useState } from 'react'
-import { Option } from '@/components/multiselect'
+import { MultiSelect } from '@/components/multi-select'
 import { useFormContext } from 'react-hook-form'
 import { CreateCardProps } from '@/schemas/create-card-schema'
 import { useQuery } from '@tanstack/react-query'
 import { findManyUsers } from '@/actions/users/find-many-users'
 import { Button } from '@/components/ui/button'
+import { ChevronDown } from 'lucide-react'
 
-export const SelectOwners = () => {
+type SelectOwnersProps = { 
+  selected: string[],
+  onSelectionChange: (value: string[]) => void
+}
+
+export const SelectOwners = ({ 
+  selected, onSelectionChange 
+}: SelectOwnersProps) => {
 
   const {
     data,
@@ -22,19 +28,16 @@ export const SelectOwners = () => {
     })
   })
 
-  const { setValue } = useFormContext<CreateCardProps>()
-
-  const [owners, setOwners] = useState<Option[]>([])
-
   if (!data || isLoading) {
     return (
       <Button
         type="button"
         variant="outline"
         disabled
-        className={"w-full justify-start h-auto text-muted-foreground"}
+        className={"w-full justify-between h-auto text-muted-foreground"}
       >
         Selecione um responsavel
+        <ChevronDown />
       </Button>
     )
   }
@@ -46,11 +49,13 @@ export const SelectOwners = () => {
 
   return (
     <MultiSelect
+      name="owners"
+      id="owners-select"
+      description="Escolha um ou mais responsáveis"
       options={users}
-      owners={owners}
-      setOwners={setOwners}
-      setValue={setValue}
-      setValueInput={`ownersId`}
+      selected={selected}
+      onSelectionChange={onSelectionChange}
+      placeholder="Clique para selecionar os responsáveis..."
     />
   )
 }

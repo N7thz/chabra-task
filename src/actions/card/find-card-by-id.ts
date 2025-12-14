@@ -2,15 +2,22 @@
 
 import { prisma } from "@/lib/prisma"
 
-export async function findCardById(id: string) {
+export async function findCardById(
+    id: string,
+) {
 
-    const list = await prisma.card.findUnique({
+    const card = await prisma.card.findUnique({
         where: {
             id
+        },
+        include: {
+            activities: true,
+            comments: true,
+            tasks: true,
         }
     })
 
-    if (!list) throw new Error("Card não encontrado.")
+    if (!card) throw new Error("Card não encontrado.")
 
-    return list
+    return card
 }

@@ -1,29 +1,17 @@
-import { ChevronDownIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
     Popover, PopoverContent, PopoverTrigger,
 } from "@/components/ui/popover"
-import { useEffect, useState } from "react"
-import { useFormContext } from "react-hook-form"
-import { CreateCardProps } from "@/schemas/create-card-schema"
 import { ptBR } from "date-fns/locale"
+import { ChevronDownIcon } from "lucide-react"
+import { useState } from "react"
 
-export const SelectTerm = () => {
+export const SelectTerm = ({
+    date, setDate
+}: { date: Date, setDate: (date: Date) => void }) => {
 
     const [open, setOpen] = useState(false)
-
-    const {
-        setValue,
-        watch, 
-        formState: { errors }
-    } = useFormContext<CreateCardProps>()
-
-    useEffect(() => {
-        if (errors.term) setOpen(true)
-    }, [])
-
-    const date = watch("term")
 
     return (
         <Popover
@@ -54,7 +42,7 @@ export const SelectTerm = () => {
                     captionLayout="dropdown"
                     onSelect={(date) => {
 
-                        if (date) setValue("term", date)
+                        if (date) setDate(date)
 
                         setOpen(false)
                     }}

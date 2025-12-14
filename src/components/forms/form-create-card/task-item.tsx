@@ -2,31 +2,22 @@ import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { CreateCardProps } from "@/schemas/create-card-schema"
 import { X } from "lucide-react"
 import { useFormContext } from "react-hook-form"
-import { SelectTaskOwners } from "./select-task-owners"
+import { SelectOwners } from "./select-owners"
 import { SelectTaskTerm } from "./select-task-term"
-import { CreateCardProps } from "@/schemas/create-card-schema"
-
-type Task = {
-    id: string
-    name: string
-    term: Date
-    completed: boolean
-    owners: string[]
-}
 
 type TaskItemProps = {
     index: number,
     remove: (index: number) => void
 }
 
-export const TaskItem = ({
-    index,
-    remove,
-}: TaskItemProps) => {
+export const TaskItem = ({ index, remove }: TaskItemProps) => {
 
-    const { register } = useFormContext<CreateCardProps>()
+    const { register, setValue, watch } = useFormContext<CreateCardProps>()
+
+    const ownersSelected = watch("ownersId")
 
     return (
         <Card className="bg-transparent">
@@ -64,7 +55,10 @@ export const TaskItem = ({
                     <span className="self-start">
                         Responsaveis:
                     </span>
-                    <SelectTaskOwners index={index} />
+                    <SelectOwners
+                        selected={ownersSelected}
+                        onSelectionChange={(value) => setValue(`tasks.${index}.ownersId`, value)}
+                    />
                 </Label>
             </CardContent>
         </Card>
