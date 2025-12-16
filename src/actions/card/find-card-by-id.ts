@@ -1,6 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
+import { Card, CardComplete } from "@/types"
 
 export async function findCardById(
     id: string,
@@ -11,13 +12,21 @@ export async function findCardById(
             id
         },
         include: {
-            activities: true,
-            comments: true,
+            activities: {
+                include: {
+                    author: true
+                }
+            },
+            comments: {
+                include: {
+                    author: true
+                }
+            },
             tasks: true,
         }
     })
 
     if (!card) throw new Error("Card não encontrado.")
 
-    return card
+    return card as CardComplete
 }

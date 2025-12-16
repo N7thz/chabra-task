@@ -37,20 +37,21 @@ export async function createCard({
         throw new Error("Não foi possivel encontrar a sessão, tente logar novamente.")
     }
 
-    const {
-        user: {
-            id: userId,
-            name
-        }
-    } = session
+    const { user } = session
+
+    const { id: userId, name } = user
 
     const card = await prisma.card.create({
         data: {
             ...formData,
             activities: {
                 create: {
-                    userId,
                     message: `O usuario ${name} criou o cartão ${formData.title}.`,
+                    author: {
+                        connect: {
+                            id: userId
+                        }
+                    }
                 }
             },
             list: {

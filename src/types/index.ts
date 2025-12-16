@@ -1,4 +1,11 @@
-import { Task, User } from "@prisma/client"
+import type {
+	Activity,
+	Comments,
+	Priority,
+	Status,
+	Task,
+	User
+} from "@prisma/client"
 import { ReactNode } from "react"
 
 export type LayoutProps = {
@@ -31,4 +38,24 @@ export type Card = {
 	listId: string
 	owner: User[]        // pode tipar melhor se quiser
 	tasks: Task[]        // idem
+}
+
+export type CardComplete = {
+	id: string
+	title: string
+	cnpj: string
+	description: string
+	term: Date
+	color: string | null
+	createdAt: Date
+	completedAt: Date | null
+	updatedAt: Date
+	labelId: string | null
+	ownersId: string[]
+	priority: Priority
+	status: Status
+	listId: string
+	activities: Activity[]
+	comments: Comments[]
+	tasks: Task[]
 }

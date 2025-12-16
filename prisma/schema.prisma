@@ -19,13 +19,10 @@ model User {
   banReason     String?
   banExpires    DateTime?
   role          Role       @default(USER)
-  taskId        String?
   sessions      Session[]
   accounts      Account[]
   comments      Comments[]
   spaces        Space[]
-  card          Card?      @relation(fields: [cardId], references: [id], onDelete: Cascade)
-  cardId        String?
   activities    Activity[]
 
   @@map("users")
@@ -77,7 +74,6 @@ model Card {
   activities  Activity[]
   list        List?      @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      String?
-  users       User[]
 
   @@map("cards")
 }
