@@ -121,18 +121,16 @@ export function MultiSelect({
                                             className="bg-primary text-primary-foreground px-2 py-1 rounded text-sm flex items-center gap-1 group"
                                         >
                                             {label}
-                                            <button
-                                                type="button"
+                                            <span
                                                 onClick={(e) => {
                                                     e.stopPropagation()
                                                     handleRemove(selected[i])
                                                 }}
                                                 className="hover:opacity-70 transition-opacity cursor-pointer"
-                                                disabled={disabled}
                                                 aria-label={`Remover ${label}`}
                                             >
                                                 <X size={14} />
-                                            </button>
+                                            </span>
                                         </span>
                                     ))}
                                 {selected.length > 2 && <span className="text-muted-foreground text-sm">+{selected.length - 2}</span>}

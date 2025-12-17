@@ -1,5 +1,4 @@
 import { changeColorList } from "@/actions/lists/change-color-list"
-import { deleteList } from "@/actions/lists/delete-list"
 import { queryClient } from "@/components/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
@@ -7,10 +6,9 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
-    DialogTitle,
+    DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
@@ -21,7 +19,7 @@ import {
 } from "@/schemas/change-color-list-schema"
 import { colors } from "@/utils/colors"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { Check } from "lucide-react"
 import { useForm } from "react-hook-form"
 

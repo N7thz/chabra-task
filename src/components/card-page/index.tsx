@@ -10,6 +10,7 @@ import { SelectTerm } from "@/components/forms/form-create-card/select-term"
 import { Button } from "@/components/ui/button"
 import {
     Card,
+    CardAction,
     CardContent,
     CardDescription,
     CardFooter,
@@ -22,23 +23,31 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 import { CardComplete } from "@/types"
 import { useQuery } from "@tanstack/react-query"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { Clock, MessageSquareText } from "lucide-react"
-import { ActivitiesContainer } from "./activities"
-import { CommentsContainer } from "./comments"
-import { CardContainer } from "../card-container"
+import {
+    Clock,
+    Ellipsis,
+    MessageSquareText
+} from "lucide-react"
+import { useState } from "react"
 import { Input } from "../ui/input"
+import { useSidebar } from "../ui/sidebar"
+import { ActivitiesContainer } from "./activities"
+import { ChangeColorCardDialog } from "./change-color-card-dialog"
+import { CommentsContainer } from "./comments"
 
 export const CardPage = ({ id, space }: { id: string, space: string }) => {
 
+    const { open: sidebarOpen } = useSidebar()
+
     const { data: card, isLoading } = useQuery<CardComplete>({
-        queryKey: ["find-card-by-id"],
+        queryKey: ["find-card-by-id", id],
         queryFn: () => findCardById(id)
     })
 
@@ -82,16 +91,20 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
     console.log(card.activities)
 
     return (
-        <Card className="min-w-3/5 max-w-4/6 max-h-5/6 pt-0 overflow-hidden">
-            <div
-                style={{
-                    background: color ?? undefined
-                }}
-                className="h-50 w-full bg-red-50"
+        <Card className={cn(
+            "pt-0 transition-all overflow-hidden",
+            sidebarOpen ? "w-5/6" : "w-3/5"
+        )}>
+            <ChangeColorCardDialog 
+                id={id}
+                color={color}
             />
-            <CardHeader style={{
-                background: color ?? undefined
-            }}>
+            <CardHeader>
+                <CardAction>
+                    <Button variant={"ghost"}>
+                        <Ellipsis />
+                    </Button>
+                </CardAction>
                 <CardTitle>
                     {title}
                 </CardTitle>
