@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import {
     Card,
     CardAction,
+    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle
@@ -18,6 +19,7 @@ import { Comments } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { ChevronDown, Ellipsis, MessageSquareText } from "lucide-react"
+import { CommentsItem } from "./comments-item"
 
 type CommentsContainerProps = {
     open: boolean
@@ -66,32 +68,11 @@ export const CommentsContainer = ({
                                     </span>
                                 </div>
                             )
-                            : comments.map(({ id, message, createdAt }) => (
-                                <Card
-                                    key={id}
-                                    className="bg-transparent py-4"
-                                >
-                                    <CardHeader className="px-4">
-                                        <Avatar className="mb-2">
-                                            <AvatarImage
-                                                src="https://github.com/shadcn.png"
-                                                alt="@shadcn"
-                                            />
-                                            <AvatarFallback>CN</AvatarFallback>
-                                        </Avatar>
-                                        <CardTitle className="text-sm font-normal">
-                                            {message}
-                                        </CardTitle>
-                                        <CardAction>
-                                            <Button variant="ghost">
-                                                <Ellipsis />
-                                            </Button>
-                                        </CardAction>
-                                    </CardHeader>
-                                    <CardFooter className="text-xs justify-end text-muted-foreground">
-                                        {formatDate(createdAt, "dd 'de' MMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
-                                    </CardFooter>
-                                </Card>
+                            : comments.map(comment => (
+                                <CommentsItem
+                                    key={comment.id}
+                                    comment={comment}
+                                />
                             ))
                     }
                 </CollapsibleContent>

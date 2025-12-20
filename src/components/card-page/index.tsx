@@ -38,7 +38,7 @@ import {
 import { useSidebar } from "../ui/sidebar"
 import { ActivitiesContainer } from "./activities"
 import { ChangeColorCardDialog } from "./change-color-card-dialog"
-import { CommentsContainer } from "./comments"
+import { CommentsContainer } from "./comments-container"
 import { CommentContainerDialog } from "./comments-dialog"
 import { queryKeys } from "@/utils/query-keys"
 import { useState } from "react"
@@ -96,7 +96,7 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
     return (
         <Card className={cn(
             "pt-0 transition-all overflow-hidden",
-            sidebarOpen ? "w-5/6" : "w-3/5"
+            sidebarOpen ? "w-5/6" : "w-10/12"
         )}>
             <ChangeColorCardDialog
                 id={id}
