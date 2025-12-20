@@ -12,6 +12,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
+import { queryKeys } from "@/utils/query-keys"
 
 export const SpaceList = () => {
 
@@ -20,7 +21,7 @@ export const SpaceList = () => {
         isLoading,
         error
     } = useQuery({
-        queryKey: ["find-many-space"],
+        queryKey: queryKeys.space.findMany(),
         queryFn: () => findManySpace()
     })
 

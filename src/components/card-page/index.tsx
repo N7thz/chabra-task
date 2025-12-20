@@ -40,13 +40,17 @@ import { ActivitiesContainer } from "./activities"
 import { ChangeColorCardDialog } from "./change-color-card-dialog"
 import { CommentsContainer } from "./comments"
 import { CommentContainerDialog } from "./comments-dialog"
+import { queryKeys } from "@/utils/query-keys"
+import { useState } from "react"
 
 export const CardPage = ({ id, space }: { id: string, space: string }) => {
+
+    const [open, setOpen] = useState(false)
 
     const { open: sidebarOpen } = useSidebar()
 
     const { data: card, isLoading } = useQuery<CardComplete>({
-        queryKey: ["find-card-by-id", id],
+        queryKey: queryKeys.card.find(id),
         queryFn: () => findCardById(id)
     })
 
@@ -186,10 +190,17 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
                             </CardHeader>
                             <CardContent className="flex-1 px-3 flex flex-col gap-2">
                                 <ActivitiesContainer activities={activities} />
-                                <CommentsContainer comments={comments} />
+                                <CommentsContainer
+                                    open={open}
+                                    onOpenChange={setOpen}
+                                    comments={comments}
+                                />
                             </CardContent>
                             <CardFooter className="px-3">
-                                <CommentContainerDialog cardId={id} />
+                                <CommentContainerDialog
+                                    cardId={id}
+                                    onOpenCommentsCollapse={setOpen}
+                                />
                             </CardFooter>
                         </Card>
                     </ResizablePanel>

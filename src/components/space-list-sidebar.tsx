@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 import Link from "next/link"
 import { Blend } from "lucide-react"
+import { queryKeys } from "@/utils/query-keys"
 
 export const SpaceListSidebar = () => {
 
@@ -16,7 +17,7 @@ export const SpaceListSidebar = () => {
         isLoading,
         error
     } = useQuery({
-        queryKey: ["find-many-space"],
+        queryKey: queryKeys.space.findMany(),
         queryFn: () => findManySpace()
     })
 

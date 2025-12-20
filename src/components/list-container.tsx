@@ -17,6 +17,7 @@ import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 import Link from "next/link"
 import { List } from "@/types"
 import { CardContainer } from "./card-container"
+import { queryKeys } from "@/utils/query-keys"
 
 export const ListContainer = ({ space }: { space: string }) => {
 
@@ -26,7 +27,7 @@ export const ListContainer = ({ space }: { space: string }) => {
         error,
         refetch
     } = useQuery({
-        queryKey: ["find-many-lists"],
+        queryKey: queryKeys.list.findMany(),
         queryFn: () => findManyList<List[]>({
             orderBy: {
                 createdAt: "asc"
@@ -94,7 +95,7 @@ export const ListContainer = ({ space }: { space: string }) => {
             }
         </ div>
     )
-    
+
     return (
         <div className="flex space-x-4">
             {

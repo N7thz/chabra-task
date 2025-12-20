@@ -17,6 +17,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { EditListProps, editListSchema } from "@/schemas/edit-list-schema"
+import { queryKeys } from "@/utils/query-keys"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
@@ -44,7 +45,7 @@ export const FormEditListDialog = ({
             })
 
             queryClient.invalidateQueries({
-                queryKey: ["find-many-lists"]
+                queryKey: queryKeys.list.findMany()
             })
         },
         onError: (error) => {
@@ -59,7 +60,7 @@ export const FormEditListDialog = ({
     const {
         data: list
     } = useQuery({
-        queryKey: ["find-list-by-name"],
+        queryKey: queryKeys.list.find(id),
         queryFn: () => findListById(id)
     })
 

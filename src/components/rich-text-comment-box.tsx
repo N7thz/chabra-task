@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "./toast"
 import { queryClient } from "./theme-provider"
+import { queryKeys } from "@/utils/query-keys"
 
 export const commentSchema = z.object({
     content: z
@@ -35,10 +36,12 @@ export type CommentFormData = z.infer<typeof commentSchema>
 
 export function RichTextCommentBox({
     cardId,
+    onOpenCommentsCollapse,
     onOpenChange
 }: {
     cardId: string
     onOpenChange: (open: boolean) => void
+    onOpenCommentsCollapse: (open: boolean) => void
 }) {
 
     const {
@@ -55,11 +58,14 @@ export function RichTextCommentBox({
             toast({
                 title: "Comentário adicionado com sucesso.",
                 description: "O comentário foi criado com sucesso.",
-                onAutoClose: () => onOpenChange(false)
+                onAutoClose: () => {
+                    onOpenChange(false)
+                    onOpenCommentsCollapse(true)
+                }
             })
 
             queryClient.invalidateQueries({
-                queryKey: [""]
+                queryKey: queryKeys.card.find(cardId)
             })
         },
         onError: (err) => {

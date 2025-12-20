@@ -8,6 +8,7 @@ import {
     ChangeColorListProps, changeColorListSchema
 } from "@/schemas/change-color-list-schema"
 import { colors } from "@/utils/colors"
+import { queryKeys } from "@/utils/query-keys"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Check } from "lucide-react"
@@ -31,7 +32,7 @@ export const FormChangeColorCardDialog = ({
             })
 
             queryClient.invalidateQueries({
-                queryKey: ["find-card-by-id", id]
+                queryKey: queryKeys.card.find(id)
             })
         },
         onError: (error) => {

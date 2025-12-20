@@ -5,21 +5,22 @@ import { useQuery } from '@tanstack/react-query'
 import { findManyUsers } from '@/actions/users/find-many-users'
 import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
+import { queryKeys } from '@/utils/query-keys'
 
-type SelectOwnersProps = { 
+type SelectOwnersProps = {
   selected: string[],
   onSelectionChange: (value: string[]) => void
 }
 
-export const SelectOwners = ({ 
-  selected, onSelectionChange 
+export const SelectOwners = ({
+  selected, onSelectionChange
 }: SelectOwnersProps) => {
 
   const {
     data,
     isLoading,
   } = useQuery({
-    queryKey: ["find-many-users"],
+    queryKey: queryKeys.user.findMany(),
     queryFn: () => findManyUsers({
       select: {
         id: true,

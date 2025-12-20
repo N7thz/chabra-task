@@ -10,7 +10,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 
-export const CommentContainerDialog = ({ cardId }: { cardId: string }) => {
+type CommentContainerDialogProps = {
+    onOpenCommentsCollapse: (open: boolean) => void
+    cardId: string 
+}
+
+export const CommentContainerDialog = ({ 
+    cardId,
+    onOpenCommentsCollapse,
+}: CommentContainerDialogProps) => {
 
     const [open, setOpen] = useState(false)
 
@@ -33,6 +41,7 @@ export const CommentContainerDialog = ({ cardId }: { cardId: string }) => {
                 </AlertDialogHeader>
                 <RichTextCommentBox
                     cardId={cardId}
+                    onOpenCommentsCollapse={onOpenCommentsCollapse}
                     onOpenChange={setOpen}
                 />
             </AlertDialogContent>
