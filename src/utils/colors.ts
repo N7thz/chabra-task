@@ -49,4 +49,16 @@ export const colors: string[] = [
 
     // rose
     "#fda4af", "#fb7185", "#f43f5e"
-];
+]
+
+export const colorsComment = [
+    "#ffffff",
+    "#000000",
+    "#ef4444",
+    "#f97316",
+    "#eab308",
+    "#22c55e",
+    "#06b6d4",
+    "#3b82f6",
+    "#8b5cf6"
+]

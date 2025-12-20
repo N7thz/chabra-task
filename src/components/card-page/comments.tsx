@@ -15,6 +15,8 @@ export const CommentsContainer = ({ comments }: { comments: Comments[] }) => {
 
     const [open, setOpen] = useState(false)
 
+    console.log(comments)
+
     return (
         <Collapsible
             open={open}

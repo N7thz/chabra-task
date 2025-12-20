@@ -1,4 +1,4 @@
-import { changeColorList } from "@/actions/card/change-color-card"
+import { changeColorList } from "@/actions/cards/change-color-card"
 import { queryClient } from "@/components/theme-provider"
 import { toast } from "@/components/toast"
 import { Input } from "@/components/ui/input"

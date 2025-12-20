@@ -1,20 +1,31 @@
 "use client"
 
+import { createComments } from "@/actions/comments/create-comment"
+import { SpanErrorMessage } from "@/components/span-error"
+import {
+    AlertDialogAction,
+    AlertDialogCancel, AlertDialogFooter
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
+import { colorsComment as colors } from "@/utils/colors"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+import { Bold, Italic, Send, Underline } from "lucide-react"
 import type React from "react"
 import { useRef } from "react"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Button } from "@/components/ui/button"
-import { Bold, Italic, Underline, Palette, Send } from "lucide-react"
-import { SpanErrorMessage } from "./span-error"
-import { Card, CardContent, CardFooter } from "./ui/card"
+import { toast } from "./toast"
+import { queryClient } from "./theme-provider"
 
 export const commentSchema = z.object({
     content: z
         .string()
         .min(1, "O comentário não pode estar vazio")
         .refine((val) => {
+            // Remove HTML tags para verificar se há conteúdo real
             const text = val.replace(/<[^>]*>/g, "").trim()
             return text.length > 0
         }, "O comentário deve conter texto"),
@@ -22,163 +33,205 @@ export const commentSchema = z.object({
 
 export type CommentFormData = z.infer<typeof commentSchema>
 
-export const RichTextCommentBox = () => {
+export function RichTextCommentBox({
+    cardId,
+    onOpenChange
+}: {
+    cardId: string
+    onOpenChange: (open: boolean) => void
+}) {
+
+    const {
+        mutate,
+        isPending,
+        isSuccess
+    } = useMutation({
+        mutationKey: ["create-comment"],
+        mutationFn: (message: string) => createComments({
+            cardId,
+            message
+        }),
+        onSuccess: () => {
+            toast({
+                title: "Comentário adicionado com sucesso.",
+                description: "O comentário foi criado com sucesso.",
+                onAutoClose: () => onOpenChange(false)
+            })
+
+            queryClient.invalidateQueries({
+                queryKey: [""]
+            })
+        },
+        onError: (err) => {
+            toast({
+                title: err.name,
+                description: err.message,
+                variant: "destructive"
+            })
+        }
+    })
 
     const {
         register,
         handleSubmit,
         reset,
         setValue,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<CommentFormData>({
         resolver: zodResolver(commentSchema),
+        defaultValues: { content: "" },
     })
 
     const editorRef = useRef<HTMLDivElement>(null)
-    const colorInputRef = useRef<HTMLInputElement>(null)
 
-    const colors = [
-        "#ffffff",
-        "#000000",
-        "#ef4444",
-        "#f97316",
-        "#eab308",
-        "#22c55e",
-        "#06b6d4",
-        "#3b82f6",
-        "#8b5cf6"
-    ]
+    const handleEditorInput = () => {
+        if (editorRef.current) {
+            const content = editorRef.current.innerHTML
+            setValue("content", content, { shouldValidate: true })
+        }
+    }
 
-    const applyFormat = (formatType: "bold" | "italic" | "underline") => {
-        document.execCommand(formatType)
-        editorRef.current?.focus()
+    const applyFormat = (command: string) => {
+        document.execCommand(command, false, undefined)
+        if (editorRef.current) {
+            editorRef.current.focus()
+            handleEditorInput()
+        }
     }
 
     const applyColor = (color: string) => {
         document.execCommand("foreColor", false, color)
-        editorRef.current?.focus()
+        if (editorRef.current) {
+            editorRef.current.focus()
+            handleEditorInput()
+        }
     }
 
-    const onFormSubmit = (data: CommentFormData) => {
+    const onFormSubmit = ({ content }: CommentFormData) => {
 
-        console.log(data)
+        mutate(content)
+        reset()
 
         if (editorRef.current) {
             editorRef.current.innerHTML = ""
         }
     }
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter" && e.ctrlKey) {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
             handleSubmit(onFormSubmit)()
         }
     }
 
     return (
-        <Card>
-            <CardContent>
-                <form
-                    id="form-add-comments"
-                    onSubmit={handleSubmit(onFormSubmit)}
-                    className="space-y-4"
-                >
-                    <div className="rounded-lg p-3 border border-border">
-                        <div className="flex flex-wrap gap-2 items-center">
-                            <Button
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                onClick={() => applyFormat("bold")}
-                                className="w-10 h-10 p-0"
-                                title="Negrito (Ctrl+B)"
-                            >
-                                <Bold className="w-4 h-4" />
-                            </Button>
+        <form
+            onSubmit={handleSubmit(onFormSubmit)}
+            className="space-y-4"
+        >
+            {/* Barra de Ferramentas */}
+            <div className="flex flex-col items-center gap-3 rounded-lg p-3 border border-border">
+                <div className="w-full flex gap-2 justify-start">
+                    <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={() => applyFormat("bold")}
+                        className="w-10 h-10 p-0"
+                        title="Negrito"
+                    >
+                        <Bold className="size-4" />
+                    </Button>
 
-                            <Button
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                onClick={() => applyFormat("italic")}
-                                className="w-10 h-10 p-0"
-                                title="Itálico (Ctrl+I)"
-                            >
-                                <Italic className="w-4 h-4" />
-                            </Button>
+                    <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={() => applyFormat("italic")}
+                        className="w-10 h-10 p-0"
+                        title="Itálico"
+                    >
+                        <Italic className="size-4" />
+                    </Button>
 
-                            <Button
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                onClick={() => applyFormat("underline")}
-                                className="w-10 h-10 p-0"
-                                title="Sublinhado (Ctrl+U)"
-                            >
-                                <Underline className="w-4 h-4" />
-                            </Button>
+                    <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={() => applyFormat("underline")}
+                        className="w-10 h-10 p-0"
+                        title="Sublinhado"
+                    >
+                        <Underline className="size-4" />
+                    </Button>
+                </div>
 
-                            <div className="w-px h-6 bg-border" />
+                <Separator />
 
-                            <div className="flex items-center gap-2">
-
-                                <input
-                                    ref={colorInputRef}
-                                    type="color"
-                                    onChange={(e) => applyColor(e.target.value)}
-                                    className="hidden"
-                                />
-
-                                <div className="flex gap-1">
-                                    {colors.map((color) => (
-                                        <Button
-                                            key={color}
-                                            type="button"
-                                            size={"icon"}
-                                            onClick={() => applyColor(color)}
-                                            className="rounded-lg border-2 hover:scale-110 transition-transform"
-                                            style={{ backgroundColor: color }}
-                                            title={`Cor: ${color}`}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <input type="hidden" {...register("content")} />
-                        <div
-                            ref={editorRef}
-                            contentEditable
-                            onInput={(e) => {
-                                const html = e.currentTarget.innerHTML
-                                setValue("content", html, { shouldValidate: true })
-                            }}
-                            onKeyDown={handleKeyDown}
-                            className="w-full min-h-40 p-4 border-2 border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-                            style={{ wordBreak: "break-word" }}
-                            suppressContentEditableWarning
+                <div className="w-full flex gap-1">
+                    {colors.map((color) => (
+                        <Button
+                            key={color}
+                            type="button"
+                            onClick={() => applyColor(color)}
+                            className="size-8 rounded hover:scale-90 transition-transform border"
+                            style={{ backgroundColor: color }}
+                            title={`Cor: ${color}`}
                         />
-                        {
-                            errors.content &&
-                            <SpanErrorMessage
-                                message={errors.content.message}
-                            />
-                        }
-                    </div>
-                </form>
-            </CardContent>
-            <CardFooter className="justify-end">
-                <Button
-                    form="form-add-comments"
+                    ))}
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <div
+                    data-placeholder="Escreva um comentário..."
+                    ref={editorRef}
+                    contentEditable
+                    onInput={handleEditorInput}
+                    onKeyDown={handleKeyDown}
+                    className={cn(
+                        "bg-popover min-h-40 max-h-60 px-4 py-3 border-2 border-border rounded-lg text-foreground overflow-y-auto",
+                        "focus:outline-none focus:ring-2 focus:ring-primary",
+                    )}
+                    style={{
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                    }}
+                />
+                {/* Campo hidden para react-hook-form */}
+                <input
+                    type="hidden"
+                    {...register("content")}
+                />
+                {errors.content &&
+                    <SpanErrorMessage message={errors.content.message} />
+                }
+            </div>
+            <AlertDialogFooter>
+                <AlertDialogCancel>
+                    Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isPending || isSuccess}
+                    variant="default"
                     className="gap-2"
                 >
-                    <Send className="w-4 h-4" />
-                    {isSubmitting ? "Enviando..." : "Enviar Comentário"}
-                </Button>
-            </CardFooter>
-        </Card>
+                    <Send className="size-4" />
+                    {
+                        isPending ? "Enviando..." : "Enviar Comentário"
+                    }
+                </AlertDialogAction>
+            </AlertDialogFooter>
+
+            <style jsx>
+                {`[contenteditable][data-placeholder]:empty:before 
+            {
+                content: attr(data-placeholder);
+                color: hsl(var(--muted-foreground));
+                pointer-events: none;
+            }`}
+            </style>
+        </form>
     )
 }

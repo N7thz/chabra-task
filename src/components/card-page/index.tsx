@@ -1,6 +1,6 @@
 "use client"
 
-import { findCardById } from "@/actions/card/find-card-by-id"
+import { findCardById } from "@/actions/cards/find-card-by-id"
 import { SelectOwners } from "@/components/forms/form-create-card/select-owners"
 import {
     SelectPriority
@@ -35,12 +35,11 @@ import {
     Ellipsis,
     MessageSquareText
 } from "lucide-react"
-import { useState } from "react"
-import { Input } from "../ui/input"
 import { useSidebar } from "../ui/sidebar"
 import { ActivitiesContainer } from "./activities"
 import { ChangeColorCardDialog } from "./change-color-card-dialog"
 import { CommentsContainer } from "./comments"
+import { CommentContainerDialog } from "./comments-dialog"
 
 export const CardPage = ({ id, space }: { id: string, space: string }) => {
 
@@ -95,7 +94,7 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
             "pt-0 transition-all overflow-hidden",
             sidebarOpen ? "w-5/6" : "w-3/5"
         )}>
-            <ChangeColorCardDialog 
+            <ChangeColorCardDialog
                 id={id}
                 color={color}
             />
@@ -186,15 +185,11 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="flex-1 px-3 flex flex-col gap-2">
-                                <ActivitiesContainer
-                                    activities={activities}
-                                />
-                                <CommentsContainer
-                                    comments={comments}
-                                />
+                                <ActivitiesContainer activities={activities} />
+                                <CommentsContainer comments={comments} />
                             </CardContent>
                             <CardFooter className="px-3">
-                                <Input placeholder="escreva um comentário..." />
+                                <CommentContainerDialog cardId={id} />
                             </CardFooter>
                         </Card>
                     </ResizablePanel>

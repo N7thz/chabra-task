@@ -1,6 +1,6 @@
 "use client"
 
-import { createCard, FormDataCreateCard } from "@/actions/card/create-card"
+import { createCard, FormDataCreateCard } from "@/actions/cards/create-card"
 import { SpanErrorMessage } from "@/components/span-error"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
