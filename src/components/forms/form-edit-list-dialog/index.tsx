@@ -57,6 +57,8 @@ export const FormEditListDialog = ({
         }
     })
 
+    console.log(id)
+
     const {
         data: list
     } = useQuery({
@@ -73,7 +75,7 @@ export const FormEditListDialog = ({
     })
 
     function onSubmit({ name }: EditListProps) {
-        mutate({  id,  name })
+        mutate({ id, name })
     }
 
     return (

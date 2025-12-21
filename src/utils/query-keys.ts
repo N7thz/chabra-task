@@ -34,4 +34,11 @@ export const queryKeys = {
         find: (id: string) => ["find-user-by-id", id],
         findMany: () => ["find-many-users"],
     },
+    notification: {
+        create: () => ["create-notification"],
+        update: () => ["update-notification"],
+        delete: () => ["delete-notification"],
+        find: (id: string) => ["find-notification-by-id", id],
+        findMany: () => ["find-many-notifications"],
+    },
 };

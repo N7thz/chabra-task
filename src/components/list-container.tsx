@@ -103,7 +103,7 @@ export const ListContainer = ({ space }: { space: string }) => {
                     ? (
                         <p>Você ainda não possui listas criadas.</p>
                     )
-                    : lists.map(({ id, name, color, cards }) => (
+                    : lists.map(({ id, name, color, cards = [] }) => (
                         <Card
                             key={id}
                             className="w-100 h-min pt-0 overflow-hidden"
@@ -120,13 +120,18 @@ export const ListContainer = ({ space }: { space: string }) => {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {
-                                    cards.map(card => (
-                                        <CardContainer
-                                            key={card.id}
-                                            card={card}
-                                            space={space}
-                                        />
-                                    ))
+                                    cards.length === 0
+                                        ? (
+                                            <CardDescription>
+                                                Sem cartões nesta lista.
+                                            </CardDescription>
+                                        ) : cards.map(card => (
+                                            <CardContainer
+                                                key={card.id}
+                                                card={card}
+                                                space={space}
+                                            />
+                                        ))
                                 }
                             </CardContent>
                             <CardFooter>

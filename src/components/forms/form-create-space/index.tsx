@@ -13,8 +13,9 @@ import { cn } from "@/lib/utils"
 import {
     FormCreateSpaceProps, createSpaceSchema
 } from "@/schemas/create-space-schema"
+import { queryKeys } from "@/utils/query-keys"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Space } from "@prisma/client"
+import { Space, Notification } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
@@ -26,19 +27,35 @@ export const FormCreateSpace = () => {
     } = useMutation({
         mutationKey: ["create-Space"],
         mutationFn: (name: string) => createSpace(name),
-        onSuccess: ({ name, ...rest }) => {
+        onSuccess: ({
+            spaceCreated: {
+                name,
+                ...rest
+            },
+            notification
+        }) => {
 
             toast({
                 title: `Região ${name} criada com sucesso!`,
                 description: "Você já pode usar essa região para organizar suas listas de tarefas."
             })
 
-            queryClient.setQueryData<Space[]>(["find-many-space"],
+            queryClient.setQueryData<Space[]>(queryKeys.space.findMany(),
                 (oldData) => {
 
                     if (!oldData) return [{ name, ...rest }]
 
                     return [...oldData, { name, ...rest }]
+                }
+            )
+
+            queryClient.setQueryData<Notification[]>(
+                queryKeys.notification.findMany(),
+                (oldData) => {
+
+                    if (!oldData) return [notification]
+
+                    return [...oldData, notification]
                 }
             )
         },

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Configurações | Chabra Tasks",
 }
 
-export default async function Home() {
+export default async function Settings() {
     return (
         <main className={cn(
             "h-dvh w-full flex justify-center items-center p-8 gap-4",

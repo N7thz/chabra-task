@@ -67,7 +67,6 @@ export const DropdownMenuEditDialog = ({
             </DropdownMenu>
             <FormEditListDialog
                 id={id}
-                name={name}
                 open={showEditDialog}
                 onOpenChange={setShowEditDialog}
             />

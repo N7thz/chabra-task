@@ -14,8 +14,9 @@ import { Spinner } from "@/components/ui/spinner"
 import {
     FormCreateListProps, createListSchema
 } from "@/schemas/create-list-schema"
+import { queryKeys } from "@/utils/query-keys"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { List } from "@prisma/client"
+import { List, Notification } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 import { usePathname } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -41,19 +42,32 @@ export const FormCreateList = () => {
     } = useMutation({
         mutationKey: ["create-list"],
         mutationFn: (name: string) => createList({ name, space }),
-        onSuccess: ({ name, ...rest }) => {
+        onSuccess: ({
+            list: { name, ...rest },
+            notification
+        }) => {
 
             toast({
                 title: "Lista criada com sucesso!",
                 description: `A lista ${name} foi criada com sucesso.`,
             })
 
-            queryClient.setQueryData<List[]>(["find-many-lists"], (oldData) => {
+            queryClient.setQueryData<List[]>(queryKeys.list.findMany(), (oldData) => {
 
                 if (!oldData) return [{ name, ...rest }]
 
                 return [...oldData, { name, ...rest }]
             })
+
+            queryClient.setQueryData<Notification[]>(
+                queryKeys.notification.findMany(),
+                (oldData) => {
+
+                    if (!oldData) return [notification]
+
+                    return [...oldData, notification]
+                }
+            )
         },
         onError: (error) => {
 

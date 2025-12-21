@@ -43,7 +43,7 @@ export default async function Home({
 							Adicionar lista
 						</Button>
 					</AlertDialogTrigger>
-					<AlertDialogContent>
+					<AlertDialogContent className="w-1/2">
 						<AlertDialogHeader>
 							<AlertDialogTitle>
 								Adicionar lista

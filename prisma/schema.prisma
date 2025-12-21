@@ -9,10 +9,11 @@ datasource db {
 model Notification {
   id           String   @id @default(uuid())
   message      String
-  createdAt    DateTime @map("created_at")
-  read         Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
   description  String?
   recipientsId String[]
+  recipientsRead String[]
+  recipientsDeleted String[]
 
   @@map("notifications")
 }

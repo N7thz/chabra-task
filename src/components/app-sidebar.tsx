@@ -15,52 +15,25 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar"
+import { auth } from "@/lib/auth"
 import {
     Bell,
     Calendar,
     ChevronUp,
+    Cog,
     Home,
     LucideIcon,
     Settings,
-    UserCircle,
-    LogOut,
-    Cog
+    UserCircle
 } from "lucide-react"
-import Link from "next/link"
-import { SidebarTrigger } from "./sidebar-trigger"
-import { SpaceListSidebar } from "./space-list-sidebar"
-import { auth } from "@/lib/auth"
+import { Route } from "next"
 import { headers } from "next/headers"
+import Link from "next/link"
+import { NotificationsContainer } from "./notifications"
+import { SidebarTrigger } from "./sidebar-trigger"
 import { SignOutButton } from "./sign-out-button"
-
-type SidebarItem = {
-    title: string
-    url: any
-    Icon: LucideIcon
-}
-
-const items: SidebarItem[] = [
-    {
-        title: "Home",
-        url: "/home",
-        Icon: Home,
-    },
-    {
-        title: "Notificações",
-        url: "/notifications",
-        Icon: Bell,
-    },
-    {
-        title: "Agenda",
-        url: "/calendar",
-        Icon: Calendar,
-    },
-    {
-        title: "Opções",
-        url: "/settings",
-        Icon: Settings,
-    },
-]
+import { SpaceListSidebar } from "./space-list-sidebar"
+import { se } from "date-fns/locale"
 
 export const AppSidebar = async () => {
 
@@ -81,16 +54,42 @@ export const AppSidebar = async () => {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarTrigger />
-                            {items.map(({ Icon, title, url }) => (
-                                <SidebarMenuItem key={title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={url}>
-                                            <Icon />
-                                            <span>{title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {
+                                session && session.user &&
+                                <NotificationsContainer
+                                    recipientId={session.user.id}
+                                />
+                            }
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href={"/home"}>
+                                        <Home />
+                                        <span>
+                                            Home
+                                        </span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href={"#"}>
+                                        <Calendar />
+                                        <span>
+                                            Agenda
+                                        </span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href={"/settings"}>
+                                        <Settings />
+                                        <span>
+                                            Opções
+                                        </span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
@@ -129,11 +128,11 @@ export const AppSidebar = async () => {
                                     </span>
                                 </DropdownMenuItem>
                                 <SignOutButton />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarFooter>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
         </Sidebar >
     )
 }
