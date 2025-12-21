@@ -95,7 +95,7 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
 
     return (
         <Card className={cn(
-            "pt-0 transition-all overflow-hidden",
+            "pt-0 transition-all overflow-hidden max-h-11/12",
             sidebarOpen ? "w-5/6" : "w-10/12"
         )}>
             <ChangeColorCardDialog

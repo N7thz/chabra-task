@@ -32,9 +32,6 @@ export const CommentsContainer = ({
     onOpenChange,
     comments
 }: CommentsContainerProps) => {
-
-    console.log(comments)
-
     return (
         <Collapsible
             open={open}
@@ -56,7 +53,7 @@ export const CommentsContainer = ({
                     )} />
                 </Button>
             </CollapsibleTrigger>
-            <ScrollArea className="max-h-50">
+            <ScrollArea className="max-h-30">
                 <ScrollBar />
                 <CollapsibleContent className="flex flex-col gap-3">
                     {

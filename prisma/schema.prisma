@@ -6,6 +6,17 @@ datasource db {
   provider = "postgresql"
 }
 
+model Notification {
+  id           String   @id @default(uuid())
+  message      String
+  createdAt    DateTime @map("created_at")
+  read         Boolean  @default(false)
+  description  String?
+  recipientsId String[]
+
+  @@map("notifications")
+}
+
 model User {
   id            String     @id @default(uuid())
   email         String     @unique
@@ -13,6 +24,7 @@ model User {
   emailVerified Boolean    @default(false)
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @default(now()) @updatedAt @map("updated_at")
+  isActive      Boolean    @default(true)
   password      String?
   image         String?
   banned        Boolean?   @default(false)

@@ -214,14 +214,11 @@ export function RichTextCommentBox({
                 }
             </div>
             <AlertDialogFooter>
-                <AlertDialogCancel>
-                    Cancelar
-                </AlertDialogCancel>
                 <AlertDialogAction
                     type="submit"
                     disabled={isPending || isSuccess}
                     variant="default"
-                    className="gap-2"
+                    className="gap-2 w-full"
                 >
                     <Send className="size-4" />
                     {

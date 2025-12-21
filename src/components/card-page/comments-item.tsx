@@ -14,6 +14,7 @@ import { ptBR } from "date-fns/locale"
 import { Ellipsis } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 import { getInitials } from "@/functions/get-initials"
+import { stringToHTML } from "@/functions/string-to-HTML"
 
 export const CommentsItem = ({
     comment: { message, createdAt }
@@ -28,6 +29,10 @@ export const CommentsItem = ({
     const { user: { name, image } } = data
 
     const initials = getInitials(name)
+
+    const message_element = stringToHTML(message)
+
+    const date = formatDate(createdAt, "dd 'de' MMM 'de' yyyy 'às' HH:mm", { locale: ptBR })
 
     return (
         <Card className="bg-transparent py-4">
@@ -47,7 +52,7 @@ export const CommentsItem = ({
                     </CardTitle>
                 </div>
                 <CardDescription className="text-primary">
-                    {message}
+                    {message_element}
                 </CardDescription>
                 <CardAction>
                     <Button variant="ghost">
@@ -56,7 +61,7 @@ export const CommentsItem = ({
                 </CardAction>
             </CardHeader>
             <CardFooter className="text-xs justify-end text-muted-foreground">
-                {formatDate(createdAt, "dd 'de' MMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
+                {date}
             </CardFooter>
         </Card>
     )
