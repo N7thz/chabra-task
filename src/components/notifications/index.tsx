@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { queryKeys } from "@/utils/query-keys"
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
-import { Bell } from "lucide-react"
+import { Bell, RotateCw } from "lucide-react"
 
 export const NotificationsContainer = ({
 	recipientId
@@ -30,19 +31,29 @@ export const NotificationsContainer = ({
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: ["find-many-notifications", recipientId],
-		// queryKey: queryKeys.notification.findMany(),
+		queryKey: queryKeys.notification.findMany(recipientId),
 		queryFn: () => findNotificationsyUserId(recipientId),
 	})
 
-	console.log(error, notifications)
-
 	if (error) {
-		toast({
-			title: "Erro ao carregar as notificações",
-			description: error.message,
-			variant: "destructive",
-		})
+		return (
+			toast({
+				title: error.name,
+				description: error.message,
+				variant: "destructive",
+				duration: Infinity,
+				closeButton: true,
+				action: {
+					label: (
+						<span className="flex items-center gap-2 group">
+							Tentar novamente
+							<RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+						</span>
+					),
+					onClick: () => refetch()
+				}
+			})
+		)
 	}
 
 	if (isLoading || !notifications) {

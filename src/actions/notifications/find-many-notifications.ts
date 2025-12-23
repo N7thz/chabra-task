@@ -20,7 +20,5 @@ export async function findNotificationsyUserId(
 		...props
 	})
 
-	console.log(notifications)
-
 	return notifications
 }

@@ -57,8 +57,6 @@ export const FormChangeColorCardDialog = ({
 
     const currentColor = watch("color")
 
-    console.log(currentColor)
-
     function onSubmit({ color }: ChangeColorListProps) {
         mutate(color)
     }

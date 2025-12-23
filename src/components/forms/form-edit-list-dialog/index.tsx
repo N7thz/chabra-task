@@ -20,6 +20,7 @@ import { EditListProps, editListSchema } from "@/schemas/edit-list-schema"
 import { queryKeys } from "@/utils/query-keys"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "@tanstack/react-query"
+import { RotateCw } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 export const FormEditListDialog = ({
@@ -57,10 +58,10 @@ export const FormEditListDialog = ({
         }
     })
 
-    console.log(id)
-
     const {
-        data: list
+        data: list,
+        error,
+        refetch
     } = useQuery({
         queryKey: queryKeys.list.find(id),
         queryFn: () => findListById(id)
@@ -76,6 +77,27 @@ export const FormEditListDialog = ({
 
     function onSubmit({ name }: EditListProps) {
         mutate({ id, name })
+    }
+
+    if (error) {
+        return (
+            toast({
+                title: error.name,
+                description: error.message,
+                variant: "destructive",
+                duration: Infinity,
+                closeButton: true,
+                action: {
+                    label: (
+                        <span className="flex items-center gap-2 group">
+                            Tentar novamente
+                            <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+                        </span>
+                    ),
+                    onClick: () => refetch()
+                }
+            })
+        )
     }
 
     return (

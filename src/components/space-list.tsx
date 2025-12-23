@@ -13,23 +13,41 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 import { queryKeys } from "@/utils/query-keys"
+import { toast } from "./toast"
+import { RotateCw } from "lucide-react"
 
 export const SpaceList = () => {
 
     const {
         data: spaces,
         isLoading,
-        error
+        error,
+        refetch
     } = useQuery({
         queryKey: queryKeys.space.findMany(),
         queryFn: () => findManySpace()
     })
 
-    if (error) return (
-        <div>
-            error
-        </div>
-    )
+    if (error) {
+        return (
+            toast({
+                title: error.name,
+                description: error.message,
+                variant: "destructive",
+                duration: Infinity,
+                closeButton: true,
+                action: {
+                    label: (
+                        <span className="flex items-center gap-2 group">
+                            Tentar novamente
+                            <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+                        </span>
+                    ),
+                    onClick: () => refetch()
+                }
+            })
+        )
+    }
 
     if (isLoading || !spaces) return (
         <Card className="w-2/3 bg-background">

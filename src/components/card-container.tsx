@@ -16,6 +16,12 @@ import { Card as CardContainerProps } from "@/types"
 import { Task } from "@prisma/client"
 import { useRouter } from "next/navigation"
 
+const images: string[] = [
+    "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=96&h=96&dpr=2&q=80",
+    "https://images.unsplash.com/photo-1628157588553-5eeea00af15c?w=96&h=96&dpr=2&q=80",
+    "https://images.unsplash.com/photo-1655874819398-c6dfbec68ac7?w=96&h=96&dpr=2&q=80"
+]
+
 export const CardContainer = ({
     space,
     card: {
@@ -70,7 +76,7 @@ export const CardContainer = ({
                         <Clock className="size-3" />
                         {formatDate(term, "dd 'de' MMM", { locale: ptBR })}
                     </div>
-                    <AvatarGroup />
+                    <AvatarGroup images={images} />
                 </div>
                 <div className="space-y-2.5">
                     <div className="text-sm">

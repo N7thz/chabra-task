@@ -104,8 +104,6 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
         // console.log(formData)
     }
 
-    console.log(errors)
-
     const ownersSelected = watch("ownersId")
     const term = watch("term")
 

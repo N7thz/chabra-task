@@ -39,6 +39,6 @@ export const queryKeys = {
         update: () => ["update-notification"],
         delete: () => ["delete-notification"],
         find: (id: string) => ["find-notification-by-id", id],
-        findMany: () => ["find-many-notifications"],
+        findMany: (id?: string) => ["find-many-notifications", id],
     },
 };

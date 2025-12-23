@@ -33,7 +33,8 @@ import { ptBR } from "date-fns/locale"
 import {
     Clock,
     Ellipsis,
-    MessageSquareText
+    MessageSquareText,
+    RotateCw
 } from "lucide-react"
 import { useSidebar } from "../ui/sidebar"
 import { ActivitiesContainer } from "./activities"
@@ -42,6 +43,7 @@ import { CommentsContainer } from "./comments-container"
 import { CommentContainerDialog } from "./comments-dialog"
 import { queryKeys } from "@/utils/query-keys"
 import { useState } from "react"
+import { toast } from "../toast"
 
 export const CardPage = ({ id, space }: { id: string, space: string }) => {
 
@@ -49,10 +51,36 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
 
     const { open: sidebarOpen } = useSidebar()
 
-    const { data: card, isLoading } = useQuery<CardComplete>({
+    const {
+        data: card,
+        isLoading,
+        error,
+        refetch
+    } = useQuery<CardComplete>({
         queryKey: queryKeys.card.find(id),
         queryFn: () => findCardById(id)
     })
+
+    if (error) {
+        return (
+            toast({
+                title: error.name,
+                description: error.message,
+                variant: "destructive",
+                duration: Infinity,
+                closeButton: true,
+                action: {
+                    label: (
+                        <span className="flex items-center gap-2 group">
+                            Tentar novamente
+                            <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+                        </span>
+                    ),
+                    onClick: () => refetch()
+                }
+            })
+        )
+    }
 
     if (!card || isLoading) {
         return (
@@ -90,8 +118,6 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
         comments,
         tasks
     } = card
-
-    console.log(card.activities)
 
     return (
         <Card className={cn(

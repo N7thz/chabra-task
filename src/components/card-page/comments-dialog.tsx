@@ -19,7 +19,8 @@ import { CommentsItem } from "./comments-item"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Button } from "../ui/button"
-import { X } from "lucide-react"
+import { RotateCw, X } from "lucide-react"
+import { toast } from "../toast"
 
 type CommentContainerDialogProps = {
     onOpenCommentsCollapse: (open: boolean) => void
@@ -36,11 +37,33 @@ export const CommentContainerDialog = ({
     const {
         data: comments,
         isLoading,
-        error
+        error,
+        refetch
     } = useQuery({
         queryKey: queryKeys.comment.findMany(),
         queryFn: () => findManyComments()
     })
+
+    if (error) {
+        return (
+            toast({
+                title: error.name,
+                description: error.message,
+                variant: "destructive",
+                duration: Infinity,
+                closeButton: true,
+                action: {
+                    label: (
+                        <span className="flex items-center gap-2 group">
+                            Tentar novamente
+                            <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+                        </span>
+                    ),
+                    onClick: () => refetch()
+                }
+            })
+        )
+    }
 
     if (isLoading || !comments) return <span>
         Carregando...

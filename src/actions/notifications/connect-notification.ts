@@ -23,8 +23,6 @@ export async function connectNotification({
 
         const recipient = await findUserById(recipientId)
 
-        console.log(recipient)
-
         if (!recipient) {
             throw new Error("O usuário destinatário não foi encontrado.")
         }

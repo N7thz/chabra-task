@@ -5,8 +5,9 @@ import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/
 import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 import Link from "next/link"
-import { Blend } from "lucide-react"
+import { Blend, RotateCw } from "lucide-react"
 import { queryKeys } from "@/utils/query-keys"
+import { toast } from "./toast"
 
 export const SpaceListSidebar = () => {
 
@@ -15,17 +16,33 @@ export const SpaceListSidebar = () => {
     const {
         data: spaces,
         isLoading,
-        error
+        error,
+        refetch
     } = useQuery({
         queryKey: queryKeys.space.findMany(),
         queryFn: () => findManySpace()
     })
 
-    if (error) return (
-        <div>
-            error
-        </div>
-    )
+    if (error) {
+        return (
+            toast({
+                title: error.name,
+                description: error.message,
+                variant: "destructive",
+                duration: Infinity,
+                closeButton: true,
+                action: {
+                    label: (
+                        <span className="flex items-center gap-2 group">
+                            Tentar novamente
+                            <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+                        </span>
+                    ),
+                    onClick: () => refetch()
+                }
+            })
+        )
+    }
 
     if (isLoading || !spaces) return (
         <>

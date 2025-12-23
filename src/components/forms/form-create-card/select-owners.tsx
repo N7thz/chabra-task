@@ -4,8 +4,9 @@ import { CreateCardProps } from '@/schemas/create-card-schema'
 import { useQuery } from '@tanstack/react-query'
 import { findManyUsers } from '@/actions/users/find-many-users'
 import { Button } from '@/components/ui/button'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, RotateCw } from 'lucide-react'
 import { queryKeys } from '@/utils/query-keys'
+import { toast } from '@/components/toast'
 
 type SelectOwnersProps = {
   selected: string[],
@@ -19,6 +20,8 @@ export const SelectOwners = ({
   const {
     data,
     isLoading,
+    error,
+    refetch
   } = useQuery({
     queryKey: queryKeys.user.findMany(),
     queryFn: () => findManyUsers({
@@ -28,6 +31,27 @@ export const SelectOwners = ({
       }
     })
   })
+
+  if (error) {
+    return (
+      toast({
+        title: error.name,
+        description: error.message,
+        variant: "destructive",
+        duration: Infinity,
+        closeButton: true,
+        action: {
+          label: (
+            <span className="flex items-center gap-2 group">
+              Tentar novamente
+              <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+            </span>
+          ),
+          onClick: () => refetch()
+        }
+      })
+    )
+  }
 
   if (!data || isLoading) {
     return (

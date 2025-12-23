@@ -11,10 +11,11 @@ export const toast = ({
 	title,
 	description,
 	variant = "success",
+	duration = 2000,
 	...props
 }: ToastProps) =>
 	toastPrimitive(title, {
-		duration: 2000,
+		duration,
 		description: (
 			<span className="text-muted-foreground">
 				{description}
