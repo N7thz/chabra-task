@@ -42,12 +42,12 @@ export const CardContainer = ({
 
     function getCompletedPercentage(tasks: Task[]) {
 
-        if (tasks.length === 0) return 0;
+        if (tasks.length === 0) return 0
 
-        const completedCount = tasks.filter(t => t.completed).length;
+        const completedCount = tasks.filter(t => t.completed).length
 
-        return (completedCount / tasks.length) * 100;
-    };
+        return (completedCount / tasks.length) * 100
+    }
 
     return (
         <Card

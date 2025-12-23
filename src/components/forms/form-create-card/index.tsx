@@ -168,7 +168,7 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
                                 </span>
                                 <SelectTerm
                                     date={term}
-                                    setDate={(date) => setValue("term", date)}
+                                    onDateChange={(date) => setValue("term", date)}
                                 />
                             </Label>
                             <Label className="flex flex-col gap-3">

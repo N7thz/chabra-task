@@ -8,8 +8,8 @@ import { ChevronDownIcon } from "lucide-react"
 import { useState } from "react"
 
 export const SelectTerm = ({
-    date, setDate
-}: { date: Date, setDate: (date: Date) => void }) => {
+    date, onDateChange
+}: { date: Date | undefined, onDateChange: (date: Date) => void }) => {
 
     const [open, setOpen] = useState(false)
 
@@ -42,7 +42,7 @@ export const SelectTerm = ({
                     captionLayout="dropdown"
                     onSelect={(date) => {
 
-                        if (date) setDate(date)
+                        if (date) onDateChange(date)
 
                         setOpen(false)
                     }}
