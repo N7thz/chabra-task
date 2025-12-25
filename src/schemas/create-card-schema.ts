@@ -39,10 +39,7 @@ export const createCardSchema = z.object({
             "COMPLETED"
         ]),
     term: z
-        .date()
-        .refine((date) => date > new Date(), {
-            message: "O prazo deve estar no futuro."
-        }),
+        .date(),
     color: z
         .string()
         .nullable(),

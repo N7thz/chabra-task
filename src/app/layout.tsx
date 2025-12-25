@@ -8,6 +8,7 @@ import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
 import { cookies } from "next/headers"
 import "./globals.css"
+import { LoadingProvider } from "@/providers/loading-provider"
 
 const jetBrains = JetBrains_Mono({
 	variable: "--font-jetbrains-mono",
@@ -29,10 +30,15 @@ export default async function RootLayout({
 		<html lang="pt-BR" suppressHydrationWarning>
 			<head />
 			<body className={cn(jetBrains.className, "antialiased")}>
-				<ThemeProvider attribute="class" defaultTheme="system">
-					<Background>
-						{children}
-					</Background>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+				>
+					<LoadingProvider>
+						<Background>
+							{children}
+						</Background>
+					</LoadingProvider>
 				</ThemeProvider>
 				<Toaster />
 			</body>

@@ -29,8 +29,29 @@ import { Clock, Ellipsis, RotateCw } from "lucide-react"
 import { CardCommentsActivity } from "./card-comments-activity"
 import { CardInfoTask } from "./card-info-task"
 import { ChangeColorCardDialog } from "./change-color-card-dialog"
+import { useLoading } from "@/providers/loading-provider"
+import { Spinner } from "../ui/spinner"
+import { AvatarGroup } from "@/components/avatar-group"
+import { SelectOwners } from "@/components/forms/form-create-card/select-owners"
+import {
+    SelectPriority
+} from "@/components/forms/form-create-card/select-priority"
+import { SelectStatus } from "@/components/forms/form-create-card/select-status"
+import { SelectTerm } from "@/components/forms/form-create-card/select-term"
+import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
+import { CreateCardProps, createCardSchema } from "@/schemas/create-card-schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Card as CardProps, Priority, Status, Task } from "@prisma/client"
+import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { CardTask } from "@/components/card-page/card-task"
+import { FormUpdateCard } from "../forms/form-update-card"
 
 export const CardPage = ({ id, space }: { id: string, space: string }) => {
+
+    const { loading } = useLoading()
 
     const { open: sidebarOpen } = useSidebar()
 
@@ -93,7 +114,6 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
         createdAt,
         activities,
         comments,
-        tasks
     } = card
 
     return (
@@ -105,56 +125,22 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
                 id={id}
                 color={color}
             />
-            <CardHeader>
-                <CardAction>
-                    <Button variant={"ghost"}>
-                        <Ellipsis />
-                    </Button>
-                </CardAction>
-                <CardTitle>
-                    {title}
-                </CardTitle>
-                <CardDescription className="flex gap-2 items-center text-primary">
-                    <Clock className="size-3.5" />
-                    {
-                        formatDate(
-                            createdAt,
-                            "dd 'de' MMM 'de' yyyy 'às' HH:mm",
-                            { locale: ptBR }
-                        )
-                    }
-                </CardDescription>
-                <CardDescription className="text-primary">
-                    {cnpj}
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="flex space-x-4">
-                <ResizablePanelGroup
-                    direction="horizontal"
-                    className="size-full rounded-lg border"
-                >
-                    <ResizablePanel
-                        defaultSize={70}
-                        minSize={30}
-                        className="size-full"
-                    >
-                        <CardInfoTask card={card} />
-                    </ResizablePanel>
-                    <ResizableHandle withHandle />
-                    <ResizablePanel defaultSize={30}>
-                        <CardCommentsActivity
-                            id={id}
-                            activities={activities}
-                            comments={comments}
-                        />
-                    </ResizablePanel>
-                </ResizablePanelGroup>
-            </CardContent>
+            <FormUpdateCard card={card} />
+            
             <CardFooter className="justify-end">
-                <Button className="w-1/2">
-                    Salvar alterações
+                <Button
+                    type="submit"
+                    form="form-update-card"
+                    className="w-1/2"
+                    disabled={isLoading}
+                >
+                    {
+                        isLoading
+                            ? <Spinner />
+                            : "Salvar alterações"
+                    }
                 </Button>
             </CardFooter>
-        </Card >
+        </Card>
     )
 }

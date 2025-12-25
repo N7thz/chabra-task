@@ -1,9 +1,21 @@
+import { findCardById } from "@/actions/cards/find-card-by-id"
 import { CardPage } from "@/components/card-page"
 import { cn } from "@/lib/utils"
 import { Metadata } from "next"
 
-export const metadata: Metadata = {
-    title: "Criar cartão | Chabra Tasks",
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ space: string, id: string }>
+}): Promise<Metadata> {
+
+    const { id } = await params
+
+    const { title } = await findCardById(id)
+
+    return {
+        title: `Chabra Tasks | ${title}` 
+    }
 }
 
 export default async function CreateCard({

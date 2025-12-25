@@ -13,18 +13,18 @@ import { cn } from "@/lib/utils"
 import {
     Image
 } from "lucide-react"
-import { 
-    FormChangeColorCardDialog 
+import {
+    FormChangeColorCardDialog
 } from "../forms/form-change-color-card-dialog"
 import { useState } from "react"
 
-type ChangeColorCardDialogProps = { 
-    id: string 
+type ChangeColorCardDialogProps = {
+    id: string
     color: string | null
 }
 
-export const ChangeColorCardDialog = ({ 
-    id, color 
+export const ChangeColorCardDialog = ({
+    id, color
 }: ChangeColorCardDialogProps) => {
 
     const [open, setOpen] = useState(false)
@@ -50,7 +50,9 @@ export const ChangeColorCardDialog = ({
                             <Image />
                         </div>
                         <span>
-                            Adicionar capa
+                            {
+                                color ? "Alterar capa" : "Adicionar capa"
+                            }
                         </span>
                     </div>
                 </div>
@@ -71,6 +73,7 @@ export const ChangeColorCardDialog = ({
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button
+                            type="button"
                             variant="destructive"
                             className="w-1/2"
                         >

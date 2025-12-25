@@ -35,7 +35,10 @@ export const SelectStatus = ({
     onValueChange: (value: string) => void
 }) => {
     return (
-        <Select onValueChange={onValueChange}>
+        <Select
+            defaultValue={defaultValue}
+            onValueChange={onValueChange}
+        >
             <SelectTrigger className="w-full text-muted-foreground">
                 <SelectValue
                     defaultValue={defaultValue}
