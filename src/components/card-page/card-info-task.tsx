@@ -19,7 +19,6 @@ import { Progress } from "@/components/ui/progress"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
-import { useLoading } from "@/providers/loading-provider"
 import { CreateCardProps } from "@/schemas/create-card-schema"
 import { CardComplete } from "@/types"
 import { Priority, Status, Task } from "@prisma/client"
@@ -38,13 +37,11 @@ export const CardInfoTask = ({
     }
 }: { card: CardComplete }) => {
 
-    const { startLoading, stopLoading } = useLoading()
-
     const {
         control,
         setValue,
         register,
-        watch
+        watch,
     } = useFormContext<CreateCardProps>()
 
     const term = watch("term")
@@ -61,16 +58,19 @@ export const CardInfoTask = ({
     }
 
     const {
+        fields,
         append,
-        remove,
-        fields
+        remove
     } = useFieldArray({
         name: "tasks",
-        control
+        control,
     })
+
+    console.log(fields)
 
     function appendTasks() {
         append({
+            id: "",
             name: "",
             term: new Date(),
             completed: false,
@@ -148,10 +148,10 @@ export const CardInfoTask = ({
                     </div>
                     {
                         fields.length !== 0 &&
-                        fields.map((task, index) => (
+                        fields.map(({ id, ...rest }, index) => (
                             <CardTask
-                                key={task.id}
-                                task={task as Task}
+                                key={id}
+                                task={{ id, ...rest }}
                                 index={index}
                                 remove={remove}
                             />

@@ -1,11 +1,9 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { Card, CardComplete } from "@/types"
+import { CardComplete } from "@/types"
 
-export async function findCardById(
-    id: string,
-) {
+export async function findCardById(id: string) {
 
     const card = await prisma.card.findUnique({
         where: {

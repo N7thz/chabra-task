@@ -65,9 +65,9 @@ export const CommentContainerDialog = ({
         )
     }
 
-    if (isLoading || !comments) return <span>
-        Carregando...
-    </span>
+    if (isLoading || !comments) return (
+        <Input disabled placeholder="Digite um comentário..." />
+    )
 
     return (
         <AlertDialog

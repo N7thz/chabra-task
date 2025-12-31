@@ -15,6 +15,7 @@ import { Ellipsis } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 import { getInitials } from "@/functions/get-initials"
 import { stringToHTML } from "@/functions/string-to-HTML"
+import { Skeleton } from "../ui/skeleton"
 
 export const CommentsItem = ({
     comment: { message, createdAt }
@@ -23,7 +24,31 @@ export const CommentsItem = ({
     const { data } = authClient.useSession()
 
     if (!data) {
-        return
+        return (
+            <Card className="bg-transparent">
+                <CardHeader className="px-4">
+                    <div className="w-full flex gap-2 items-center py-0.5">
+                        <Avatar className="mb-2">
+                            <AvatarImage
+                                src={undefined}
+                                alt="@shadcn"
+                            />
+                            <AvatarFallback>
+                                <Ellipsis />
+                            </AvatarFallback>
+                        </Avatar>
+                        <CardTitle>
+                            <Skeleton />
+                        </CardTitle>
+                    </div>
+                    <CardAction>
+                        <Button disabled variant="ghost">
+                            <Ellipsis />
+                        </Button>
+                    </CardAction>
+                </CardHeader>
+            </Card>
+        )
     }
 
     const { user: { name, image } } = data

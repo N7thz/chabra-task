@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 export const createTaskSchema = z.object({
+    id: z.string(),
     name: z.string().min(1, "O nome da tarefa é obrigatório."),
     term: z.date(),
     completed: z.boolean(),

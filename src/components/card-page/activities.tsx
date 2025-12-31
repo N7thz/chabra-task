@@ -1,9 +1,16 @@
 import { Button } from "@/components/ui/button"
 import {
+    Card,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card"
+import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { Activity } from "@prisma/client"
 import { formatDate } from "date-fns"
@@ -11,14 +18,27 @@ import { ptBR } from "date-fns/locale"
 import { ChevronDown, History } from "lucide-react"
 import { useState } from "react"
 
-export const ActivitiesContainer = ({ activities }: { activities: Activity[] }) => {
+type ActivitiesContainerProps = {
+    activities: Activity[]
+    open: boolean
+    setOpen: (open: boolean) => void
+    toggleExclusive(target: "comments" | "activities"): void
+}
 
-    const [open, setOpen] = useState(false)
+export const ActivitiesContainer = ({
+    open,
+    setOpen,
+    activities,
+    toggleExclusive
+}: ActivitiesContainerProps) => {
 
     return (
         <Collapsible
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={(open) => {
+                toggleExclusive("activities")
+                setOpen(open)
+            }}
             className="flex flex-col gap-2"
         >
             <CollapsibleTrigger asChild>
@@ -36,22 +56,29 @@ export const ActivitiesContainer = ({ activities }: { activities: Activity[] }) 
                     )} />
                 </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-3">
-                {
-                    activities.map(({ id, message, createdAt }) => (
-                        <div
-                            key={id}
-                            className="rounded-md border py-2 px-2.5 text-sm flex flex-col gap-5"
-                        >
-                            <span className="truncate">
-                                {message}
-                            </span>
-                            <span className="truncate text-xs text-muted-foreground self-end">
-                                {formatDate(createdAt, "dd 'de' MMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
-                            </span>
-                        </div>
-                    ))
-                }
+            <CollapsibleContent>
+                <ScrollArea className="h-40">
+                    <ScrollBar />
+                    <div className="size-full space-y-3">
+                        {
+                            activities.map(({ id, message, createdAt }) => (
+                                <Card
+                                    key={id}
+                                    className="size-full bg-transparent p-2"
+                                >
+                                    <CardHeader className="px-2 gap-3">
+                                        <CardTitle className="text-sm">
+                                            {message}
+                                        </CardTitle>
+                                        <CardDescription className="truncate text-xs ml-auto">
+                                            {formatDate(createdAt, "dd 'de' MMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
+                                        </CardDescription>
+                                    </CardHeader>
+                                </Card>
+                            ))
+                        }
+                    </div>
+                </ScrollArea>
             </CollapsibleContent>
         </Collapsible>
     )

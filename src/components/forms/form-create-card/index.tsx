@@ -87,7 +87,7 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
         fields: tasks
     } = useFieldArray({
         name: "tasks",
-        control
+        control,
     })
 
     function appendTasks() {

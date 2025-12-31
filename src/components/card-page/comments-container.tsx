@@ -1,13 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardAction,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card"
 import {
     Collapsible,
     CollapsibleContent,
@@ -16,26 +7,29 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { Comments } from "@prisma/client"
-import { formatDate } from "date-fns"
-import { ptBR } from "date-fns/locale"
-import { ChevronDown, Ellipsis, MessageSquareText } from "lucide-react"
+import { ChevronDown, MessageSquareText } from "lucide-react"
 import { CommentsItem } from "./comments-item"
 
 type CommentsContainerProps = {
     open: boolean
     onOpenChange: (open: boolean) => void
     comments: Comments[]
+    toggleExclusive(target: "comments" | "activities"): void
 }
 
 export const CommentsContainer = ({
     open,
     onOpenChange,
-    comments
+    comments,
+    toggleExclusive
 }: CommentsContainerProps) => {
     return (
         <Collapsible
             open={open}
-            onOpenChange={onOpenChange}
+            onOpenChange={(open) => {
+                toggleExclusive("comments")
+                onOpenChange(open)
+            }}
             className="flex flex-col gap-2"
         >
             <CollapsibleTrigger asChild>

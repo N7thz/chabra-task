@@ -9,7 +9,7 @@ import { MessageSquareText } from "lucide-react"
 import { ActivitiesContainer } from "./activities"
 import { CommentsContainer } from "./comments-container"
 import { CommentContainerDialog } from "./comments-dialog"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Activity, Comments } from "@prisma/client"
 
 type CardCommentsActivityProps = {
@@ -24,7 +24,23 @@ export const CardCommentsActivity = ({
     activities
 }: CardCommentsActivityProps) => {
 
-    const [open, setOpen] = useState(false)
+    const [commentsContainerOpen, setCommentsContainerOpen] = useState(false)
+    const [activitiesContainer, setActivitiesContainer] = useState(false)
+
+    function toggleExclusive(
+        target: "comments" | "activities"
+    ) {
+        if (target === "comments") {
+            setCommentsContainerOpen(true)
+            setActivitiesContainer(false)
+        }
+
+        if (target === "activities") {
+            setActivitiesContainer(true)
+            setCommentsContainerOpen(false)
+        }
+    }
+
 
     return (
         <Card className="size-full border-none">
@@ -35,17 +51,23 @@ export const CardCommentsActivity = ({
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 px-3 flex flex-col gap-2">
-                <ActivitiesContainer activities={activities} />
+                <ActivitiesContainer
+                    open={activitiesContainer}
+                    setOpen={setActivitiesContainer}
+                    activities={activities}
+                    toggleExclusive={toggleExclusive}
+                />
                 <CommentsContainer
-                    open={open}
-                    onOpenChange={setOpen}
+                    open={commentsContainerOpen}
+                    onOpenChange={setCommentsContainerOpen}
                     comments={comments}
+                    toggleExclusive={toggleExclusive}
                 />
             </CardContent>
             <CardFooter className="px-3">
                 <CommentContainerDialog
                     cardId={id}
-                    onOpenCommentsCollapse={setOpen}
+                    onOpenCommentsCollapse={setCommentsContainerOpen}
                 />
             </CardFooter>
         </Card>
