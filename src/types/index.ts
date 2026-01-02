@@ -59,3 +59,20 @@ export type CardComplete = {
 	comments: Comments[]
 	tasks: Task[]
 }
+
+export interface CardTest {
+	id: string
+	title: string
+	description?: string
+	priority: "low" | "medium" | "high"
+}
+
+export interface Column {
+	id: string
+	title: string
+	cards: CardTest[]
+}
+
+export type ListWithCards = List & {
+	cards: Card[]
+}

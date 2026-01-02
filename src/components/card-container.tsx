@@ -29,7 +29,7 @@ export const CardContainer = ({
         title,
         description,
         term,
-        tasks
+        tasks = []
     }
 }: {
     card: CardContainerProps,

@@ -7,4 +7,4 @@ export async function createActivity(data: Prisma.ActivityCreateInput) {
     return await prisma.activity.create({
         data
     })
-}
+} 

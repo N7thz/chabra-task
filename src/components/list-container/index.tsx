@@ -17,14 +17,15 @@ import { queryKeys } from "@/utils/query-keys"
 import { useQuery } from "@tanstack/react-query"
 import { Clock, Ellipsis, RotateCw } from "lucide-react"
 import Link from "next/link"
-import { CardContainer } from "./card-container"
-import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
-import { toast } from "./toast"
+import { CardContainer } from "../card-container"
+import { DropdownMenuEditDialog } from "../dropdown-menu-edit-list"
+import { toast } from "../toast"
 import { useEffect } from "react"
-import { Progress } from "./ui/progress"
-import { AvatarGroup } from "./avatar-group"
+import { Progress } from "../ui/progress"
+import { AvatarGroup } from "../avatar-group"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { ListContainerItem } from "./list-container-item"
 
 export const ListContainer = ({ space }: { space: string }) => {
 
@@ -135,48 +136,12 @@ export const ListContainer = ({ space }: { space: string }) => {
                     ? (
                         <p>Você ainda não possui listas criadas.</p>
                     )
-                    : lists.map(({ id, name, color, cards = [] }) => (
-                        <Card
-                            key={id}
-                            className="w-100 h-min pt-0 overflow-hidden"
-                        >
-                            <CardHeader style={{
-                                background: color ?? undefined
-                            }}>
-                                <CardAction className="mt-5">
-                                    <DropdownMenuEditDialog id={id} name={name} />
-                                </CardAction>
-                                <CardTitle className="truncate mt-5">
-                                    {name}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                {
-                                    cards.length === 0
-                                        ? (
-                                            <CardDescription>
-                                                Sem cartões nesta lista.
-                                            </CardDescription>
-                                        ) : cards.map(card => (
-                                            <CardContainer
-                                                key={card.id}
-                                                card={card}
-                                                space={space}
-                                            />
-                                        ))
-                                }
-                            </CardContent>
-                            <CardFooter>
-                                <Button
-                                    asChild
-                                    className="w-full"
-                                >
-                                    <Link href={`/${space}/${id}/create-card`}>
-                                        Adicionar cartão
-                                    </Link>
-                                </Button>
-                            </CardFooter>
-                        </Card>
+                    : lists.map(list => (
+                        <ListContainerItem
+                            key={list.id}
+                            list={list}
+                            space={space}
+                        />
                     ))
             }
         </div>
