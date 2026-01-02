@@ -205,7 +205,9 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
         console.log("LISTA INICIAL:", fromListId)
         console.log("LISTA FINAL:", toList.id)
 
-        mutate({ cardId: activeId, listId: toList.id })
+        if (fromListId !== toList.id) {
+            mutate({ cardId: activeId, listId: toList.id })
+        }
 
         setFromListId(null)
     }
