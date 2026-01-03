@@ -39,8 +39,8 @@ export const DropdownMenuEditDialog = ({
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                    className="min-w-100"
-                    align="end"
+                    className="min-w-60"
+                    align="start"
                 >
                     <DropdownMenuLabel className="text-muted-foreground">
                         Opções
