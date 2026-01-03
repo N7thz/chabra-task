@@ -1,15 +1,16 @@
 "use client"
 
+import { cn } from "@/lib/utils"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { ReactNode } from "react"
+import { ComponentProps } from "react"
 
-interface Props {
+type Props = ComponentProps<"div"> & {
     id: string
-    children: ReactNode
 }
 
-export function SortableCard({ id, children }: Props) {
+export function SortableCard({ id, children, className, ...props }: Props) {
+
     const {
         setNodeRef,
         attributes,
@@ -31,7 +32,8 @@ export function SortableCard({ id, children }: Props) {
             style={style}
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing"
+            {...props}
+            className={cn("cursor-grab active:cursor-grabbing", className)}
         >
             {children}
         </div>

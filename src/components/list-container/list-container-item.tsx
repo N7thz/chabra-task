@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { ListWithCards } from "@/types"
 import Link from "next/link"
-import { CardContainer } from "../card-container"
+import { CardContainer } from "../drag-in-drop/card-container"
 import { DropdownMenuEditDialog } from "../dropdown-menu-edit-list"
 
 export const ListContainerItem = ({ list, space }: {

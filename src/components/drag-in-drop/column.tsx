@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useDroppable } from "@dnd-kit/core"
 import type { List } from "@/types"
-import { CardContainer } from "../card-container"
+import { CardContainer } from "./card-container"
 import { SortableCard } from "./sortable-card"
 import { cn } from "@/lib/utils"
 
@@ -31,15 +31,11 @@ export function Column({ list, space }: ColumnProps) {
             </CardHeader>
             <CardContent className="space-y-4">
                 {list.cards.map(card => (
-                    <SortableCard
+                    <CardContainer
                         key={card.id}
-                        id={card.id}
-                    >
-                        <CardContainer 
-                            card={card}
-                            space={space}
-                        />
-                    </SortableCard>
+                        card={card}
+                        space={space}
+                    />
                 ))}
             </CardContent>
         </Card>

@@ -1,11 +1,11 @@
 "use server"
 
+import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { headers } from "next/headers"
+import { createActivity } from "../activities/create-activity"
 import { findListById } from "../lists/find-list-by-id"
 import { findCardById } from "./find-card-by-id"
-import { createActivity } from "../activities/create-activity"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
 
 type ChangeListCardProps = {
     listId: string
@@ -45,7 +45,12 @@ export async function changeListCard({ cardId, listId }: ChangeListCardProps) {
             }
         },
         message:
-            `O cartão ${card.title} foi movido para a lista ${card.list?.name}`
+            `O cartão ${card.title} foi movido para a lista ${card.list?.name}`,
+        card: {
+            connect: {
+                id: cardId
+            }
+        }
     })
 
     return card
