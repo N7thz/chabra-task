@@ -5,13 +5,23 @@ import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/
 import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 import Link from "next/link"
-import { Blend, RotateCw } from "lucide-react"
+import { Blend, Dot, RotateCw } from "lucide-react"
 import { queryKeys } from "@/utils/query-keys"
 import { toast } from "./toast"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 export const SpaceListSidebar = () => {
 
     const { open } = useSidebar()
+
+    const pathname = usePathname()
+
+    const validPathname = usePathname().startsWith("/space")
+        ? decodeURI(pathname).slice(7)
+        : pathname
+
+    console.log(validPathname)
 
     const {
         data: spaces,
@@ -75,11 +85,25 @@ export const SpaceListSidebar = () => {
                     : spaces.map(({ id, name }) => (
                         <SidebarMenuItem key={id}>
                             <SidebarMenuButton asChild>
-                                <Link href={`/space/${name}`}>
-                                    <Blend />
-                                    <span>
-                                        {name}
-                                    </span>
+                                <Link
+                                    href={`/space/${name}`}
+                                    className={cn(validPathname === name && "border border-primary flex justify-between")}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <Blend />
+                                        <span className={cn(
+                                            "capitalize",
+                                            validPathname === name
+                                                ? "font-semibold"
+                                                : "font-light"
+                                        )}>
+                                            {name}
+                                        </span>
+                                    </div>
+                                    {
+                                        validPathname === name &&
+                                        <Dot className="scale-200" />
+                                    }
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

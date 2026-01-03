@@ -32,6 +32,7 @@ export const CardContainer = ({
         title,
         description,
         term,
+        color,
         tasks = []
     }
 }: {
@@ -69,7 +70,7 @@ export const CardContainer = ({
             <Link
                 title={`Ir para o card ${title}`}
                 href={`/${space}/card/${id}`}
-                className="contents size-full cursor-pointer hover:scale-95 duration-200 group"
+                className="contents size-full cursor-pointer group"
             >
                 <CardHeader className="pt-6">
                     <CardAction>

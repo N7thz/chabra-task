@@ -17,23 +17,19 @@ import {
 } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
 import {
-    Bell,
     Calendar,
     ChevronUp,
     Cog,
     Home,
-    LucideIcon,
     Settings,
     UserCircle
 } from "lucide-react"
-import { Route } from "next"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { NotificationsContainer } from "./notifications"
 import { SidebarTrigger } from "./sidebar-trigger"
 import { SignOutButton } from "./sign-out-button"
 import { SpaceListSidebar } from "./space-list-sidebar"
-import { se } from "date-fns/locale"
 
 export const AppSidebar = async () => {
 

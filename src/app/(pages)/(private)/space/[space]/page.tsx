@@ -1,3 +1,4 @@
+import { Board } from "@/components/drag-in-drop/board"
 import { FormCreateList } from "@/components/forms/form-create-list"
 import { ListContainer } from "@/components/list-container"
 import {
@@ -23,7 +24,7 @@ export default async function Home({
 	params: Promise<{ space: string }>
 }) {
 
-	const { space } = await params
+	const space =  decodeURI((await params).space)
 
 	return (
 		<ScrollArea className="h-dvh w-[1560px]">
@@ -35,7 +36,7 @@ export default async function Home({
 				"flex flex-nowrap p-8 gap-4",
 				"max-sm:px-4"
 			)}>
-				<ListContainer space={space} />
+				<Board space={space} />
 				<AlertDialog>
 					<AlertDialogTrigger asChild>
 						<Button>

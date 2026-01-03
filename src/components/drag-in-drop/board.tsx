@@ -1,33 +1,43 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { changeListCard } from "@/actions/cards/change-list-card"
+import { findManyList } from "@/actions/lists/find-many-list"
+import { AvatarGroup } from "@/components/avatar-group"
+import { toast } from "@/components/toast"
+import { Button } from "@/components/ui/button"
+import {
+    CardAction,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+    Card as CardUI
+} from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
+import { queryClient } from "@/providers/theme-provider"
+import type { Card, ListWithCards } from "@/types"
+import { queryKeys } from "@/utils/query-keys"
 import {
     DndContext,
     DragEndEvent,
     DragOverEvent,
-    DragStartEvent,
     DragOverlay,
+    DragStartEvent,
     closestCorners
 } from "@dnd-kit/core"
 import {
     SortableContext,
-    verticalListSortingStrategy,
-    arrayMove
+    verticalListSortingStrategy
 } from "@dnd-kit/sortable"
-import { createPortal } from "react-dom"
-
-import type { Card, ListWithCards } from "@/types"
-import { Column } from "./column"
-import { CardPreview } from "./card-preview"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { queryKeys } from "@/utils/query-keys"
-import { findManyList } from "@/actions/lists/find-many-list"
-import { toast } from "../toast"
-import { RotateCw } from "lucide-react"
-import { changeListCard } from "@/actions/cards/change-list-card"
-import { prisma } from "@/lib/prisma"
-import { findCardById } from "@/actions/cards/find-card-by-id"
-import { queryClient } from "../theme-provider"
+import { formatDate } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { Clock, Ellipsis, RotateCw } from "lucide-react"
+import { useState } from "react"
+import { createPortal } from "react-dom"
+import { CardPreview } from "./card-preview"
+import { Column } from "./column"
 
 interface BoardProps {
     initialLists: ListWithCards[]
@@ -42,11 +52,11 @@ export const Board = ({ space }: { space: string }) => {
         error,
         refetch
     } = useQuery({
-        queryKey: queryKeys.list.findMany(),
+        queryKey: queryKeys.list.findMany(space),
         queryFn: () => findManyList<ListWithCards[]>({
             where: {
                 space: {
-                    name: decodeURI(space)
+                    name: space
                 }
             },
             include: {
@@ -56,10 +66,55 @@ export const Board = ({ space }: { space: string }) => {
     })
 
     if (isLoading || !lists) {
+
+        const images = Array.from({ length: 3 }).map((_, index) => (`${index}`))
+
         return (
-            <span>
-                Carregando...
-            </span>
+            <div className="flex space-x-4">
+                {
+                    Array.from({ length: 3 }).map((_, index) => (
+                        <CardUI
+                            key={index}
+                            className="w-100 pt-0 overflow-hidden"
+                        >
+                            <div className="bg-green-500 w-full h-12" />
+                            <CardContent>
+                                <CardUI>
+                                    <CardHeader>
+                                        <CardTitle>
+                                            <Skeleton className="h-4" />
+                                        </CardTitle>
+                                        <CardAction>
+                                            <Button
+                                                disabled
+                                                variant="ghost"
+                                                className="-translate-y-2"
+                                            >
+                                                <Ellipsis />
+                                            </Button>
+                                        </CardAction>
+                                    </CardHeader>
+                                    <CardContent className="space-y-5">
+                                        <div className="flex justify-between">
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <Clock className="size-3" />
+                                                {formatDate(new Date(), "dd 'de' MMM", { locale: ptBR })}
+                                            </div>
+                                            <AvatarGroup images={images} />
+                                        </div>
+                                        <Progress value={index * 10} />
+                                    </CardContent>
+                                </CardUI>
+                            </CardContent>
+                            <CardFooter>
+                                <Button disabled className="w-full">
+                                    Adicionar cartão
+                                </Button>
+                            </CardFooter>
+                        </CardUI>
+                    ))
+                }
+            </ div>
         )
     }
 
@@ -111,7 +166,7 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.list.findMany()
+                queryKey: queryKeys.list.findMany(space)
             })
         }
     })

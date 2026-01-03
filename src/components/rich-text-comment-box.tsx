@@ -18,7 +18,7 @@ import { useRef } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "./toast"
-import { queryClient } from "./theme-provider"
+import { queryClient } from "../providers/theme-provider"
 import { queryKeys } from "@/utils/query-keys"
 
 export const commentSchema = z.object({

@@ -1,43 +1,80 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useDroppable } from "@dnd-kit/core"
 import type { List } from "@/types"
 import { CardContainer } from "./card-container"
 import { SortableCard } from "./sortable-card"
 import { cn } from "@/lib/utils"
+import { Button } from "../ui/button"
+import Link from "next/link"
+import { DropdownMenuEditDialog } from "../dropdown-menu-edit-list"
 
 type ColumnProps = {
     list: List
     space: string
 }
 
-export function Column({ list, space }: ColumnProps) {
+export function Column({
+    space,
+    list: {
+        id, name, cards, color
+    },
+}: ColumnProps) {
 
-    const { setNodeRef, isOver } = useDroppable({ id: list.id })
+    const { setNodeRef, isOver } = useDroppable({ id })
 
     return (
         <Card
             ref={setNodeRef}
             className={cn(
-                "w-100 transition-colors",
+                "w-100 h-min pt-0 overflow-hidden transition-colors",
                 isOver ? "bg-primary/10" : "bg-muted/50"
             )}
         >
-            <CardHeader>
+            <CardHeader
+                style={{
+                    background: color ?? undefined
+                }}
+                className="flex items-center justify-between py-4" 
+            >
                 <CardTitle className="font-semibold text-xl">
-                    {list.name}
+                    {name}
                 </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {list.cards.map(card => (
-                    <CardContainer
-                        key={card.id}
-                        card={card}
+                <CardAction>
+                    <DropdownMenuEditDialog
+                        id={id}
                         space={space}
                     />
-                ))}
+                </CardAction>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                {
+                    cards.length === 0
+                        ? (
+                            <CardDescription>
+                                Você ainda não possui cartões nesta lista.
+                            </CardDescription>
+                        )
+                        : cards.map(card => (
+                            <CardContainer
+                                key={card.id}
+                                card={card}
+                                space={space}
+                            />
+                        ))
+                }
             </CardContent>
+            <CardFooter>
+                <Button
+                    asChild
+                    className="w-full"
+                >
+                    <Link href={`/${space}/${id}/create-card`}>
+                        Adicionar cartão
+                    </Link>
+                </Button>
+            </CardFooter>
         </Card>
     )
 }

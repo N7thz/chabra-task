@@ -28,7 +28,7 @@ export const ListContainerItem = ({ list, space }: {
                 <CardAction className="mt-5">
                     <DropdownMenuEditDialog
                         id={id}
-                        name={name}
+                        space={space}
                     />
                 </CardAction>
                 <CardTitle className="truncate mt-5">

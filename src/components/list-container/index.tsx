@@ -6,7 +6,6 @@ import {
     Card,
     CardAction,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle
@@ -15,16 +14,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { List } from "@/types"
 import { queryKeys } from "@/utils/query-keys"
 import { useQuery } from "@tanstack/react-query"
-import { Clock, Ellipsis, RotateCw } from "lucide-react"
-import Link from "next/link"
-import { CardContainer } from "../drag-in-drop/card-container"
-import { DropdownMenuEditDialog } from "../dropdown-menu-edit-list"
-import { toast } from "../toast"
-import { useEffect } from "react"
-import { Progress } from "../ui/progress"
-import { AvatarGroup } from "../avatar-group"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { Clock, Ellipsis, RotateCw } from "lucide-react"
+import { AvatarGroup } from "../avatar-group"
+import { toast } from "../toast"
+import { Progress } from "../ui/progress"
 import { ListContainerItem } from "./list-container-item"
 
 export const ListContainer = ({ space }: { space: string }) => {
@@ -35,7 +30,7 @@ export const ListContainer = ({ space }: { space: string }) => {
         error,
         refetch
     } = useQuery({
-        queryKey: queryKeys.list.findMany(),
+        queryKey: queryKeys.list.findMany(space),
         queryFn: () => findManyList<List[]>({
             orderBy: {
                 createdAt: "asc"

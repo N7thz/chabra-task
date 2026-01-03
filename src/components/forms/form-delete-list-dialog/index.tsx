@@ -1,5 +1,5 @@
 import { deleteList } from "@/actions/lists/delete-list"
-import { queryClient } from "@/components/theme-provider"
+import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -42,7 +42,7 @@ export const FormDeleteListDialog = ({
                 const newLists =
                     oldData.filter(oldList => oldList.id !== list.id)
 
-                return newLists    
+                return newLists
             })
         },
         onError: (error) => {

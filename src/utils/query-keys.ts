@@ -18,7 +18,7 @@ export const queryKeys = {
         update: () => ["update-list"],
         delete: () => ["delete-list"],
         find: (id: string) => ["find-list-by-id", id],
-        findMany: () => ["find-many-lists"],
+        findMany: (space: string) => ["find-many-lists", space],
     },
     space: {
         create: () => ["create-space"],

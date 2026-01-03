@@ -2,7 +2,7 @@
 
 import { createSpace } from "@/actions/spaces/create-space"
 import { SpanErrorMessage } from "@/components/span-error"
-import { queryClient } from "@/components/theme-provider"
+import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"

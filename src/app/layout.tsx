@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { Background } from "@/components/background"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/providers/theme-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"

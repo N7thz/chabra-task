@@ -2,7 +2,7 @@
 
 import { createList } from "@/actions/lists/create-list"
 import { SpanErrorMessage } from "@/components/span-error"
-import { queryClient } from "@/components/theme-provider"
+import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import {
     AlertDialogAction,
@@ -52,7 +52,7 @@ export const FormCreateList = () => {
                 description: `A lista ${name} foi criada com sucesso.`,
             })
 
-            queryClient.setQueryData<List[]>(queryKeys.list.findMany(), (oldData) => {
+            queryClient.setQueryData<List[]>(queryKeys.list.findMany(space), (oldData) => {
 
                 if (!oldData) return [{ name, ...rest }]
 

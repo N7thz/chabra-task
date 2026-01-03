@@ -1,7 +1,7 @@
 import { editList } from "@/actions/lists/edit-list"
 import { findListById } from "@/actions/lists/find-list-by-id"
 import { SpanErrorMessage } from "@/components/span-error"
-import { queryClient } from "@/components/theme-provider"
+import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,10 +25,12 @@ import { useForm } from "react-hook-form"
 
 export const FormEditListDialog = ({
     id,
+    space,
     open,
     onOpenChange
 }: {
     id: string
+    space: string
     open: boolean,
     onOpenChange: (open: boolean) => void
 }) => {
@@ -46,7 +48,7 @@ export const FormEditListDialog = ({
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.list.findMany()
+                queryKey: queryKeys.list.findMany(space)
             })
         },
         onError: (error) => {
@@ -70,6 +72,7 @@ export const FormEditListDialog = ({
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors }
     } = useForm<EditListProps>({
         resolver: zodResolver(editListSchema)

@@ -17,14 +17,9 @@ import {
 import { FormDeleteListDialog } from "./forms/form-delete-list-dialog"
 import { FormEditListDialog } from "./forms/form-edit-list-dialog"
 
-type DropdownMenuEditDialogProps = {
-    id: string,
-    name: string
-}
-
 export const DropdownMenuEditDialog = ({
-    id, name
-}: DropdownMenuEditDialogProps) => {
+    id, space
+}: { id: string, space: string }) => {
 
     const [showEditDialog, setShowEditDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -35,6 +30,7 @@ export const DropdownMenuEditDialog = ({
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Button
+                        type="button"
                         variant="ghost"
                         aria-label="Open menu"
                         size="icon"
@@ -42,7 +38,10 @@ export const DropdownMenuEditDialog = ({
                         <Ellipsis />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-40" align="end">
+                <DropdownMenuContent
+                    className="min-w-100"
+                    align="end"
+                >
                     <DropdownMenuLabel className="text-muted-foreground">
                         Opções
                     </DropdownMenuLabel>
@@ -67,6 +66,7 @@ export const DropdownMenuEditDialog = ({
             </DropdownMenu>
             <FormEditListDialog
                 id={id}
+                space={space}
                 open={showEditDialog}
                 onOpenChange={setShowEditDialog}
             />
@@ -77,6 +77,7 @@ export const DropdownMenuEditDialog = ({
             />
             <FormChangeColorListDialog
                 id={id}
+                space={space}
                 open={showChangeColorDialog}
                 onOpenChange={setShowChangeColorDialog}
             />

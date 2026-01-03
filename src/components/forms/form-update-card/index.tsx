@@ -3,7 +3,7 @@ import {
     CardCommentsActivity
 } from "@/components/card-page/card-comments-activity"
 import { CardInfoTask } from "@/components/card-page/card-info-task"
-import { queryClient } from "@/components/theme-provider"
+import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import {

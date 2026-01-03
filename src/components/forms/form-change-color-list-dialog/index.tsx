@@ -1,5 +1,5 @@
 import { changeColorList } from "@/actions/lists/change-color-list"
-import { queryClient } from "@/components/theme-provider"
+import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -26,36 +26,15 @@ import { useForm } from "react-hook-form"
 
 export const FormChangeColorListDialog = ({
     id,
+    space,
     open,
     onOpenChange
 }: {
     id: string
+    space: string
     open: boolean,
     onOpenChange: (open: boolean) => void
 }) => {
-
-    const { mutate, isPending } = useMutation({
-        mutationKey: ["change-color-list"],
-        mutationFn: (color: string) => changeColorList({ id, color }),
-        onSuccess: () => {
-
-            toast({
-                title: "A lista foi atualizada.",
-                onAutoClose: () => onOpenChange(false)
-            })
-
-            queryClient.invalidateQueries({
-                queryKey: queryKeys.list.findMany()
-            })
-        },
-        onError: (error) => {
-            toast({
-                title: error.name,
-                description: error.message,
-                variant: "destructive"
-            })
-        }
-    })
 
     const {
         setValue,
@@ -66,6 +45,29 @@ export const FormChangeColorListDialog = ({
         resolver: zodResolver(changeColorListSchema),
         defaultValues: {
             color: undefined
+        }
+    })
+
+    const { mutate, isPending } = useMutation({
+        mutationKey: ["change-color-list"],
+        mutationFn: (color: string) => changeColorList({ id, color }),
+        onSuccess: () => {
+
+            toast({
+                title: "A cor da lista foi atualizada.",
+                onAutoClose: () => onOpenChange(false)
+            })
+
+            queryClient.invalidateQueries({
+                queryKey: queryKeys.list.findMany(space)
+            })
+        },
+        onError: (error) => {
+            toast({
+                title: error.name,
+                description: error.message,
+                variant: "destructive"
+            })
         }
     })
 
@@ -80,7 +82,7 @@ export const FormChangeColorListDialog = ({
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="space-y-4 w-full">
+            <DialogContent className="space-y-4 sm:max-w-120">
                 <DialogHeader>
                     <DialogTitle>
                         Alterar cor da lista
