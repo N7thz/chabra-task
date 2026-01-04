@@ -14,9 +14,10 @@ import { Card as CardContainerProps } from "@/types"
 import { Task } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { Clock, Ellipsis, GripHorizontal } from "lucide-react"
+import { Clock, GripHorizontal } from "lucide-react"
 import Link from "next/link"
 import { AvatarGroup } from "../avatar-group"
+import { CardOptionsDialog } from "./card-options-dialog"
 import { SortableCard } from "./sortable-card"
 
 const images: string[] = [
@@ -32,7 +33,7 @@ export const CardContainer = ({
         title,
         description,
         term,
-        color,
+        listId,
         tasks = []
     }
 }: {
@@ -67,46 +68,48 @@ export const CardContainer = ({
                 </Button>
             </CardHeader>
             <Separator className="bg-border/60" />
-            <Link
-                title={`Ir para o card ${title}`}
-                href={`/${space}/card/${id}`}
-                className="contents size-full cursor-pointer group"
-            >
-                <CardHeader className="pt-6">
-                    <CardAction>
-                        <Button variant={"ghost"}>
-                            <Ellipsis />
-                        </Button>
-                    </CardAction>
+            <CardHeader className="pt-6">
+                <CardAction>
+                    <CardOptionsDialog
+                        id={id}
+                        listId={listId}
+                        space={space}
+                    />
+                </CardAction>
+                <Link
+                    title={`Ir para o card ${title}`}
+                    href={`/${space}/card/${id}`}
+                    className="contents size-full cursor-pointer group"
+                >
                     <CardTitle className={cn(
                         "text-base",
                         "group-hover:underline"
                     )}>
                         {title}
                     </CardTitle>
-                    {
-                        description &&
-                        <CardDescription>
-                            {description}
-                        </CardDescription>
-                    }
-                </CardHeader>
-                <CardContent className="space-y-5 pt-6">
-                    <div className="flex justify-between">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock className="size-3" />
-                            {formatDate(term, "dd 'de' MMM", { locale: ptBR })}
-                        </div>
-                        <AvatarGroup images={images} />
+                </Link>
+                {
+                    description &&
+                    <CardDescription>
+                        {description}
+                    </CardDescription>
+                }
+            </CardHeader>
+            <CardContent className="space-y-5 pt-6">
+                <div className="flex justify-between">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Clock className="size-3" />
+                        {formatDate(term, "dd 'de' MMM", { locale: ptBR })}
                     </div>
-                    <div className="space-y-2.5">
-                        <div className="text-sm">
-                            {tasksCompleteds} de {tasks.length}
-                        </div>
-                        <Progress value={getCompletedPercentage(tasks)} />
+                    <AvatarGroup images={images} />
+                </div>
+                <div className="space-y-2.5">
+                    <div className="text-sm">
+                        {tasksCompleteds} de {tasks.length}
                     </div>
-                </CardContent>
-            </Link>
-        </Card>
+                    <Progress value={getCompletedPercentage(tasks)} />
+                </div>
+            </CardContent>
+        </Card >
     )
 }

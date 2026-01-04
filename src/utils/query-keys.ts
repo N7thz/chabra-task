@@ -1,44 +1,76 @@
 export const queryKeys = {
-    card: {
-        create: () => ["create-card"],
-        update: () => ["update-card"],
-        delete: () => ["delete-card"],
-        find: (id: string) => ["find-card-by-id", id],
-        findMany: () => ["find-many-cards"],
-    },
-    comment: {
-        create: () => ["create-comment"],
-        update: () => ["update-comment"],
-        delete: () => ["delete-comment"],
-        find: (id: string) => ["find-comment-by-id", id],
-        findMany: () => ["find-many-comments"],
-    },
-    list: {
-        create: () => ["create-list"],
-        update: () => ["update-list"],
-        delete: () => ["delete-list"],
-        find: (id: string) => ["find-list-by-id", id],
-        findMany: (space: string) => ["find-many-lists", space],
-    },
     space: {
-        create: () => ["create-space"],
-        update: () => ["update-space"],
-        delete: () => ["delete-space"],
-        find: (id: string) => ["find-space-by-id", id],
-        findMany: () => ["find-many-spaces"],
+        all: ["spaces"] as const,
+        lists: () => [...queryKeys.space.all, "list"] as const,
+
+        findMany: () =>
+            [...queryKeys.space.lists()] as const,
+
+        find: (spaceId: string) =>
+            [...queryKeys.space.all, spaceId] as const,
     },
-    user: {
-        create: () => ["create-user"],
-        update: () => ["update-user"],
-        delete: () => ["delete-user"],
-        find: (id: string) => ["find-user-by-id", id],
-        findMany: () => ["find-many-users"],
+
+    list: {
+        all: ["lists"] as const,
+        bySpace: (space: string) =>
+            [...queryKeys.list.all, "space", space] as const,
+
+        findMany: (space: string) =>
+            [...queryKeys.list.bySpace(space)] as const,
+
+        find: (listId: string) =>
+            [...queryKeys.list.all, listId] as const,
     },
+
+    card: {
+        all: ["cards"] as const,
+
+        bySpace: (space: string) =>
+            [...queryKeys.card.all, "space", space] as const,
+
+        byList: (listId: string) =>
+            [...queryKeys.card.all, "list", listId] as const,
+
+        findManyBySpace: (space: string) =>
+            [...queryKeys.card.bySpace(space)] as const,
+
+        findManyByList: (listId: string) =>
+            [...queryKeys.card.byList(listId)] as const,
+
+        find: (cardId: string) =>
+            [...queryKeys.card.all, cardId] as const,
+    },
+
+    comment: {
+        all: ["comments"] as const,
+
+        byCard: (cardId: string) =>
+            [...queryKeys.comment.all, "card", cardId] as const,
+
+        findManyByCard: (cardId: string) =>
+            [...queryKeys.comment.byCard(cardId)] as const,
+
+        find: (commentId: string) =>
+            [...queryKeys.comment.all, commentId] as const,
+    },
+
     notification: {
-        create: () => ["create-notification"],
-        update: () => ["update-notification"],
-        delete: () => ["delete-notification"],
-        find: (id: string) => ["find-notification-by-id", id],
-        findMany: (id?: string) => ["find-many-notifications", id],
+        all: ["notifications"] as const,
+
+        byUser: (userId?: string) =>
+            [...queryKeys.notification.all, userId ?? "me"] as const,
+
+        findMany: (userId?: string) =>
+            [...queryKeys.notification.byUser(userId)] as const,
     },
-};
+
+    user: {
+        all: ["users"] as const,
+
+        findMany: () =>
+            [...queryKeys.user.all] as const,
+
+        find: (userId: string) =>
+            [...queryKeys.user.all, userId] as const,
+    },
+}

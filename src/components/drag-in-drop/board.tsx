@@ -52,6 +52,7 @@ export const Board = ({ space }: { space: string }) => {
         error,
         refetch
     } = useQuery({
+        refetchOnWindowFocus: true,
         queryKey: queryKeys.list.findMany(space),
         queryFn: () => findManyList<ListWithCards[]>({
             where: {
@@ -155,11 +156,16 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
 
     const { mutate } = useMutation({
         mutationKey: ["change-list-card"],
-        mutationFn: ({ cardId, listId }: {
-            listId: string
+        mutationFn: ({
+            cardId,
+            currentListId,
+            newListId
+        }: {
+            currentListId: string
+            newListId: string
             cardId: string
-        }) => changeListCard({ cardId, listId }),
-        onSuccess: ({ title, list }) => {
+        }) => changeListCard({ cardId, currentListId, newListId }),
+        onSuccess: ({ card: { title, list } }) => {
 
             toast({
                 title: `O cartão ${title} foi movido para a lista ${list?.name}`
@@ -261,7 +267,11 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
         console.log("LISTA FINAL:", toList.id)
 
         if (fromListId !== toList.id) {
-            mutate({ cardId: activeId, listId: toList.id })
+            mutate({
+                cardId: activeId,
+                currentListId: fromListId,
+                newListId: toList.id
+            })
         }
 
         setFromListId(null)

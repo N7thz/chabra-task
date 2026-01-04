@@ -8,13 +8,18 @@ import { findListById } from "../lists/find-list-by-id"
 import { findCardById } from "./find-card-by-id"
 
 type ChangeListCardProps = {
-    listId: string
+    currentListId: string
+    newListId: string
     cardId: string
 }
 
-export async function changeListCard({ cardId, listId }: ChangeListCardProps) {
+export async function changeListCard({
+    cardId, currentListId, newListId
+}: ChangeListCardProps) {
 
-    await findListById(listId)
+    await findListById(newListId)
+
+    const currentList = await findListById(currentListId)
 
     await findCardById(cardId)
 
@@ -31,7 +36,7 @@ export async function changeListCard({ cardId, listId }: ChangeListCardProps) {
             id: cardId
         },
         data: {
-            listId
+            listId: newListId,
         },
         include: {
             list: true
@@ -45,7 +50,7 @@ export async function changeListCard({ cardId, listId }: ChangeListCardProps) {
             }
         },
         message:
-            `O cartão ${card.title} foi movido para a lista ${card.list?.name}`,
+            `O cartão ${card.title} foi movido da lista ${currentList.name}  para a lista ${card.list?.name}`,
         card: {
             connect: {
                 id: cardId
@@ -53,5 +58,5 @@ export async function changeListCard({ cardId, listId }: ChangeListCardProps) {
         }
     })
 
-    return card
+    return { card, oldListId: currentList.id, newListId }
 }
