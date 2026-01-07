@@ -39,7 +39,7 @@ import { createPortal } from "react-dom"
 import { CardPreview } from "./card-preview"
 import { Column } from "./column"
 
-interface BoardProps {
+type BoardProps = {
     initialLists: ListWithCards[]
     space: string
 }
