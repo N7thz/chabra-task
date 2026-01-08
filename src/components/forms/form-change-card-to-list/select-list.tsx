@@ -15,7 +15,13 @@ import { ListWithCards } from "@/types"
 import { useQuery } from "@tanstack/react-query"
 import { useFormContext } from "react-hook-form"
 
-export const SelectList = ({ space }: { space: string }) => {
+export const SelectList = ({
+    space,
+    listName
+}: {
+    space: string
+    listName: string | undefined
+}) => {
 
     const { setValue } = useFormContext<ChangeCardListProps>()
 
@@ -49,7 +55,7 @@ export const SelectList = ({ space }: { space: string }) => {
                 "w-full capitalize",
                 "placeholder:normal-case"
             )}>
-                <SelectValue placeholder="Selecione nova lista a lista" />
+                <SelectValue placeholder="Selecione nova lista" />
             </SelectTrigger>
             <SelectContent className="w-full">
                 <SelectGroup>
@@ -62,9 +68,15 @@ export const SelectList = ({ space }: { space: string }) => {
                             <SelectItem
                                 key={id}
                                 value={id}
-                                className="capitalize"
+                                disabled={listName === name}
                             >
                                 {name}
+                                {
+                                    listName === name &&
+                                    <div className="text-muted-foreground">
+                                        {`(Lista atual)`}
+                                    </div>
+                                }
                             </SelectItem>
                         ))
                     }

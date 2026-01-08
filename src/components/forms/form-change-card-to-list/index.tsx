@@ -30,7 +30,6 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { SelectList } from "./select-list"
-import { Card as CardProps } from "@prisma/client"
 
 type FormChangeCardListProps = {
     cardId: string
@@ -47,9 +46,11 @@ export const FormChangeCardList = ({
     const {
         data: list
     } = useQuery({
-        queryKey: ["find-list-by-id", listId],
+        queryKey: ["find-list-by-id", cardId],
         queryFn: () => findListById(listId)
     })
+
+    console.log(list)
 
     const { mutate, isPending, isSuccess } = useMutation({
         mutationKey: ["change-card-list"],
@@ -66,10 +67,11 @@ export const FormChangeCardList = ({
 
             toast({
                 title: `O cartão foi movido para a lista ${card.list?.name}`,
-                onAutoClose: () => setOpen(false)
+                onAutoClose: () => {
+                    setOpen(false)
+                    window.location.reload()
+                }
             })
-
-            throw new Error("inplementar atualização via invalidate")
         },
         onError: (err) => {
             toast({
@@ -87,14 +89,9 @@ export const FormChangeCardList = ({
         }
     })
 
-    const {
-        watch,
-        handleSubmit,
-    } = form
+    const { watch,  handleSubmit } = form
 
     function onSubmit({ currentListId, newListId }: ChangeCardListProps) {
-
-        console.log(currentListId, newListId)
 
         if (currentListId === newListId) return
 
@@ -132,7 +129,10 @@ export const FormChangeCardList = ({
                                     value={list?.name}
                                 />
                             </Label>
-                            <SelectList space={space} />
+                            <SelectList
+                                listName={list?.name}
+                                space={space}
+                            />
                             {
                                 watch("currentListId") === watch("newListId") &&
                                 <SpanErrorMessage message="A nova lista deve ser diferente da atual." />
@@ -158,9 +158,7 @@ export const FormChangeCardList = ({
                                 }}
                             >
                                 {
-                                    (isPending || isSuccess)
-                                        ? <Spinner />
-                                        : "Confirmar"
+                                    (isPending) ? <Spinner /> : "Confirmar"
                                 }
                             </AlertDialogAction>
                         </AlertDialogFooter>

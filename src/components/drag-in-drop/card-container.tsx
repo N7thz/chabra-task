@@ -10,7 +10,7 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
-import { Card as CardContainerProps } from "@/types"
+import { Card as CardPorps } from "@prisma/client"
 import { Task } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -19,6 +19,10 @@ import Link from "next/link"
 import { AvatarGroup } from "../avatar-group"
 import { CardOptionsDialog } from "./card-options-dialog"
 import { SortableCard } from "./sortable-card"
+
+type CardContainerProps = CardPorps & {
+    tasks: Task[]
+}
 
 const images: string[] = [
     "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=96&h=96&dpr=2&q=80",
@@ -72,7 +76,7 @@ export const CardContainer = ({
                 <CardAction>
                     <CardOptionsDialog
                         id={id}
-                        listId={listId}
+                        listId={listId!}
                         space={space}
                     />
                 </CardAction>

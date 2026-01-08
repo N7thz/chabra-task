@@ -58,7 +58,7 @@ export const Board = () => {
         error,
         refetch
     } = useQuery({
-        queryKey: ["find-many-lists"],
+        queryKey: ["find-many-lists", space],
         queryFn: () => findManyList<ListWithCards[]>({
             where: {
                 space: {
@@ -70,8 +70,6 @@ export const Board = () => {
             }
         })
     })
-
-    console.log(lists)
 
     if (isLoading || !lists) {
 
