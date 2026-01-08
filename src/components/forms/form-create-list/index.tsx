@@ -14,7 +14,7 @@ import { Spinner } from "@/components/ui/spinner"
 import {
     FormCreateListProps, createListSchema
 } from "@/schemas/create-list-schema"
-import { queryKeys } from "@/utils/query-keys"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { List, Notification } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"

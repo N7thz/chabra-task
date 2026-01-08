@@ -1,10 +1,17 @@
 "use client"
 
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { 
+    Card, 
+    CardAction, 
+    CardContent, 
+    CardDescription, 
+    CardFooter, 
+    CardHeader, 
+    CardTitle 
+} from "@/components/ui/card"
 import { useDroppable } from "@dnd-kit/core"
 import type { List } from "@/types"
 import { CardContainer } from "./card-container"
-import { SortableCard } from "./sortable-card"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import Link from "next/link"
@@ -42,10 +49,7 @@ export function Column({
                     {name}
                 </CardTitle>
                 <CardAction>
-                    <DropdownMenuEditDialog
-                        id={id}
-                        space={space}
-                    />
+                    <DropdownMenuEditDialog id={id} />
                 </CardAction>
             </CardHeader>
             <CardContent className="space-y-4">

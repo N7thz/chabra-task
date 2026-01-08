@@ -1,12 +1,9 @@
-import { MultiSelect } from '@/components/multi-select'
-import { useFormContext } from 'react-hook-form'
-import { CreateCardProps } from '@/schemas/create-card-schema'
-import { useQuery } from '@tanstack/react-query'
 import { findManyUsers } from '@/actions/users/find-many-users'
-import { Button } from '@/components/ui/button'
-import { ChevronDown, RotateCw } from 'lucide-react'
-import { queryKeys } from '@/utils/query-keys'
+import { MultiSelect } from '@/components/multi-select'
 import { toast } from '@/components/toast'
+import { Button } from '@/components/ui/button'
+import { useQuery } from '@tanstack/react-query'
+import { ChevronDown, RotateCw } from 'lucide-react'
 
 type SelectOwnersProps = {
   selected: string[],
@@ -23,7 +20,7 @@ export const SelectOwners = ({
     error,
     refetch
   } = useQuery({
-    queryKey: queryKeys.user.findMany(),
+    queryKey: ["find-many-users"],
     queryFn: () => findManyUsers({
       select: {
         id: true,

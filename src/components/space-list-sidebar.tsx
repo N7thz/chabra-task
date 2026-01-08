@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Skeleton } from "./ui/skeleton"
 import Link from "next/link"
 import { Blend, Dot, RotateCw } from "lucide-react"
-import { queryKeys } from "@/utils/query-keys"
+
 import { toast } from "./toast"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -21,15 +21,13 @@ export const SpaceListSidebar = () => {
         ? decodeURI(pathname).slice(7)
         : pathname
 
-    console.log(validPathname)
-
     const {
         data: spaces,
         isLoading,
         error,
         refetch
     } = useQuery({
-        queryKey: queryKeys.space.findMany(),
+        queryKey: ["find-many-spaces", pathname],
         queryFn: () => findManySpace()
     })
 

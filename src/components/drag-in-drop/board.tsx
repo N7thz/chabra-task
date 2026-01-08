@@ -16,8 +16,8 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { queryClient } from "@/providers/theme-provider"
-import type { Card, ListWithCards } from "@/types"
-import { queryKeys } from "@/utils/query-keys"
+import type { ListWithCards } from "@/types"
+
 import {
     DndContext,
     DragEndEvent,
@@ -38,13 +38,19 @@ import { useState } from "react"
 import { createPortal } from "react-dom"
 import { CardPreview } from "./card-preview"
 import { Column } from "./column"
+import { Card } from "@prisma/client"
+import { usePathname } from "next/navigation"
 
 type BoardProps = {
     initialLists: ListWithCards[]
     space: string
 }
 
-export const Board = ({ space }: { space: string }) => {
+export const Board = () => {
+
+    const pathname = usePathname()
+
+    const space = decodeURI(pathname).slice(7)
 
     const {
         data: lists,
@@ -52,8 +58,7 @@ export const Board = ({ space }: { space: string }) => {
         error,
         refetch
     } = useQuery({
-        refetchOnWindowFocus: true,
-        queryKey: queryKeys.list.findMany(space),
+        queryKey: ["find-many-lists"],
         queryFn: () => findManyList<ListWithCards[]>({
             where: {
                 space: {
@@ -65,6 +70,8 @@ export const Board = ({ space }: { space: string }) => {
             }
         })
     })
+
+    console.log(lists)
 
     if (isLoading || !lists) {
 
@@ -172,7 +179,7 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.list.findMany(space)
+                queryKey: ["find-many-lists"]
             })
         }
     })
@@ -277,7 +284,6 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
         setFromListId(null)
     }
 
-
     return (
         <DndContext
             collisionDetection={closestCorners}
@@ -286,18 +292,23 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
             onDragEnd={handleDragEnd}
         >
             <div className="flex gap-6 items-start">
-                {lists.map(list => (
-                    <SortableContext
-                        key={list.id}
-                        items={list.cards.map(card => card.id)}
-                        strategy={verticalListSortingStrategy}
-                    >
-                        <Column
-                            list={list}
-                            space={space}
-                        />
-                    </SortableContext>
-                ))}
+                {lists.map(list => {
+
+                    const items = list.cards.map(card => card.id)
+
+                    return (
+                        <SortableContext
+                            key={list.id}
+                            items={items}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <Column
+                                list={list}
+                                space={space}
+                            />
+                        </SortableContext>
+                    )
+                })}
             </div>
 
             {createPortal(

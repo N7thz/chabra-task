@@ -17,7 +17,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { EditListProps, editListSchema } from "@/schemas/edit-list-schema"
-import { queryKeys } from "@/utils/query-keys"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { RotateCw } from "lucide-react"
@@ -48,7 +48,7 @@ export const FormEditListDialog = ({
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.list.findMany(space)
+                queryKey: ["find-many-lists"]
             })
         },
         onError: (error) => {
@@ -65,14 +65,13 @@ export const FormEditListDialog = ({
         error,
         refetch
     } = useQuery({
-        queryKey: queryKeys.list.find(id),
+        queryKey: ["find-list-by-id", id],
         queryFn: () => findListById(id)
     })
 
     const {
         register,
         handleSubmit,
-        setValue,
         formState: { errors }
     } = useForm<EditListProps>({
         resolver: zodResolver(editListSchema)

@@ -23,7 +23,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { CreateCardProps, createCardSchema, CreateTaskProps } from "@/schemas/create-card-schema"
 import { CardComplete } from "@/types"
-import { queryKeys } from "@/utils/query-keys"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Prisma } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
@@ -61,7 +61,7 @@ export const FormUpdateCard = ({ card }: { card: CardComplete }) => {
                 id: string
             })[]
         }) => updateCard({ id, card, tasks }),
-        onSuccess: () => {
+        onSuccess: ({ id }) => {
 
             toast({
                 title: `O cartão ${title} foi atualizado com sucesso`,
@@ -69,7 +69,7 @@ export const FormUpdateCard = ({ card }: { card: CardComplete }) => {
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.card.find(id)
+                queryKey: ["find-card-by-id", id]
             })
         },
         onError: (error) => {

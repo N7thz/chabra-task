@@ -13,8 +13,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { CreateCardProps } from "@/schemas/create-card-schema"
-import { queryKeys } from "@/utils/query-keys"
-import { Task } from "@prisma/client"
+
 import { useMutation } from "@tanstack/react-query"
 import { Trash } from "lucide-react"
 import { UseFieldArrayRemove, useFormContext } from "react-hook-form"
@@ -50,7 +49,7 @@ export const CardTask = ({
         }),
         onSuccess: ({ id }) => {
             queryClient.invalidateQueries({
-                queryKey: queryKeys.card.find(id)
+                queryKey: ["find-card-by-id", id]
             })
         },
         onError: (err) => {

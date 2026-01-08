@@ -14,7 +14,7 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 import { CardComplete } from "@/types"
-import { queryKeys } from "@/utils/query-keys"
+
 import { useQuery } from "@tanstack/react-query"
 import { RotateCw } from "lucide-react"
 import { FormUpdateCard } from "../forms/form-update-card"
@@ -30,7 +30,7 @@ export const CardPage = ({ id, space }: { id: string, space: string }) => {
         error,
         refetch
     } = useQuery<CardComplete>({
-        queryKey: queryKeys.card.find(id),
+        queryKey: ["find-card-by-id", id],
         queryFn: () => findCardById(id)
     })
 

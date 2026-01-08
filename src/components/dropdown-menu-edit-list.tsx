@@ -16,10 +16,13 @@ import {
 } from "./forms/form-change-color-list-dialog"
 import { FormDeleteListDialog } from "./forms/form-delete-list-dialog"
 import { FormEditListDialog } from "./forms/form-edit-list-dialog"
+import { usePathname } from "next/navigation"
 
-export const DropdownMenuEditDialog = ({
-    id, space
-}: { id: string, space: string }) => {
+export const DropdownMenuEditDialog = ({ id }: { id: string }) => {
+
+    const pathname = usePathname().slice(7)
+
+    const space = decodeURI(pathname)
 
     const [showEditDialog, setShowEditDialog] = useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -77,7 +80,6 @@ export const DropdownMenuEditDialog = ({
             />
             <FormChangeColorListDialog
                 id={id}
-                space={space}
                 open={showChangeColorDialog}
                 onOpenChange={setShowChangeColorDialog}
             />

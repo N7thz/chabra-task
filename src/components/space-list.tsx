@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
+import { Ellipsis, RotateCw } from "lucide-react"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
-import { queryKeys } from "@/utils/query-keys"
 import { toast } from "./toast"
-import { RotateCw } from "lucide-react"
+import { Button } from "./ui/button"
 
 export const SpaceList = () => {
 
@@ -24,7 +24,7 @@ export const SpaceList = () => {
         error,
         refetch
     } = useQuery({
-        queryKey: queryKeys.space.findMany(),
+        queryKey: ["find-many-spaces"],
         queryFn: () => findManySpace()
     })
 
@@ -87,10 +87,9 @@ export const SpaceList = () => {
                             <Card key={id}>
                                 <CardHeader>
                                     <CardAction>
-                                        <DropdownMenuEditDialog
-                                            id={id}
-                                            name={name}
-                                        />
+                                        <Button variant={"ghost"}>
+                                            <Ellipsis />
+                                        </Button>
                                     </CardAction>
                                     <CardTitle>
                                         {name}

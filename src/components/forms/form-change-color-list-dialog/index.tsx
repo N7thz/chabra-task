@@ -18,7 +18,6 @@ import {
     ChangeColorListProps, changeColorListSchema
 } from "@/schemas/change-color-list-schema"
 import { colors } from "@/utils/colors"
-import { queryKeys } from "@/utils/query-keys"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Check } from "lucide-react"
@@ -26,12 +25,10 @@ import { useForm } from "react-hook-form"
 
 export const FormChangeColorListDialog = ({
     id,
-    space,
     open,
     onOpenChange
 }: {
     id: string
-    space: string
     open: boolean,
     onOpenChange: (open: boolean) => void
 }) => {
@@ -59,7 +56,7 @@ export const FormChangeColorListDialog = ({
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.list.findMany(space)
+                queryKey: ["find-many-lists"]
             })
         },
         onError: (error) => {

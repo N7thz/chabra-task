@@ -1,6 +1,5 @@
 import { Board } from "@/components/drag-in-drop/board"
 import { FormCreateList } from "@/components/forms/form-create-list"
-import { ListContainer } from "@/components/list-container"
 import {
 	AlertDialog,
 	AlertDialogContent,
@@ -18,13 +17,7 @@ export const metadata: Metadata = {
 	title: "Home | Stoke App",
 }
 
-export default async function Home({
-	params,
-}: {
-	params: Promise<{ space: string }>
-}) {
-
-	const space =  decodeURI((await params).space)
+export default async function Home() {
 
 	return (
 		<ScrollArea className="h-dvh w-[1560px]">
@@ -36,7 +29,7 @@ export default async function Home({
 				"flex flex-nowrap p-8 gap-4",
 				"max-sm:px-4"
 			)}>
-				<Board space={space} />
+				<Board />
 				<AlertDialog>
 					<AlertDialogTrigger asChild>
 						<Button>

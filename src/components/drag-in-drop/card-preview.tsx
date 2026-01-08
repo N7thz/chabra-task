@@ -5,7 +5,7 @@ import {
     Card as UICard
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import type { Card } from "@/types"
+import type { Card } from "@prisma/client"
 import { GripHorizontal } from "lucide-react"
 
 export function CardPreview({ card: { title } }: { card: Card }) {

@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { ChangeCardListProps } from "@/schemas/change-card-list-schema"
-import { queryKeys } from "@/utils/query-keys"
-import { List } from "@prisma/client"
+import { ListWithCards } from "@/types"
 import { useQuery } from "@tanstack/react-query"
 import { useFormContext } from "react-hook-form"
 
@@ -24,8 +23,8 @@ export const SelectList = ({ space }: { space: string }) => {
         data: lists,
         isLoading
     } = useQuery({
-        queryKey: queryKeys.list.findMany(space),
-        queryFn: () => findManyList<List[]>({
+        queryKey: ["find-many-lists"],
+        queryFn: () => findManyList<ListWithCards[]>({
             where: {
                 space: {
                     name: space

@@ -24,7 +24,7 @@ import {
     ChangeCardListProps,
     changeCardListSchema
 } from "@/schemas/change-card-list-schema"
-import { queryKeys } from "@/utils/query-keys"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useState } from "react"
@@ -47,7 +47,7 @@ export const FormChangeCardList = ({
     const {
         data: list
     } = useQuery({
-        queryKey: queryKeys.list.find(listId),
+        queryKey: ["find-list-by-id", listId],
         queryFn: () => findListById(listId)
     })
 
@@ -69,17 +69,7 @@ export const FormChangeCardList = ({
                 onAutoClose: () => setOpen(false)
             })
 
-            queryClient.setQueryData(
-                queryKeys.card.findManyByList(oldListId),
-                (old?: CardProps[]) =>
-                    old?.filter(c => c.id !== card.id)
-            )
-
-            queryClient.setQueryData(
-                queryKeys.card.findManyByList(newListId),
-                (old?: CardProps[]) =>
-                    [...(old ?? []), card]
-            )
+            throw new Error("inplementar atualização via invalidate")
         },
         onError: (err) => {
             toast({

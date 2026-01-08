@@ -1,26 +1,24 @@
+import { findManyComments } from "@/actions/comments/find-many-comments"
 import { RichTextCommentBox } from "@/components/rich-text-comment-box"
 import {
     AlertDialog,
+    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
+    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-    AlertDialogFooter,
-    AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { useQuery } from "@tanstack/react-query"
-import { queryKeys } from "@/utils/query-keys"
-import { findManyComments } from "@/actions/comments/find-many-comments"
-import { CommentsItem } from "./comments-item"
-import { ScrollArea, ScrollBar } from "../ui/scroll-area"
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { Button } from "../ui/button"
 import { RotateCw, X } from "lucide-react"
+import { useState } from "react"
 import { toast } from "../toast"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { ScrollArea, ScrollBar } from "../ui/scroll-area"
+import { CommentsItem } from "./comments-item"
 
 type CommentContainerDialogProps = {
     onOpenCommentsCollapse: (open: boolean) => void
@@ -40,7 +38,7 @@ export const CommentContainerDialog = ({
         error,
         refetch
     } = useQuery({
-        queryKey: queryKeys.comment.findMany(),
+        queryKey: ["find-many-comments"],
         queryFn: () => findManyComments()
     })
 

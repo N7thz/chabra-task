@@ -1,14 +1,11 @@
-import { AppSidebar } from "@/components/app-sidebar"
 import { Background } from "@/components/background"
-import { ThemeProvider } from "@/providers/theme-provider"
-import { SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
+import { LoadingProvider } from "@/providers/loading-provider"
+import { ThemeProvider } from "@/providers/theme-provider"
 import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
-import { cookies } from "next/headers"
 import "./globals.css"
-import { LoadingProvider } from "@/providers/loading-provider"
 
 const jetBrains = JetBrains_Mono({
 	variable: "--font-jetbrains-mono",
@@ -27,7 +24,7 @@ export default async function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="pt-BR" suppressHydrationWarning>
+		<html lang="ptBR" suppressHydrationWarning>
 			<head />
 			<body className={cn(jetBrains.className, "antialiased")}>
 				<ThemeProvider

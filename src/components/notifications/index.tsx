@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { queryKeys } from "@/utils/query-keys"
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
 import { Bell, RotateCw } from "lucide-react"
@@ -31,7 +30,7 @@ export const NotificationsContainer = ({
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: queryKeys.notification.findMany(recipientId),
+		queryKey: ["find-many-notifications-by-recipient-id", recipientId],
 		queryFn: () => findNotificationsyUserId(recipientId),
 	})
 

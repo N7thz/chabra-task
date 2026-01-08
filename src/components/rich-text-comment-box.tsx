@@ -19,7 +19,6 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { toast } from "./toast"
 import { queryClient } from "../providers/theme-provider"
-import { queryKeys } from "@/utils/query-keys"
 
 export const commentSchema = z.object({
     content: z
@@ -65,7 +64,7 @@ export function RichTextCommentBox({
             })
 
             queryClient.invalidateQueries({
-                queryKey: queryKeys.card.find(cardId)
+                queryKey: ["find-card-by-id", cardId]
             })
         },
         onError: (err) => {
