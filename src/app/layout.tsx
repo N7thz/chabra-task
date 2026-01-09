@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next"
 import { Background } from "@/components/background"
 import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
@@ -38,6 +39,7 @@ export default async function RootLayout({
 					</LoadingProvider>
 				</ThemeProvider>
 				<Toaster />
+				<Analytics />
 			</body>
 		</html>
 	)
