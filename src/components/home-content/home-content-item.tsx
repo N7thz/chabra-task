@@ -1,19 +1,22 @@
 import {
+	CardAction,
 	CardDescription,
 	CardFooter,
 	CardHeader,
 	CardTitle,
 	Card as UICard,
 } from "@/components/ui/card"
+import { getDeadlineDays } from "@/functions/get-dead-line-days"
 import { cn } from "@/lib/utils"
 import { Card, Priority, Status } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Clock } from "lucide-react"
 import Link from "next/link"
+import { AvatarGroup } from "../avatar-group"
 
 export const HomeContentItem = ({
-	card: { id, title, createdAt, ...rest },
+	card: { id, title, createdAt, ownersId, ...rest },
 }: {
 	card: Card
 }) => {
@@ -61,6 +64,7 @@ export const HomeContentItem = ({
 
 	const status = getStatusBadge(rest.status)
 	const priority = getPriorityBadge(rest.priority)
+	const term = getDeadlineDays(rest.term)
 
 	return (
 		<UICard key={id} className="justify-between">
@@ -77,10 +81,38 @@ export const HomeContentItem = ({
 						})}
 					</span>
 				</CardDescription>
+				<CardDescription className="flex gap-2 items-center text-primary  w-fit py-2 px-4 rounded-md border-2">
+					<Clock className="size-3.5" />
+					Prazo:
+					<span>
+						{formatDate(rest.term, "dd 'de' MMM", {
+							locale: ptBR,
+						})}
+					</span>
+					{
+						term.status === "OVERDUE"
+							? (
+								<span className="bg-red-500 py-0.5 px-1 rounded-sm">
+									{term.text}
+								</span>
+							)
+							: (
+								<span className="bg-green-600 py-0.5 px-1 rounded-sm">
+									{term.days} restantes
+								</span>
+							)
+					}
+				</CardDescription>
+				<CardAction>
+					<AvatarGroup usersId={ownersId} />
+				</CardAction>
 			</CardHeader>
 			<CardFooter className="gap-2">
 				{[status, priority].map(({ color, text }) => (
-					<div key={text} className={cn("w-fit text-sm rounded-md p-2", color)}>
+					<div
+						key={text}
+						className={cn("w-fit text-sm rounded-md p-2", color)}
+					>
 						{text}
 					</div>
 				))}

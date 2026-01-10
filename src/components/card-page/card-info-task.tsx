@@ -117,7 +117,7 @@ export const CardInfoTask = ({
 							<Clock className="size-3" />
 							{formatDate(term, "dd 'de' MMM", { locale: ptBR })}
 						</div>
-						<AvatarGroup images={["a", "b", "c"]} />
+						<AvatarGroup usersId={["a", "b", "c"]} />
 					</div>
 					<div className="space-y-2.5">
 						<div className="text-sm">

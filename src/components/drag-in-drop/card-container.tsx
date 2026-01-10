@@ -76,7 +76,7 @@ export const CardContainer = ({
 						<Clock className="size-3" />
 						{formatDate(term, "dd 'de' MMM", { locale: ptBR })}
 					</div>
-					<AvatarGroup images={images} />
+					<AvatarGroup usersId={images} />
 				</div>
 				<div className="space-y-2.5">
 					<div className="text-sm">

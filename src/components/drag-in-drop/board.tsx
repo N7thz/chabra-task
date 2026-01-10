@@ -94,7 +94,7 @@ export const Board = () => {
 											<Clock className="size-3" />
 											{formatDate(new Date(), "dd 'de' MMM", { locale: ptBR })}
 										</div>
-										<AvatarGroup images={images} />
+										<AvatarGroup usersId={images} />
 									</div>
 									<Progress value={index * 10} />
 								</CardContent>
