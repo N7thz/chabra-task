@@ -4,5 +4,5 @@ import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 
 export async function findManyUsers(props: Prisma.UserFindManyArgs = {}) {
-    return await prisma.user.findMany(props)
+	return await prisma.user.findMany(props)
 }

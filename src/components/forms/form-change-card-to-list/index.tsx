@@ -5,15 +5,15 @@ import { findListById } from "@/actions/lists/find-list-by-id"
 import { SpanErrorMessage } from "@/components/span-error"
 import { toast } from "@/components/toast"
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -21,8 +21,8 @@ import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
 import { queryClient } from "@/providers/theme-provider"
 import {
-    ChangeCardListProps,
-    changeCardListSchema
+	ChangeCardListProps,
+	changeCardListSchema,
 } from "@/schemas/change-card-list-schema"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -32,137 +32,116 @@ import { FormProvider, useForm } from "react-hook-form"
 import { SelectList } from "./select-list"
 
 type FormChangeCardListProps = {
-    cardId: string
-    listId: string
-    space: string
+	cardId: string
+	listId: string
+	space: string
 }
 
 export const FormChangeCardList = ({
-    listId, cardId, space
+	listId,
+	cardId,
+	space,
 }: FormChangeCardListProps) => {
+	const [open, setOpen] = useState(false)
 
-    const [open, setOpen] = useState(false)
+	const { data: list } = useQuery({
+		queryKey: ["find-list-by-id", cardId],
+		queryFn: () => findListById(listId),
+	})
 
-    const {
-        data: list
-    } = useQuery({
-        queryKey: ["find-list-by-id", cardId],
-        queryFn: () => findListById(listId)
-    })
+	const { mutate, isPending, isSuccess } = useMutation({
+		mutationKey: ["change-card-list"],
+		mutationFn: ({
+			cardId,
+			currentListId,
+			newListId,
+		}: {
+			currentListId: string
+			newListId: string
+			cardId: string
+		}) => changeListCard({ cardId, currentListId, newListId }),
+		onSuccess: ({ card, oldListId, newListId }) => {
+			toast({
+				title: `O cartão foi movido para a lista ${card.list?.name}`,
+				onAutoClose: () => {
+					setOpen(false)
+					window.location.reload()
+				},
+			})
+		},
+		onError: err => {
+			toast({
+				title: err.name,
+				description: err.message,
+				variant: "destructive",
+			})
+		},
+	})
 
-    const { mutate, isPending, isSuccess } = useMutation({
-        mutationKey: ["change-card-list"],
-        mutationFn: ({
-            cardId,
-            currentListId,
-            newListId
-        }: {
-            currentListId: string
-            newListId: string
-            cardId: string
-        }) => changeListCard({ cardId, currentListId, newListId }),
-        onSuccess: ({ card, oldListId, newListId }) => {
+	const form = useForm<ChangeCardListProps>({
+		resolver: zodResolver(changeCardListSchema),
+		defaultValues: {
+			currentListId: listId,
+		},
+	})
 
-            toast({
-                title: `O cartão foi movido para a lista ${card.list?.name}`,
-                onAutoClose: () => {
-                    setOpen(false)
-                    window.location.reload()
-                }
-            })
-        },
-        onError: (err) => {
-            toast({
-                title: err.name,
-                description: err.message,
-                variant: "destructive"
-            })
-        }
-    })
+	const { watch, handleSubmit } = form
 
-    const form = useForm<ChangeCardListProps>({
-        resolver: zodResolver(changeCardListSchema),
-        defaultValues: {
-            currentListId: listId
-        }
-    })
+	function onSubmit({ currentListId, newListId }: ChangeCardListProps) {
+		if (currentListId === newListId) return
 
-    const { watch,  handleSubmit } = form
+		mutate({ cardId, currentListId, newListId })
+	}
 
-    function onSubmit({ currentListId, newListId }: ChangeCardListProps) {
+	return (
+		<AlertDialog open={open} onOpenChange={setOpen}>
+			<AlertDialogTrigger asChild>
+				<DropdownMenuItem onSelect={e => e.preventDefault()}>
+					Alterar lista do cartão
+				</DropdownMenuItem>
+			</AlertDialogTrigger>
+			<FormProvider {...form}>
+				<form>
+					<AlertDialogContent className="sm:min-w-120 space-y-5">
+						<AlertDialogHeader>
+							<AlertDialogTitle>Alterar lista do cartão</AlertDialogTitle>
+							<AlertDialogDescription>
+								Altere a lista do cartão atual
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<div className="space-y-2">
+							<Label className="flex flex-col gap-2">
+								Lista atual:
+								<Input readOnly value={list?.name} />
+							</Label>
+							<SelectList listName={list?.name} space={space} />
+							{watch("currentListId") === watch("newListId") && (
+								<SpanErrorMessage message="A nova lista deve ser diferente da atual." />
+							)}
+						</div>
+						<AlertDialogFooter>
+							<AlertDialogCancel
+								type="button"
+								variant="destructive"
+								className="w-1/2">
+								Cancelar
+							</AlertDialogCancel>
+							<AlertDialogAction
+								type="submit"
+								variant="default"
+								className="w-1/2"
+								disabled={watch("currentListId") === watch("newListId")}
+								onClick={e => {
+									e.preventDefault()
 
-        if (currentListId === newListId) return
-
-        mutate({ cardId, currentListId, newListId })
-    }
-
-    return (
-        <AlertDialog
-            open={open}
-            onOpenChange={setOpen}
-        >
-            <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
-                >
-                    Alterar lista do cartão
-                </DropdownMenuItem>
-            </AlertDialogTrigger>
-            <FormProvider {...form}>
-                <form>
-                    <AlertDialogContent className="sm:min-w-120 space-y-5">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>
-                                Alterar lista do cartão
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Altere a lista do cartão atual
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <div className="space-y-2">
-                            <Label className="flex flex-col gap-2">
-                                Lista atual:
-                                <Input
-                                    readOnly
-                                    value={list?.name}
-                                />
-                            </Label>
-                            <SelectList
-                                listName={list?.name}
-                                space={space}
-                            />
-                            {
-                                watch("currentListId") === watch("newListId") &&
-                                <SpanErrorMessage message="A nova lista deve ser diferente da atual." />
-                            }
-                        </div>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel
-                                type="button"
-                                variant="destructive"
-                                className="w-1/2"
-                            >
-                                Cancelar
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                                type="submit"
-                                variant="default"
-                                className="w-1/2"
-                                disabled={watch("currentListId") === watch("newListId")}
-                                onClick={(e) => {
-                                    e.preventDefault()
-
-                                    handleSubmit(onSubmit)()
-                                }}
-                            >
-                                {
-                                    (isPending) ? <Spinner /> : "Confirmar"
-                                }
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </form>
-            </FormProvider>
-        </AlertDialog>
-    )
+									handleSubmit(onSubmit)()
+								}}>
+								{isPending ? <Spinner /> : "Confirmar"}
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</form>
+			</FormProvider>
+		</AlertDialog>
+	)
 }

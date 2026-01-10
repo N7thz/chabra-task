@@ -28,10 +28,7 @@ export default async function RootLayout({
 		<html lang="ptBR" suppressHydrationWarning>
 			<head />
 			<body className={cn(jetBrains.className, "antialiased")}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-				>
+				<ThemeProvider attribute="class" defaultTheme="system">
 					<LoadingProvider>
 						<Background>
 							{children}

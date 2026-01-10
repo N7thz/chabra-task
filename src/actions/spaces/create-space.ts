@@ -7,37 +7,38 @@ import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 
 export async function createSpace(name: string) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	})
 
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    })
+	if (!session || !session.user) {
+		throw new Error("Usuário não autenticado")
+	}
 
-    if (!session || !session.user) {
-        throw new Error("Usuário não autenticado")
-    }
+	const space = await prisma.space.findUnique({
+		where: {
+			name,
+		},
+	})
 
-    const space = await prisma.space.findUnique({
-        where: {
-            name
-        }
-    })
+	if (space)
+		throw new Error("Espaço já existe", {
+			cause:
+				"Você está tentado cadatrar um novo cartão com um nome que já existe em uma lista.",
+		})
 
-    if (space) throw new Error("Espaço já existe", {
-        cause: "Você está tentado cadatrar um novo cartão com um nome que já existe em uma lista."
-    })
+	const notification = await connectNotification({
+		notification: {
+			message: `Você criou um novo espaço: ${name}`,
+			recipientsId: [session.user.id],
+		},
+	})
 
-    const notification = await connectNotification({
-        notification: {
-            message: `Você criou um novo espaço: ${name}`,
-            recipientsId: [session.user.id],
-        }
-    })
+	const spaceCreated = await prisma.space.create({
+		data: {
+			name,
+		},
+	})
 
-    const spaceCreated = await prisma.space.create({
-        data: {
-            name
-        }
-    })
-
-    return { spaceCreated, notification }
+	return { spaceCreated, notification }
 }

@@ -16,11 +16,7 @@ export const toast = ({
 }: ToastProps) =>
 	toastPrimitive(title, {
 		duration,
-		description: (
-			<span className="text-muted-foreground">
-				{description}
-			</span>
-		),
+		description: <span className="text-muted-foreground">{description}</span>,
 		icon:
 			variant === "success" ? (
 				<CheckCircle className="size-4 text-primary" />

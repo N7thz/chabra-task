@@ -3,14 +3,13 @@
 import { prisma } from "@/lib/prisma"
 
 export async function findTaskById(id: string) {
+	const task = await prisma.task.findUnique({
+		where: {
+			id,
+		},
+	})
 
-    const task = await prisma.task.findUnique({
-        where: {
-            id
-        }
-    })
+	if (!task) throw new Error("Tarefa não encontrada.")
 
-    if (!task) throw new Error("Tarefa não encontrada.")
-
-    return task
+	return task
 }

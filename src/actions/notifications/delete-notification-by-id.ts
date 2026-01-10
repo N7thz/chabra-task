@@ -7,18 +7,18 @@ type DeleteNotificationByIdProps = {
 	recipientId: string
 }
 
-export async function deleteNotificationById({ 
+export async function deleteNotificationById({
 	notificationId,
-	recipientId 
+	recipientId,
 }: DeleteNotificationByIdProps) {
 	return await prisma.notification.update({
 		where: {
-			id: notificationId
+			id: notificationId,
 		},
 		data: {
 			recipientsDeleted: {
-				push: recipientId
-			}
-		}
+				push: recipientId,
+			},
+		},
 	})
 }

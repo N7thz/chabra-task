@@ -7,18 +7,18 @@ type ReadAllNotificationProps = {
 }
 
 export async function readAllNotification({
-	recipientId
+	recipientId,
 }: ReadAllNotificationProps) {
 	return await prisma.notification.updateManyAndReturn({
 		where: {
 			recipientsId: {
-				has: recipientId
-			}
+				has: recipientId,
+			},
 		},
 		data: {
 			recipientsRead: {
-				push: recipientId
-			}
-		}
+				push: recipientId,
+			},
+		},
 	})
 }

@@ -4,27 +4,26 @@ import { prisma } from "@/lib/prisma"
 import { CardComplete } from "@/types"
 
 export async function findCardById(id: string) {
+	const card = await prisma.card.findUnique({
+		where: {
+			id,
+		},
+		include: {
+			activities: {
+				include: {
+					author: true,
+				},
+			},
+			comments: {
+				include: {
+					author: true,
+				},
+			},
+			tasks: true,
+		},
+	})
 
-    const card = await prisma.card.findUnique({
-        where: {
-            id
-        },
-        include: {
-            activities: {
-                include: {
-                    author: true
-                }
-            },
-            comments: {
-                include: {
-                    author: true
-                }
-            },
-            tasks: true,
-        }
-    })
+	if (!card) throw new Error("Card não encontrado.")
 
-    if (!card) throw new Error("Card não encontrado.")
-
-    return card as CardComplete
+	return card as CardComplete
 }

@@ -6,34 +6,32 @@ import { th } from "date-fns/locale"
 import { Prisma } from "@prisma/client"
 
 type ConnectNotificationProps = {
-    notification: Prisma.NotificationCreateInput & {
-        recipientsId: string[],
-    }
+	notification: Prisma.NotificationCreateInput & {
+		recipientsId: string[]
+	}
 }
 
 export async function connectNotification({
-    notification
+	notification,
 }: ConnectNotificationProps) {
+	const recipientsExist: string[] = []
 
-    const recipientsExist: string[] = []
+	const { recipientsId } = notification
 
-    const { recipientsId } = notification
+	for (const recipientId of recipientsId) {
+		const recipient = await findUserById(recipientId)
 
-    for (const recipientId of recipientsId) {
+		if (!recipient) {
+			throw new Error("O usuário destinatário não foi encontrado.")
+		}
 
-        const recipient = await findUserById(recipientId)
+		recipientsExist.push(recipient.id)
+	}
 
-        if (!recipient) {
-            throw new Error("O usuário destinatário não foi encontrado.")
-        }
-
-        recipientsExist.push(recipient.id)
-    }
-
-    return await prisma.notification.create({
-        data: {
-            ...notification,
-            recipientsId: recipientsExist,
-        }
-    })
+	return await prisma.notification.create({
+		data: {
+			...notification,
+			recipientsId: recipientsExist,
+		},
+	})
 }

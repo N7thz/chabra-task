@@ -5,14 +5,15 @@ import { SpanErrorMessage } from "@/components/span-error"
 import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import {
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogFooter,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogFooter,
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import {
-    FormCreateListProps, createListSchema
+	FormCreateListProps,
+	createListSchema,
 } from "@/schemas/create-list-schema"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -22,98 +23,76 @@ import { usePathname } from "next/navigation"
 import { useForm } from "react-hook-form"
 
 export const FormCreateList = () => {
+	const pathname = usePathname()
 
-    const pathname = usePathname()
+	const space = decodeURI(pathname).slice(7)
 
-    const space = decodeURI(pathname).slice(7)
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormCreateListProps>({
+		resolver: zodResolver(createListSchema),
+	})
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm<FormCreateListProps>({
-        resolver: zodResolver(createListSchema),
-    })
+	const { mutate, isPending, isSuccess } = useMutation({
+		mutationKey: ["create-list"],
+		mutationFn: (name: string) => createList({ name, space }),
+		onSuccess: ({ list: { name, ...rest }, notification }) => {
+			toast({
+				title: "Lista criada com sucesso!",
+				description: `A lista ${name} foi criada com sucesso.`,
+			})
 
-    const {
-        mutate,
-        isPending,
-        isSuccess
-    } = useMutation({
-        mutationKey: ["create-list"],
-        mutationFn: (name: string) => createList({ name, space }),
-        onSuccess: ({
-            list: { name, ...rest },
-            notification
-        }) => {
+			queryClient.setQueryData<List[]>(
+				queryKeys.list.findMany(space),
+				oldData => {
+					if (!oldData) return [{ name, ...rest }]
 
-            toast({
-                title: "Lista criada com sucesso!",
-                description: `A lista ${name} foi criada com sucesso.`,
-            })
+					return [...oldData, { name, ...rest }]
+				}
+			)
 
-            queryClient.setQueryData<List[]>(queryKeys.list.findMany(space), (oldData) => {
+			queryClient.setQueryData<Notification[]>(
+				queryKeys.notification.findMany(),
+				oldData => {
+					if (!oldData) return [notification]
 
-                if (!oldData) return [{ name, ...rest }]
+					return [...oldData, notification]
+				}
+			)
+		},
+		onError: error => {
+			console.error("Erro ao criar a lista:", error)
 
-                return [...oldData, { name, ...rest }]
-            })
+			toast({
+				title: "Erro ao criar a lista",
+				description:
+					"Ocorreu um erro ao criar a lista. Por favor, tente novamente.",
+				variant: "destructive",
+			})
+		},
+	})
 
-            queryClient.setQueryData<Notification[]>(
-                queryKeys.notification.findMany(),
-                (oldData) => {
+	function onSubmit({ name }: FormCreateListProps) {
+		mutate(name)
+	}
 
-                    if (!oldData) return [notification]
-
-                    return [...oldData, notification]
-                }
-            )
-        },
-        onError: (error) => {
-
-            console.error("Erro ao criar a lista:", error)
-
-            toast({
-                title: "Erro ao criar a lista",
-                description: "Ocorreu um erro ao criar a lista. Por favor, tente novamente.",
-                variant: "destructive"
-            })
-        }
-    })
-
-    function onSubmit({ name }: FormCreateListProps) {
-        mutate(name)
-    }
-
-    return (
-        <form
-            className="space-y-4"
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <div>
-                <Input
-                    placeholder="Nome da lista"
-                    {...register("name")}
-                />
-                {
-                    errors.name &&
-                    <SpanErrorMessage message={errors.name.message} />
-                }
-            </div>
-            <AlertDialogFooter>
-                <AlertDialogCancel type="button" >
-                    Cancelar
-                </AlertDialogCancel>
-                <AlertDialogAction
-                    type="submit"
-                    variant={"default"}
-                    disabled={isPending || isSuccess}
-                >
-                    {
-                        isPending ? <Spinner /> : "Confirmar"
-                    }
-                </AlertDialogAction>
-            </AlertDialogFooter>
-        </form>
-    )
+	return (
+		<form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+			<div>
+				<Input placeholder="Nome da lista" {...register("name")} />
+				{errors.name && <SpanErrorMessage message={errors.name.message} />}
+			</div>
+			<AlertDialogFooter>
+				<AlertDialogCancel type="button">Cancelar</AlertDialogCancel>
+				<AlertDialogAction
+					type="submit"
+					variant={"default"}
+					disabled={isPending || isSuccess}>
+					{isPending ? <Spinner /> : "Confirmar"}
+				</AlertDialogAction>
+			</AlertDialogFooter>
+		</form>
+	)
 }

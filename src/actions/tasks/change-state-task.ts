@@ -3,22 +3,23 @@
 import { prisma } from "@/lib/prisma"
 
 type ChangeCompletedTaskProps = {
-    id: string,
-    completed: boolean
+	id: string
+	completed: boolean
 }
 
 export async function changeCompletedTask({
-    id, completed
+	id,
+	completed,
 }: ChangeCompletedTaskProps) {
-    return await prisma.task.update({
-        where: {
-            id
-        },
-        data: {
-            completed
-        },
-        include: {
-            card: true
-        }
-    })
+	return await prisma.task.update({
+		where: {
+			id,
+		},
+		data: {
+			completed,
+		},
+		include: {
+			card: true,
+		},
+	})
 }

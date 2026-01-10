@@ -7,17 +7,18 @@ type ReadNotificationByIdProps = {
 	recipientId: string
 }
 
-export async function readNotificationById({ 
-	notificationId, recipientId 
+export async function readNotificationById({
+	notificationId,
+	recipientId,
 }: ReadNotificationByIdProps) {
 	return await prisma.notification.update({
 		where: {
-			id: notificationId
+			id: notificationId,
 		},
 		data: {
 			recipientsRead: {
-				push: recipientId
-			}
+				push: recipientId,
+			},
 		},
 	})
 }

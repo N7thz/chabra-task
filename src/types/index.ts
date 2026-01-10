@@ -4,7 +4,7 @@ import type {
 	Comments,
 	Priority,
 	Status,
-	Task
+	Task,
 } from "@prisma/client"
 import { ReactNode } from "react"
 

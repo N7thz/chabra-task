@@ -5,33 +5,27 @@ import { CSS } from "@dnd-kit/utilities"
 import { ReactNode } from "react"
 
 interface SortableItemProps {
-    id: string
-    children: ReactNode
+	id: string
+	children: ReactNode
 }
 
 export function SortableItem({ id, children }: SortableItemProps) {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition
-    } = useSortable({ id })
+	const { attributes, listeners, setNodeRef, transform, transition } =
+		useSortable({ id })
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition
-    }
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+	}
 
-    return (
-        <div
-            ref={setNodeRef}
-            style={style}
-            {...attributes}
-            {...listeners}
-            className="cursor-grab active:cursor-grabbing"
-        >
-            {children}
-        </div>
-    )
+	return (
+		<div
+			ref={setNodeRef}
+			style={style}
+			{...attributes}
+			{...listeners}
+			className="cursor-grab active:cursor-grabbing">
+			{children}
+		</div>
+	)
 }

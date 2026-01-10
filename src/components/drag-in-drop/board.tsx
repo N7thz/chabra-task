@@ -6,12 +6,12 @@ import { AvatarGroup } from "@/components/avatar-group"
 import { toast } from "@/components/toast"
 import { Button } from "@/components/ui/button"
 import {
-    CardAction,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-    Card as CardUI
+	CardAction,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+	Card as CardUI,
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -19,17 +19,14 @@ import { queryClient } from "@/providers/theme-provider"
 import type { ListWithCards } from "@/types"
 
 import {
-    DndContext,
-    DragEndEvent,
-    DragOverEvent,
-    DragOverlay,
-    DragStartEvent,
-    closestCorners
+	DndContext,
+	DragEndEvent,
+	DragOverEvent,
+	DragOverlay,
+	DragStartEvent,
+	closestCorners,
 } from "@dnd-kit/core"
-import {
-    SortableContext,
-    verticalListSortingStrategy
-} from "@dnd-kit/sortable"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -42,279 +39,247 @@ import { Card } from "@prisma/client"
 import { usePathname } from "next/navigation"
 
 type BoardProps = {
-    initialLists: ListWithCards[]
-    space: string
+	initialLists: ListWithCards[]
+	space: string
 }
 
 export const Board = () => {
+	const pathname = usePathname()
 
-    const pathname = usePathname()
+	const space = decodeURI(pathname).slice(7)
 
-    const space = decodeURI(pathname).slice(7)
+	const {
+		data: lists,
+		isLoading,
+		error,
+		refetch,
+	} = useQuery({
+		queryKey: ["find-many-lists", space],
+		queryFn: () =>
+			findManyList<ListWithCards[]>({
+				where: {
+					space: {
+						name: space,
+					},
+				},
+				include: {
+					cards: true,
+				},
+			}),
+	})
 
-    const {
-        data: lists,
-        isLoading,
-        error,
-        refetch
-    } = useQuery({
-        queryKey: ["find-many-lists", space],
-        queryFn: () => findManyList<ListWithCards[]>({
-            where: {
-                space: {
-                    name: space
-                }
-            },
-            include: {
-                cards: true
-            }
-        })
-    })
+	if (isLoading || !lists) {
+		const images = Array.from({ length: 3 }).map((_, index) => `${index}`)
 
-    if (isLoading || !lists) {
+		return (
+			<div className="flex space-x-4">
+				{Array.from({ length: 3 }).map((_, index) => (
+					<CardUI key={index} className="w-100 pt-0 overflow-hidden">
+						<div className="bg-green-500 w-full h-12" />
+						<CardContent>
+							<CardUI>
+								<CardHeader>
+									<CardTitle>
+										<Skeleton className="h-4" />
+									</CardTitle>
+									<CardAction>
+										<Button disabled variant="ghost" className="-translate-y-2">
+											<Ellipsis />
+										</Button>
+									</CardAction>
+								</CardHeader>
+								<CardContent className="space-y-5">
+									<div className="flex justify-between">
+										<div className="flex items-center gap-2 text-sm text-muted-foreground">
+											<Clock className="size-3" />
+											{formatDate(new Date(), "dd 'de' MMM", { locale: ptBR })}
+										</div>
+										<AvatarGroup images={images} />
+									</div>
+									<Progress value={index * 10} />
+								</CardContent>
+							</CardUI>
+						</CardContent>
+						<CardFooter>
+							<Button disabled className="w-full">
+								Adicionar cartão
+							</Button>
+						</CardFooter>
+					</CardUI>
+				))}
+			</div>
+		)
+	}
 
-        const images = Array.from({ length: 3 }).map((_, index) => (`${index}`))
+	if (error) {
+		return toast({
+			title: error.name,
+			description: error.message,
+			variant: "destructive",
+			duration: Infinity,
+			closeButton: true,
+			action: {
+				label: (
+					<span className="flex items-center gap-2 group">
+						Tentar novamente
+						<RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
+					</span>
+				),
+				onClick: () => refetch(),
+			},
+		})
+	}
 
-        return (
-            <div className="flex space-x-4">
-                {
-                    Array.from({ length: 3 }).map((_, index) => (
-                        <CardUI
-                            key={index}
-                            className="w-100 pt-0 overflow-hidden"
-                        >
-                            <div className="bg-green-500 w-full h-12" />
-                            <CardContent>
-                                <CardUI>
-                                    <CardHeader>
-                                        <CardTitle>
-                                            <Skeleton className="h-4" />
-                                        </CardTitle>
-                                        <CardAction>
-                                            <Button
-                                                disabled
-                                                variant="ghost"
-                                                className="-translate-y-2"
-                                            >
-                                                <Ellipsis />
-                                            </Button>
-                                        </CardAction>
-                                    </CardHeader>
-                                    <CardContent className="space-y-5">
-                                        <div className="flex justify-between">
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Clock className="size-3" />
-                                                {formatDate(new Date(), "dd 'de' MMM", { locale: ptBR })}
-                                            </div>
-                                            <AvatarGroup images={images} />
-                                        </div>
-                                        <Progress value={index * 10} />
-                                    </CardContent>
-                                </CardUI>
-                            </CardContent>
-                            <CardFooter>
-                                <Button disabled className="w-full">
-                                    Adicionar cartão
-                                </Button>
-                            </CardFooter>
-                        </CardUI>
-                    ))
-                }
-            </ div>
-        )
-    }
-
-    if (error) {
-        return (
-            toast({
-                title: error.name,
-                description: error.message,
-                variant: "destructive",
-                duration: Infinity,
-                closeButton: true,
-                action: {
-                    label: (
-                        <span className="flex items-center gap-2 group">
-                            Tentar novamente
-                            <RotateCw className="size-3 group-hover:rotate-180 transition-transform" />
-                        </span>
-                    ),
-                    onClick: () => refetch()
-                }
-            })
-        )
-    }
-
-    return (
-        <BoardData
-            space={space}
-            initialLists={lists}
-        />
-    )
+	return <BoardData space={space} initialLists={lists} />
 }
 
 export const BoardData = ({ initialLists, space }: BoardProps) => {
+	const [lists, setLists] = useState<ListWithCards[]>(initialLists)
+	const [activeCard, setActiveCard] = useState<Card | null>(null)
+	const [fromListId, setFromListId] = useState<string | null>(null)
 
-    const [lists, setLists] = useState<ListWithCards[]>(initialLists)
-    const [activeCard, setActiveCard] = useState<Card | null>(null)
-    const [fromListId, setFromListId] = useState<string | null>(null)
+	const { mutate } = useMutation({
+		mutationKey: ["change-list-card"],
+		mutationFn: ({
+			cardId,
+			currentListId,
+			newListId,
+		}: {
+			currentListId: string
+			newListId: string
+			cardId: string
+		}) => changeListCard({ cardId, currentListId, newListId }),
+		onSuccess: ({ card: { title, list } }) => {
+			toast({
+				title: `O cartão ${title} foi movido para a lista ${list?.name}`,
+			})
 
-    const { mutate } = useMutation({
-        mutationKey: ["change-list-card"],
-        mutationFn: ({
-            cardId,
-            currentListId,
-            newListId
-        }: {
-            currentListId: string
-            newListId: string
-            cardId: string
-        }) => changeListCard({ cardId, currentListId, newListId }),
-        onSuccess: ({ card: { title, list } }) => {
+			queryClient.invalidateQueries({
+				queryKey: ["find-many-lists"],
+			})
+		},
+	})
 
-            toast({
-                title: `O cartão ${title} foi movido para a lista ${list?.name}`
-            })
+	function findCard(id: string) {
+		return lists.flatMap(list => list.cards).find(card => card.id === id)
+	}
 
-            queryClient.invalidateQueries({
-                queryKey: ["find-many-lists"]
-            })
-        }
-    })
+	function findListByCardId(cardId: string) {
+		return lists.find(list => list.cards.some(card => card.id === cardId))
+	}
 
-    function findCard(id: string) {
-        return lists.flatMap(list => list.cards).find(card => card.id === id)
-    }
+	function findListById(listId: string) {
+		return lists.find(list => list.id === listId)
+	}
 
-    function findListByCardId(cardId: string) {
-        return lists.find(list =>
-            list.cards.some(card => card.id === cardId)
-        )
-    }
+	function handleDragStart(event: DragStartEvent) {
+		const card = findCard(event.active.id as string)
 
-    function findListById(listId: string) {
-        return lists.find(list => list.id === listId)
-    }
+		if (card) setActiveCard(card)
 
-    function handleDragStart(event: DragStartEvent) {
+		const activeId = event.active.id as string
+		const sourceList = findListByCardId(activeId)
 
-        const card = findCard(event.active.id as string)
+		if (sourceList) {
+			setFromListId(sourceList.id)
+		}
+	}
 
-        if (card) setActiveCard(card)
+	function handleDragOver(event: DragOverEvent) {
+		const { active, over } = event
+		if (!over) return
 
-        const activeId = event.active.id as string
-        const sourceList = findListByCardId(activeId)
+		const activeId = active.id as string
+		const overId = over.id as string
 
-        if (sourceList) {
-            setFromListId(sourceList.id)
-        }
-    }
+		const sourceList = findListByCardId(activeId)
+		if (!sourceList) return
 
-    function handleDragOver(event: DragOverEvent) {
+		const targetList =
+			lists.find(list => list.id === overId) || findListByCardId(overId)
 
-        const { active, over } = event
-        if (!over) return
+		if (!targetList || sourceList.id === targetList.id) return
 
-        const activeId = active.id as string
-        const overId = over.id as string
+		setLists(prev => {
+			const source = prev.find(l => l.id === sourceList.id)!
+			const target = prev.find(l => l.id === targetList.id)!
 
-        const sourceList = findListByCardId(activeId)
-        if (!sourceList) return
+			const sourceCards = [...source.cards]
+			const targetCards = [...target.cards]
 
-        const targetList =
-            lists.find(list => list.id === overId) ||
-            findListByCardId(overId)
+			const cardIndex = sourceCards.findIndex(c => c.id === activeId)
+			const [movedCard] = sourceCards.splice(cardIndex, 1)
 
-        if (!targetList || sourceList.id === targetList.id) return
+			movedCard.listId = target.id
 
-        setLists(prev => {
-            const source = prev.find(l => l.id === sourceList.id)!
-            const target = prev.find(l => l.id === targetList.id)!
+			return prev.map(list => {
+				if (list.id === source.id) return { ...list, cards: sourceCards }
 
-            const sourceCards = [...source.cards]
-            const targetCards = [...target.cards]
+				if (list.id === target.id)
+					return { ...list, cards: [...targetCards, movedCard] }
 
-            const cardIndex = sourceCards.findIndex(c => c.id === activeId)
-            const [movedCard] = sourceCards.splice(cardIndex, 1)
+				return list
+			})
+		})
+	}
 
-            movedCard.listId = target.id
+	function handleDragEnd(event: DragEndEvent) {
+		const { active, over } = event
 
-            return prev.map(list => {
-                if (list.id === source.id)
-                    return { ...list, cards: sourceCards }
+		if (!over) return
 
-                if (list.id === target.id)
-                    return { ...list, cards: [...targetCards, movedCard] }
+		const activeId = active.id as string
+		const overId = over.id as string
 
-                return list
-            })
-        })
-    }
+		const toList =
+			// caso solte direto na coluna
+			findListById(overId) ||
+			// caso solte em cima de outro card
+			findListByCardId(overId)
 
-    function handleDragEnd(event: DragEndEvent) {
+		if (!toList || !fromListId) return
 
-        const { active, over } = event
+		console.log("LISTA INICIAL:", fromListId)
+		console.log("LISTA FINAL:", toList.id)
 
-        if (!over) return
+		if (fromListId !== toList.id) {
+			mutate({
+				cardId: activeId,
+				currentListId: fromListId,
+				newListId: toList.id,
+			})
+		}
 
-        const activeId = active.id as string
-        const overId = over.id as string
+		setFromListId(null)
+	}
 
-        const toList =
-            // caso solte direto na coluna
-            findListById(overId) ||
-            // caso solte em cima de outro card
-            findListByCardId(overId)
+	return (
+		<DndContext
+			collisionDetection={closestCorners}
+			onDragStart={handleDragStart}
+			onDragOver={handleDragOver}
+			onDragEnd={handleDragEnd}>
+			<div className="flex gap-6 items-start">
+				{lists.map(list => {
+					const items = list.cards.map(card => card.id)
 
-        if (!toList || !fromListId) return
+					return (
+						<SortableContext
+							key={list.id}
+							items={items}
+							strategy={verticalListSortingStrategy}>
+							<Column list={list} space={space} />
+						</SortableContext>
+					)
+				})}
+			</div>
 
-        console.log("LISTA INICIAL:", fromListId)
-        console.log("LISTA FINAL:", toList.id)
-
-        if (fromListId !== toList.id) {
-            mutate({
-                cardId: activeId,
-                currentListId: fromListId,
-                newListId: toList.id
-            })
-        }
-
-        setFromListId(null)
-    }
-
-    return (
-        <DndContext
-            collisionDetection={closestCorners}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-        >
-            <div className="flex gap-6 items-start">
-                {lists.map(list => {
-
-                    const items = list.cards.map(card => card.id)
-
-                    return (
-                        <SortableContext
-                            key={list.id}
-                            items={items}
-                            strategy={verticalListSortingStrategy}
-                        >
-                            <Column
-                                list={list}
-                                space={space}
-                            />
-                        </SortableContext>
-                    )
-                })}
-            </div>
-
-            {createPortal(
-                <DragOverlay>
-                    {activeCard && <CardPreview card={activeCard} />}
-                </DragOverlay>,
-                document.body
-            )}
-        </DndContext>
-    )
+			{createPortal(
+				<DragOverlay>
+					{activeCard && <CardPreview card={activeCard} />}
+				</DragOverlay>,
+				document.body
+			)}
+		</DndContext>
+	)
 }

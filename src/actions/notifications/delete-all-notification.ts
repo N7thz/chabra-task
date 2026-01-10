@@ -2,6 +2,4 @@
 
 import { prisma } from "@/lib/prisma"
 
-export async function deleteAllNotification() {
-	
-}
+export async function deleteAllNotification() {}

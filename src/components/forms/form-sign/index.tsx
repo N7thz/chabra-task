@@ -15,7 +15,6 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 export const FormSign = () => {
-
 	const [visible, setVisible] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -94,8 +93,7 @@ export const FormSign = () => {
 						type="button"
 						variant={"link"}
 						className="p-0"
-						onClick={() => setVisible(visible => !visible)}
-					>
+						onClick={() => setVisible(visible => !visible)}>
 						{visible ? "esconder senha" : "mostrar senha"}
 					</Button>
 				</div>

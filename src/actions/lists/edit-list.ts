@@ -3,20 +3,15 @@
 import { prisma } from "@/lib/prisma"
 import { findListById } from "./find-list-by-id"
 
-export async function editList({
-    id, name
-}: {
-    id: string, name: string
-}) {
+export async function editList({ id, name }: { id: string; name: string }) {
+	await findListById(id)
 
-    await findListById(id)
-
-    return await prisma.list.update({
-        where: {
-            id
-        },
-        data: {
-            name
-        }
-    })
+	return await prisma.list.update({
+		where: {
+			id,
+		},
+		data: {
+			name,
+		},
+	})
 }

@@ -7,70 +7,69 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 
 export type FormDataCreateCard = {
-    title: string
-    cnpj: string
-    description: string | null
-    priority: "URGENT" | "HIGH" | "MID" | "LOW"
-    status: "PENDING" | "IN_PROGRESS" | "COMPLETED"
-    term: Date
-    color: string | null
-    ownersId: string[]
+	title: string
+	cnpj: string
+	description: string | null
+	priority: "URGENT" | "HIGH" | "MID" | "LOW"
+	status: "PENDING" | "IN_PROGRESS" | "COMPLETED"
+	term: Date
+	color: string | null
+	ownersId: string[]
 }
 
 type CreateCardProps = {
-    tasks: Omit<Task, "id">[]
-    formData: FormDataCreateCard,
-    id: string
+	tasks: Omit<Task, "id">[]
+	formData: FormDataCreateCard
+	id: string
 }
 
-export async function createCard({
-    tasks, formData, id,
-}: CreateCardProps) {
+export async function createCard({ tasks, formData, id }: CreateCardProps) {
+	await findListById(id)
 
-    await findListById(id)
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	})
 
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    })
+	if (!session) {
+		throw new Error(
+			"Não foi possivel encontrar a sessão, tente logar novamente."
+		)
+	}
 
-    if (!session) {
-        throw new Error("Não foi possivel encontrar a sessão, tente logar novamente.")
-    }
+	const { user } = session
 
-    const { user } = session
+	const { id: userId, name } = user
 
-    const { id: userId, name } = user
+	const card = await prisma.card.create({
+		data: {
+			...formData,
+			activities: {
+				create: {
+					message: `O usuario ${name} criou o cartão ${formData.title}.`,
+					author: {
+						connect: {
+							id: userId,
+						},
+					},
+				},
+			},
+			list: {
+				connect: {
+					id,
+				},
+			},
+			tasks: {
+				createMany: {
+					data: tasks,
+				},
+			},
+		},
+		include: {
+			comments: true,
+			label: true,
+			tasks: true,
+		},
+	})
 
-    const card = await prisma.card.create({
-        data: {
-            ...formData,
-            activities: {
-                create: {
-                    message: `O usuario ${name} criou o cartão ${formData.title}.`,
-                    author: {
-                        connect: {
-                            id: userId
-                        }
-                    }
-                }
-            },
-            list: {
-                connect: {
-                    id
-                }
-            },
-            tasks: {
-                createMany: {
-                    data: tasks
-                }
-            }
-        },
-        include: {
-            comments: true,
-            label: true,
-            tasks: true,
-        }
-    })
-
-    return { card }
+	return { card }
 }

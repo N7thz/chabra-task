@@ -8,16 +8,15 @@ export async function findNotificationsyUserId(
 	recipientId: string,
 	props: Prisma.NotificationFindManyArgs = {}
 ) {
-
 	await findUserById(recipientId)
 
 	const notifications = await prisma.notification.findMany({
 		where: {
 			recipientsId: {
-				has: recipientId
-			}
+				has: recipientId,
+			},
 		},
-		...props
+		...props,
 	})
 
 	return notifications

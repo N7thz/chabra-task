@@ -6,30 +6,25 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
-    title: "Chabra tasks | Home"
+	title: "Chabra tasks | Home",
 }
 
 export default async function Home() {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	})
 
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    })
+	if (!session) {
+		redirect("/sign-in")
+	}
 
-    if (!session) {
-        redirect("/sign-in")
-    }
-
-    return (
-        <Card className="size-full w-full m-8 border-none bg-sidebar">
-            <CardHeader>
-                <CardTitle className="text-base">
-                    Olá {session.user.name}
-                </CardTitle>
-                <CardTitle>
-                    Minhas tarefas:
-                </CardTitle>
-            </CardHeader>
-            <HomeContentPage />
-        </Card>
-    )
+	return (
+		<Card className="size-full w-full m-8 border-none bg-sidebar">
+			<CardHeader>
+				<CardTitle className="text-base">Olá {session.user.name}</CardTitle>
+				<CardTitle>Minhas tarefas:</CardTitle>
+			</CardHeader>
+			<HomeContentPage />
+		</Card>
+	)
 }

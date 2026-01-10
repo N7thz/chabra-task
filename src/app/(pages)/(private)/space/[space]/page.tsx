@@ -5,7 +5,7 @@ import {
 	AlertDialogContent,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger
+	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
@@ -20,14 +20,8 @@ export const metadata: Metadata = {
 export default async function Home() {
 	return (
 		<ScrollArea className="h-dvh w-[1560px]">
-			<ScrollBar
-				orientation="horizontal"
-				className="-translate-y-4"
-			/>
-			<main className={cn(
-				"flex flex-nowrap p-8 gap-4",
-				"max-sm:px-4"
-			)}>
+			<ScrollBar orientation="horizontal" className="-translate-y-4" />
+			<main className={cn("flex flex-nowrap p-8 gap-4", "max-sm:px-4")}>
 				<Board />
 				<AlertDialog>
 					<AlertDialogTrigger asChild>
@@ -38,9 +32,7 @@ export default async function Home() {
 					</AlertDialogTrigger>
 					<AlertDialogContent className="w-1/2">
 						<AlertDialogHeader>
-							<AlertDialogTitle>
-								Adicionar lista
-							</AlertDialogTitle>
+							<AlertDialogTitle>Adicionar lista</AlertDialogTitle>
 						</AlertDialogHeader>
 						<FormCreateList />
 					</AlertDialogContent>
