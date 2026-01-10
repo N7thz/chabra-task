@@ -5,6 +5,7 @@ import { findListById } from "../lists/find-list-by-id"
 import { CreateTaskProps as Task } from "@/schemas/create-card-schema"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
+import { createNotification } from "../notifications/create-notification"
 
 export type FormDataCreateCard = {
 	title: string
@@ -24,6 +25,7 @@ type CreateCardProps = {
 }
 
 export async function createCard({ tasks, formData, id }: CreateCardProps) {
+
 	await findListById(id)
 
 	const session = await auth.api.getSession({
@@ -71,5 +73,10 @@ export async function createCard({ tasks, formData, id }: CreateCardProps) {
 		},
 	})
 
-	return { card }
+	const notification = await createNotification({
+		message: `Você foi incluido no cartão ${card.title}`,
+		userIds: card.ownersId
+	})
+
+	return { card, notification }
 }

@@ -7,36 +7,52 @@ datasource db {
 }
 
 model Notification {
-  id           String   @id @default(uuid())
-  message      String
-  createdAt    DateTime @default(now()) @map("created_at")
-  description  String?
-  recipientsId String[]
-  recipientsRead String[]
-  recipientsDeleted String[]
+  id        String   @id @default(uuid())
+  message   String
+  createdAt DateTime @default(now())
+
+  recipients NotificationRecipient[]
 
   @@map("notifications")
 }
 
+model NotificationRecipient {
+  id String @id @default(uuid())
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  notificationId String
+  
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  readAt    DateTime?
+  deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([notificationId, userId])
+  @@index([userId])
+}
+
 model User {
-  id            String     @id @default(uuid())
-  email         String     @unique
-  name          String     @unique
-  emailVerified Boolean    @default(false)
-  createdAt     DateTime   @default(now()) @map("created_at")
-  updatedAt     DateTime   @default(now()) @updatedAt @map("updated_at")
-  isActive      Boolean    @default(true)
-  password      String?
-  image         String?
-  banned        Boolean?   @default(false)
-  banReason     String?
-  banExpires    DateTime?
-  role          Role       @default(USER)
-  sessions      Session[]
-  accounts      Account[]
-  comments      Comments[]
-  spaces        Space[]
-  activities    Activity[]
+  id                     String                  @id @default(uuid())
+  email                  String                  @unique
+  name                   String                  @unique
+  emailVerified          Boolean                 @default(false)
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @default(now()) @updatedAt @map("updated_at")
+  isActive               Boolean                 @default(true)
+  password               String?
+  image                  String?
+  banned                 Boolean?                @default(false)
+  banReason              String?
+  banExpires             DateTime?
+  role                   Role                    @default(USER)
+  sessions               Session[]
+  accounts               Account[]
+  comments               Comments[]
+  spaces                 Space[]
+  activities             Activity[]
+  notificationRecipients NotificationRecipient[]
 
   @@map("users")
 }

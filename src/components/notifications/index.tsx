@@ -1,6 +1,6 @@
 "use client"
 
-import { findNotificationsyUserId } from "@/actions/notifications/find-many-notifications"
+import { findNotificationsByUserId } from "@/actions/notifications/find-many-notifications"
 import { Animation } from "@/components/animation"
 import { toast } from "@/components/toast"
 import { Badge } from "@/components/ui/badge"
@@ -22,6 +22,7 @@ import { ptBR } from "date-fns/locale"
 import { Bell, Ellipsis, RotateCw } from "lucide-react"
 import { Button } from "../ui/button"
 import { NotificationItem } from "./notification-item"
+import { ButtonGroup } from "../ui/button-group"
 
 type NotificationsContainerProps = { recipientId: string }
 
@@ -38,7 +39,7 @@ export const NotificationsContainer = ({
 		refetch,
 	} = useQuery({
 		queryKey: ["find-many-notifications-by-recipient-id", recipientId],
-		queryFn: () => findNotificationsyUserId(recipientId),
+		queryFn: () => findNotificationsByUserId(recipientId),
 	})
 
 	if (error) {
@@ -93,6 +94,7 @@ export const NotificationsContainer = ({
 				className={cn(open ? "translate-x-50" : "translate-x-16")}
 			>
 				<div className="w-100">
+
 					<DropdownMenuLabel className="text-base flex gap-2 justify-between">
 						<div className="flex gap-2 items-center">
 							<Bell className="size-4" />
@@ -101,6 +103,21 @@ export const NotificationsContainer = ({
 						<Badge>{notifications.length}</Badge>
 					</DropdownMenuLabel>
 					<DropdownMenuSeparator />
+					<ButtonGroup
+						className="w-full my-2"
+						orientation={"vertical"}
+					>
+						<Button
+							className="w-full"
+							variant={"outline"}>
+							Marcar todas como lidas
+						</Button>
+						<Button
+							className="w-full"
+							variant={"outline"}>
+							Excluir todas
+						</Button>
+					</ButtonGroup>
 					<ScrollArea className="h-104 w-full">
 						<ScrollBar />
 						<DropdownMenuGroup className="space-y-2">

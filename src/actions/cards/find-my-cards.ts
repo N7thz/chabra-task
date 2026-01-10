@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { headers } from "next/headers"
 
 export async function findMyCards() {
+	
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	})

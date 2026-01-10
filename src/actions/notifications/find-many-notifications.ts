@@ -4,20 +4,24 @@ import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 import { findUserById } from "../users/find-user-by-id"
 
-export async function findNotificationsyUserId(
+export async function findNotificationsByUserId(
 	recipientId: string,
 	props: Prisma.NotificationFindManyArgs = {}
 ) {
 	await findUserById(recipientId)
 
-	const notifications = await prisma.notification.findMany({
+	return await prisma.notification.findMany({
 		where: {
-			recipientsId: {
-				has: recipientId,
-			},
+			recipients: {
+				some: {
+					userId: recipientId,
+					deletedAt: null
+				}
+			}
 		},
-		...props,
+		include: {
+			recipients: true
+		},
+		...props
 	})
-
-	return notifications
 }

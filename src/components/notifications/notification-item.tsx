@@ -14,7 +14,6 @@ import { Button } from "../ui/button"
 export const NotificationItem = ({
     notification: {
         message,
-        description,
         createdAt,
     }
 }: { notification: Notification }) => {
@@ -29,12 +28,6 @@ export const NotificationItem = ({
                 <CardTitle className="text-sm">
                     {message}
                 </CardTitle>
-                {
-                    description &&
-                    <CardDescription>
-                        {description}
-                    </CardDescription>
-                }
                 <CardDescription className="ml-auto text-xs">
                     {formatDate(createdAt, "PPP", { locale: ptBR })}
                 </CardDescription>
