@@ -4,7 +4,7 @@ import { findNotificationsyUserId } from "@/actions/notifications/find-many-noti
 import { Animation } from "@/components/animation"
 import { toast } from "@/components/toast"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardDescription, CardHeader } from "@/components/ui/card"
+import { Card, CardAction, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,16 +13,24 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { cn } from "@/lib/utils"
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
-import { Bell, RotateCw } from "lucide-react"
+import { formatDate } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { Bell, Ellipsis, RotateCw } from "lucide-react"
+import { Button } from "../ui/button"
+import { NotificationItem } from "./notification-item"
+
+type NotificationsContainerProps = { recipientId: string }
 
 export const NotificationsContainer = ({
-	recipientId,
-}: {
-	recipientId: string
-}) => {
+	recipientId
+}: NotificationsContainerProps) => {
+
+	const { open } = useSidebar()
+
 	const {
 		data: notifications,
 		isLoading,
@@ -79,39 +87,51 @@ export const NotificationsContainer = ({
 					</SidebarMenuButton>
 				</SidebarMenuItem>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent asChild align="end" className="translate-x-50">
+			<DropdownMenuContent
+				asChild
+				align="end"
+				className={cn(open ? "translate-x-50" : "translate-x-16")}
+			>
 				<div className="w-100">
-					<DropdownMenuLabel className="text-base flex gap-2">
-						<Bell />
-						Notificações
+					<DropdownMenuLabel className="text-base flex gap-2 justify-between">
+						<div className="flex gap-2 items-center">
+							<Bell className="size-4" />
+							Notificações
+						</div>
+						<Badge>{notifications.length}</Badge>
 					</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 					<ScrollArea className="h-104 w-full">
 						<ScrollBar />
-						<DropdownMenuGroup>
-							{notifications.length === 0 ? (
-								<Card className="border-none">
-									<CardHeader>
-										<CardDescription className="text-center">
-											Nenhuma notificação encontrada.
-										</CardDescription>
-									</CardHeader>
-								</Card>
-							) : (
-								notifications.map((notification, i) => (
-									<Animation
-										key={notification.id}
-										initial={{ x: -100, opacity: 0 }}
-										animate={{ x: 0, opacity: 1 }}
-										exit={{ x: -100, opacity: 0 }}
-										transition={{
-											duration: 0.5,
-											delay: i * 0.3,
-										}}>
-										<div>{notification.message}</div>
-									</Animation>
-								))
-							)}
+						<DropdownMenuGroup className="space-y-2">
+							{
+								notifications.length === 0
+									? (
+										<Card className="border-none">
+											<CardHeader>
+												<CardDescription className="text-center">
+													Nenhuma notificação encontrada.
+												</CardDescription>
+											</CardHeader>
+										</Card>
+									)
+									: (
+										notifications.map((notification, i) => (
+											<Animation
+												key={notification.id}
+												initial={{ x: -100, opacity: 0 }}
+												animate={{ x: 0, opacity: 1 }}
+												exit={{ x: -100, opacity: 0 }}
+												transition={{
+													duration: 0.5,
+													delay: i * 0.3,
+												}}>
+												<NotificationItem
+													notification={notification}
+												/>
+											</Animation>
+										))
+									)}
 						</DropdownMenuGroup>
 					</ScrollArea>
 				</div>

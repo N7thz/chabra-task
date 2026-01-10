@@ -26,6 +26,7 @@ export function Column({
 	space,
 	list: { id, name, cards, color },
 }: ColumnProps) {
+	
 	const { setNodeRef, isOver } = useDroppable({ id })
 
 	return (

@@ -16,25 +16,31 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
+import { User } from "@prisma/client"
 import {
 	Calendar,
 	ChevronUp,
 	Cog,
 	Home,
 	Settings,
-	UserCircle,
+	UserCircle2
 } from "lucide-react"
 import { headers } from "next/headers"
 import Link from "next/link"
+import { redirect } from "next/navigation"
+import { Avatar } from "../avatar"
 import { NotificationsContainer } from "../notifications"
 import { SidebarTrigger } from "./sidebar-trigger"
-import { SpaceListSidebar } from "./space-list-sidebar"
 import { SignOutButton } from "./sign-out-button"
+import { SpaceListSidebar } from "./space-list-sidebar"
 
 export const AppSidebar = async () => {
+
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	})
+
+	if (!session) redirect("/sign-in")
 
 	return (
 		<Sidebar variant="floating" collapsible="icon">
@@ -46,9 +52,9 @@ export const AppSidebar = async () => {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarTrigger />
-							{session && session.user && (
-								<NotificationsContainer recipientId={session.user.id} />
-							)}
+							<NotificationsContainer
+								recipientId={session.user.id}
+							/>
 							<SidebarMenuItem>
 								<SidebarMenuButton asChild>
 									<Link href={"/home"}>
@@ -91,8 +97,8 @@ export const AppSidebar = async () => {
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<SidebarMenuButton>
-									<UserCircle />
-									{session && session.user && <span>{session.user.name}</span>}
+									<UserCircle2 className="size-10"/>
+									<span>{session.user.name}</span>
 									<ChevronUp className="ml-auto" />
 								</SidebarMenuButton>
 							</DropdownMenuTrigger>

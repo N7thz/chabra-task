@@ -37,6 +37,7 @@ import { CardPreview } from "./card-preview"
 import { Column } from "./column"
 import { Card } from "@prisma/client"
 import { usePathname } from "next/navigation"
+import { colors } from "@/utils/colors"
 
 type BoardProps = {
 	initialLists: ListWithCards[]
@@ -44,6 +45,7 @@ type BoardProps = {
 }
 
 export const Board = () => {
+
 	const pathname = usePathname()
 
 	const space = decodeURI(pathname).slice(7)
@@ -63,19 +65,29 @@ export const Board = () => {
 					},
 				},
 				include: {
-					cards: true,
+					cards: {
+						include: {
+							tasks: true
+						}
+					},
 				},
 			}),
 	})
 
 	if (isLoading || !lists) {
+
 		const images = Array.from({ length: 3 }).map((_, index) => `${index}`)
 
 		return (
 			<div className="flex space-x-4">
 				{Array.from({ length: 3 }).map((_, index) => (
 					<CardUI key={index} className="w-100 pt-0 overflow-hidden">
-						<div className="bg-green-500 w-full h-12" />
+						<div
+							style={{
+								background: colors[index]
+							}}
+							className="w-full h-12"
+						/>
 						<CardContent>
 							<CardUI>
 								<CardHeader>
@@ -260,18 +272,21 @@ export const BoardData = ({ initialLists, space }: BoardProps) => {
 			onDragOver={handleDragOver}
 			onDragEnd={handleDragEnd}>
 			<div className="flex gap-6 items-start">
-				{lists.map(list => {
-					const items = list.cards.map(card => card.id)
+				{
+					lists.map(list => {
 
-					return (
-						<SortableContext
-							key={list.id}
-							items={items}
-							strategy={verticalListSortingStrategy}>
-							<Column list={list} space={space} />
-						</SortableContext>
-					)
-				})}
+						const items = list.cards.map(card => card.id)
+
+						return (
+							<SortableContext
+								key={list.id}
+								items={items}
+								strategy={verticalListSortingStrategy}>
+								<Column list={list} space={space} />
+							</SortableContext>
+						)
+					})
+				}
 			</div>
 
 			{createPortal(

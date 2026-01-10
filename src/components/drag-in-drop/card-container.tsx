@@ -33,7 +33,8 @@ export const CardContainer = ({
 }: {
 	card: CardComplete
 	space: string
-}) => {
+}) => {	
+
 	const tasksCompleteds = tasks.filter(task => task.completed).length
 
 	function getCompletedPercentage(tasks: Task[]) {
