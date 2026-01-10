@@ -26,10 +26,10 @@ import {
 } from "lucide-react"
 import { headers } from "next/headers"
 import Link from "next/link"
-import { NotificationsContainer } from "./notifications"
+import { NotificationsContainer } from "../notifications"
 import { SidebarTrigger } from "./sidebar-trigger"
-import { SignOutButton } from "./sign-out-button"
 import { SpaceListSidebar } from "./space-list-sidebar"
+import { SignOutButton } from "./sign-out-button"
 
 export const AppSidebar = async () => {
 
@@ -42,7 +42,7 @@ export const AppSidebar = async () => {
             variant="floating"
             collapsible="icon"
         >
-            <SidebarContent >
+            <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel className="text-primary text-xl mb-4">
                         Chabra Tasks

@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar } from "@/components/side-bar/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
 import { LayoutProps } from "@/types"
@@ -21,6 +21,5 @@ export default async function PrivateLayout({ children }: LayoutProps) {
 			<AppSidebar />
 			{children}
 		</SidebarProvider>
-
 	)
 }

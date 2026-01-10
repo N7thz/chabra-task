@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
-import { LightRays } from './ui/light-rays'
+import React, { ReactNode } from "react"
+import { LightRays } from "./ui/light-rays"
 
 export const Background = ({ children }: { children: ReactNode }) => {
     return (

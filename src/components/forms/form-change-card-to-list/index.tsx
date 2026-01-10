@@ -50,8 +50,6 @@ export const FormChangeCardList = ({
         queryFn: () => findListById(listId)
     })
 
-    console.log(list)
-
     const { mutate, isPending, isSuccess } = useMutation({
         mutationKey: ["change-card-list"],
         mutationFn: ({

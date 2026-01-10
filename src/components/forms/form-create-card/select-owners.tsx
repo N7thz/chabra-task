@@ -1,9 +1,9 @@
-import { findManyUsers } from '@/actions/users/find-many-users'
-import { MultiSelect } from '@/components/multi-select'
-import { toast } from '@/components/toast'
-import { Button } from '@/components/ui/button'
-import { useQuery } from '@tanstack/react-query'
-import { ChevronDown, RotateCw } from 'lucide-react'
+import { findManyUsers } from "@/actions/users/find-many-users"
+import { MultiSelect } from "@/components/multi-select"
+import { toast } from "@/components/toast"
+import { Button } from "@/components/ui/button"
+import { useQuery } from "@tanstack/react-query"
+import { ChevronDown, RotateCw } from "lucide-react"
 
 type SelectOwnersProps = {
   selected: string[],

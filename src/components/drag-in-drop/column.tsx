@@ -10,7 +10,7 @@ import {
     CardTitle 
 } from "@/components/ui/card"
 import { useDroppable } from "@dnd-kit/core"
-import type { List } from "@/types"
+import type { CardComplete, List } from "@/types"
 import { CardContainer } from "./card-container"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
@@ -63,7 +63,7 @@ export function Column({
                         : cards.map(card => (
                             <CardContainer
                                 key={card.id}
-                                card={card}
+                                card={card as CardComplete}
                                 space={space}
                             />
                         ))

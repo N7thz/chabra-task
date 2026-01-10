@@ -27,7 +27,6 @@ import { SelectStatus } from "./select-status"
 import { SelectTerm } from "./select-term"
 import { TaskItem } from "./task-item"
 import { Priority, Status } from "@prisma/client"
-import { date } from "zod"
 
 type FormCreateCardProps = { space: string, id: string }
 
@@ -45,7 +44,7 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
             {
                 formData, tasks
             }: {
-                tasks: CreateTaskProps[],
+                tasks: Omit<CreateTaskProps, "id">[],
                 formData: FormDataCreateCard
             }
         ) => createCard({ id, tasks, formData }),
@@ -92,15 +91,19 @@ export const FormCreateCard = ({ space, id }: FormCreateCardProps) => {
 
     function appendTasks() {
         append({
+            id: "",
             name: "",
             term: new Date(),
             completed: false,
-            ownersId: []
+            ownersId: [],
         })
     }
 
     function onSubmit({ tasks, ...formData }: CreateCardProps) {
-        mutate({ tasks, formData })
+
+        const data = tasks.map(({ id, ...rest }) => rest)
+
+        mutate({ tasks: data, formData })
         // console.log(formData)
     }
 

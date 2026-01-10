@@ -18,7 +18,7 @@ export type FormDataCreateCard = {
 }
 
 type CreateCardProps = {
-    tasks: Task[]
+    tasks: Omit<Task, "id">[]
     formData: FormDataCreateCard,
     id: string
 }

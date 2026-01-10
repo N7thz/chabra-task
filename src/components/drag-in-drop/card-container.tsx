@@ -19,10 +19,7 @@ import Link from "next/link"
 import { AvatarGroup } from "../avatar-group"
 import { CardOptionsDialog } from "./card-options-dialog"
 import { SortableCard } from "./sortable-card"
-
-type CardContainerProps = CardPorps & {
-    tasks: Task[]
-}
+import { CardComplete } from "@/types"
 
 const images: string[] = [
     "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=96&h=96&dpr=2&q=80",
@@ -41,7 +38,7 @@ export const CardContainer = ({
         tasks = []
     }
 }: {
-    card: CardContainerProps,
+    card: CardComplete,
     space: string
 }) => {
 
@@ -82,7 +79,7 @@ export const CardContainer = ({
                 </CardAction>
                 <Link
                     title={`Ir para o card ${title}`}
-                    href={`/${space}/card/${id}`}
+                    href={`/cards/${id}`}
                     className="contents size-full cursor-pointer group"
                 >
                     <CardTitle className={cn(

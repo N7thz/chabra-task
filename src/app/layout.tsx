@@ -5,6 +5,7 @@ import { LoadingProvider } from "@/providers/loading-provider"
 import { ThemeProvider } from "@/providers/theme-provider"
 import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 const jetBrains = JetBrains_Mono({
@@ -34,6 +35,7 @@ export default async function RootLayout({
 					<LoadingProvider>
 						<Background>
 							{children}
+							<Analytics />
 						</Background>
 					</LoadingProvider>
 				</ThemeProvider>

@@ -1,15 +1,18 @@
 "use client"
 
 import { findManySpace } from "@/actions/spaces/find-many-spaces"
-import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
-import { useQuery } from "@tanstack/react-query"
-import { Skeleton } from "./ui/skeleton"
-import Link from "next/link"
-import { Blend, Dot, RotateCw } from "lucide-react"
-
-import { toast } from "./toast"
-import { usePathname } from "next/navigation"
+import { toast } from "@/components/toast"
+import { 
+    SidebarMenuButton, 
+    SidebarMenuItem, 
+    useSidebar 
+} from "@/components/ui/sidebar"
+import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
+import { useQuery } from "@tanstack/react-query"
+import { Blend, Dot, RotateCw } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export const SpaceListSidebar = () => {
 
@@ -27,7 +30,7 @@ export const SpaceListSidebar = () => {
         error,
         refetch
     } = useQuery({
-        queryKey: ["find-many-spaces", pathname],
+        queryKey: ["find-many-spaces"],
         queryFn: () => findManySpace()
     })
 

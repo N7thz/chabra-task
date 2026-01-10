@@ -16,7 +16,6 @@ import { Activity } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { ChevronDown, History } from "lucide-react"
-import { useState } from "react"
 
 type ActivitiesContainerProps = {
     activities: Activity[]
