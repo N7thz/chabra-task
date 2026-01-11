@@ -1,267 +1,264 @@
-# Stock Management App 📦
+# Chabra Tasks
 
-A modern, full-featured stock management application built with Next.js 15, TypeScript, and Prisma. This application provides a comprehensive solution for managing product inventory, tracking stock movements, and monitoring low-stock notifications.
+<!-- Adicione sua imagem aqui -->
 
-## ✨ Features
+## 📋 Sobre o Projeto
 
-### 📊 **Product Management**
+**Chabra Tasks** é uma aplicação web moderna de gerenciamento de tarefas e projetos desenvolvida com Next.js 16. O sistema oferece uma interface intuitiva para organização de cards, listas e espaços de trabalho, com funcionalidades avançadas de colaboração e notificações em tempo real.
 
-- ✅ Create, read, update, and delete products
-- 📸 Product image upload and management with cropping functionality
-- 💰 Price tracking and management
-- 📝 Product descriptions and detailed information
-- 📊 Inventory quantity tracking
-- ⚠️ Minimum stock quantity alerts
+## 🚀 Tecnologias
 
-### 📤 **Stock Exit Management**
+### Core
+- **Next.js 16.1.1** - Framework React com suporte a Server Components
+- **React 19.2.3** - Biblioteca JavaScript para interfaces
+- **TypeScript 5** - Tipagem estática
+- **TailwindCSS 4.1.12** - Framework CSS utility-first
 
-- 🚀 Track product exits and movements
-- 👤 User-based exit logging
-- 🌍 Regional tracking for stock movements
-- 📋 Detailed exit descriptions and notes
-- ⏰ Timestamp tracking for all movements
+### Backend & Database
+- **Prisma 7.0.1** - ORM para PostgreSQL
+- **PostgreSQL** - Banco de dados relacional (Neon)
+- **Better Auth 1.3.9** - Sistema de autenticação
+- **bcryptjs** - Hash de senhas
 
-### 🔔 **Smart Notifications**
+### UI & Componentes
+- **Radix UI** - Componentes acessíveis e customizáveis
+- **Lucide React** - Biblioteca de ícones
+- **Framer Motion (motion)** - Animações
+- **@dnd-kit** - Drag and Drop
+- **Sonner** - Notificações toast
+- **React Hook Form** - Gerenciamento de formulários
+- **Zod 4.1.5** - Validação de schemas
 
-- 📢 Real-time notifications for stock activities
-- ⚠️ Low stock alerts when products reach minimum quantity
-- 👁️ Mark notifications as read/unread
-- 🗑️ Bulk notification management
-- 🎯 Action-based notification categorization (CREATE, UPDATE, DELETE, MIN_QUANTITY)
+### Utilitários
+- **TanStack Query** - Gerenciamento de estado e cache
+- **date-fns** - Manipulação de datas
+- **XLSX** - Exportação para Excel
+- **Web Push** - Notificações push
+- **Next Themes** - Suporte a temas claro/escuro
 
-### 📊 **Data Management**
-
-- 📥 Bulk product import functionality
-- 📤 Export capabilities with Excel support
-- 🔄 Advanced filtering and search
-- 📋 Data tables with sorting and pagination
-- 📊 Stock count and analytics
-
-### 🎨 **User Interface**
-
-- 🌙 Dark/Light theme support
-- 📱 Responsive design for all devices
-- ⚡ Smooth animations with Framer Motion
-- 🎛️ Modern UI components with Radix UI
-- 🔍 Command palette for quick actions
-- 📅 Date picker for time-based filtering
-
-### 🔧 **Technical Features**
-
-- ⚡ Server-side rendering with Next.js 15
-- 🗄️ SQLite database with Prisma ORM
-- 🔄 React Query for efficient data fetching
-- 📝 Form validation with React Hook Form & Zod
-- 🎨 Styling with Tailwind CSS
-- 📁 File handling with Multer
-- 🍞 Toast notifications with Sonner
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-- **Framework:** Next.js 15 with Turbopack
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **UI Components:** Radix UI, Lucide React
-- **State Management:** React Query (TanStack)
-- **Forms:** React Hook Form with Zod validation
-- **Animations:** Framer Motion, Auto-animate
-- **Tables:** TanStack Table
-
-### Backend
-
-- **Database:** SQLite with Prisma ORM
-- **API Routes:** Next.js API Routes
-- **File Upload:** Multer
-- **Validation:** Zod
-
-### Development Tools
-
-- **Package Manager:** npm
-- **Code Quality:** TypeScript
-- **Testing:** Faker.js for mock data
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- Node.js 18+
-- npm or yarn package manager
-- Git
-
-## 🚀 Getting Started
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd stoke-app
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Set up the database**
-
-   ```bash
-   # Run database migrations
-   npm run migrate
-
-   # (Optional) Reset database if needed
-   npm run reset
-   ```
-
-4. **Start the development server**
-
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Visit [http://localhost:3000](http://localhost:3000) to see the application.
-
-## 📜 Available Scripts
-
-### Development
-
-- `npm run dev` - Start development server with Turbopack
-- `npm run migrate` - Run Prisma database migrations (development)
-- `npm run reset` - Reset the database
-- `npm run studio` - Open Prisma Studio for database management
-
-### Production
-
-- `npm run build` - Build the application for production
-- `npm run start` - Start the production server
-- `npm run vercel-build` - Build command for Vercel deployment
-- `npm run db:push` - Push schema to database (production)
-- `npm run db:generate` - Generate Prisma client
-
-### Code Quality
-
-- `npm run lint` - Check for linting issues
-- `npm run lint:fix` - Fix linting issues automatically
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
-
-## 📁 Project Structure
+## 📁 Estrutura do Projeto
 
 ```
-stoke-app/
+chabra-task/
+├── prisma/
+│   ├── migrations/              # Migrações do banco de dados
+│   └── schema.prisma            # Schema do Prisma
+├── public/
+│   ├── icon-192x192.png         # PWA icons
+│   ├── icon-512x512.png
+│   └── sw.js                    # Service Worker
 ├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── (pages)/           # Page groups
-│   │   │   ├── products/      # Product management pages
-│   │   │   ├── products-exit/ # Stock exit pages
-│   │   │   ├── create-products/ # Product creation
-│   │   │   └── ...
-│   │   ├── api/               # API routes
-│   │   └── layout.tsx         # Root layout
-│   ├── actions/               # Server actions
-│   │   ├── products/          # Product-related actions
-│   │   ├── products-exit/     # Stock exit actions
-│   │   └── notifications/     # Notification actions
-│   ├── components/            # Reusable UI components
-│   └── database/              # Database files
-├── prisma/                    # Prisma schema and migrations
-├── public/                    # Static assets
-└── package.json               # Project dependencies
+│   ├── actions/                 # Server Actions do Next.js
+│   ├── app/                     # App Router do Next.js
+│   │   ├── (pages)/
+│   │   │   ├── (private)/       # Rotas privadas (autenticadas)
+│   │   │   │   ├── cards/[id]/  # Detalhes do card
+│   │   │   │   ├── home/        # Página inicial
+│   │   │   │   ├── settings/    # Configurações
+│   │   │   │   └── space/[space]/ # Espaço de trabalho
+│   │   │   └── (public)/        # Rotas públicas
+│   │   │       ├── sign-in/     # Login
+│   │   │       └── sign-up/     # Cadastro
+│   │   ├── layout.tsx           # Layout raiz
+│   │   └── globals.css          # Estilos globais
+│   ├── components/              # Componentes React
+│   │   ├── card-page/           # Componentes da página de cards
+│   │   ├── drag-in-drop/        # Sistema drag and drop
+│   │   ├── forms/               # Formulários
+│   │   ├── home-content/        # Conteúdo da home
+│   │   ├── list-container/      # Container de listas
+│   │   ├── magicui/             # Componentes de UI customizados
+│   │   ├── notifications/       # Sistema de notificações
+│   │   ├── sidebar/             # Barra lateral
+│   │   └── ui/                  # Componentes UI base
+│   ├── functions/               # Funções utilitárias
+│   ├── hooks/                   # Custom React Hooks
+│   ├── lib/                     # Bibliotecas e configurações
+│   │   ├── auth.ts              # Configuração Better Auth
+│   │   └── prisma.ts            # Cliente Prisma
+│   ├── providers/               # Context Providers
+│   │   ├── loading-provider/    # Provider de loading
+│   │   └── theme-provider/      # Provider de tema
+│   ├── schemas/                 # Schemas Zod para validação
+│   ├── types/                   # Definições de tipos TypeScript
+│   └── utils/                   # Funções utilitárias
+├── .env                         # Variáveis de ambiente
+├── .eslintrc.json              # Configuração ESLint
+├── .prettierrc.json            # Configuração Prettier
+├── package.json                # Dependências e scripts
+├── postcss.config.mjs          # Configuração PostCSS
+├── prisma.config.ts            # Configuração Prisma
+└── tsconfig.json               # Configuração TypeScript
 ```
 
-## 🗄️ Database Schema
+## 🗄️ Modelo de Dados
 
-The application uses three main models:
+O sistema possui as seguintes entidades principais:
 
-- **Product**: Core product information with inventory tracking
-- **ProductExit**: Stock movement and exit tracking
-- **Notification**: System notifications and alerts
+### 👤 User (Usuário)
+- Autenticação com email e senha
+- Roles: ADMIN, USER, TECHNICIAN, ANALYST, SUPERVISOR
+- Gerenciamento de perfil com imagem
+- Sistema de banimento com expiração
 
-## 🚀 Deploy na Produção
+### 📊 Space (Espaço)
+- Agrupamento de listas
+- Pertence a um usuário
+- Nome único
 
-### Deploy na Vercel (Recomendado)
+### 📋 List (Lista)
+- Pertence a um espaço
+- Pode ter cor personalizada
+- Contém múltiplos cards
 
-1. **Configure o banco de dados:**
-   - Crie uma conta no [Neon](https://neon.tech) (PostgreSQL gratuito)
-   - Obtenha a URL de conexão
+### 🎯 Card (Card de Tarefa)
+- Campos: título, CNPJ, descrição, prazo (term)
+- Prioridades: URGENT, HIGH, MID, LOW
+- Status: PENDING, IN_PROGRESS, COMPLETED
+- Labels customizáveis
+- Múltiplos donos (ownersId)
+- Cor personalizada
 
-2. **Faça o deploy:**
+### ✅ Task (Subtarefa)
+- Pertence a um card
+- Checkbox de conclusão
+- Prazo opcional
+- Múltiplos responsáveis
 
-   ```bash
-   # Clone e prepare o repositório
-   git add .
-   git commit -m "feat: preparar para deploy"
-   git push origin main
-   ```
+### 💬 Comments (Comentários)
+- Comentários em cards
+- Autor vinculado
 
-3. **Configure na Vercel:**
-   - Conecte seu repositório GitHub
-   - Adicione as variáveis de ambiente:
-     ```env
-     DATABASE_URL=sua-url-postgresql
-     NEXTAUTH_URL=https://seu-app.vercel.app
-     NEXTAUTH_SECRET=sua-chave-secreta
-     NEXT_PUBLIC_APP_URL=https://seu-app.vercel.app
-     NODE_ENV=production
-     ```
+### 📝 Activity (Atividades)
+- Log de ações no card
+- Rastreamento de mudanças
 
-4. **Deploy automático:**
-   - A Vercel fará o build automaticamente
-   - Acesse sua URL: `https://seu-app.vercel.app`
+### 🔔 Notification (Notificações)
+- Sistema de notificações para usuários
+- Suporte a múltiplos destinatários
+- Controle de leitura e exclusão
 
-### Guia Completo
+### 🔐 Session & Account
+- Gerenciamento de sessões
+- Suporte a múltiplos provedores de autenticação
 
-Para instruções detalhadas, veja: [DEPLOY.md](./DEPLOY.md)
+## ⚙️ Funcionalidades Principais
 
-### Variáveis de Ambiente
+### 🎯 Gerenciamento de Tarefas
+- ✅ Criação, edição e exclusão de cards
+- ✅ Organização em listas e espaços
+- ✅ Drag and drop entre listas
+- ✅ Priorização de tarefas (Urgente, Alta, Média, Baixa)
+- ✅ Status de progresso (Pendente, Em Progresso, Concluído)
+- ✅ Subtarefas (tasks) dentro dos cards
+- ✅ Labels e tags customizáveis
 
-Copie `.env.example` para `.env` e configure:
+### 👥 Colaboração
+- ✅ Atribuição de múltiplos responsáveis
+- ✅ Sistema de comentários
+- ✅ Log de atividades
+- ✅ Notificações em tempo real
+
+### 🎨 Interface
+- ✅ Tema claro/escuro
+- ✅ Design responsivo
+- ✅ Animações suaves
+- ✅ Componentes acessíveis (Radix UI)
+
+### 🔒 Segurança & Autenticação
+- ✅ Autenticação segura com Better Auth
+- ✅ Gerenciamento de sessões
+- ✅ Controle de acesso baseado em roles
+- ✅ Sistema de banimento de usuários
+
+### 📊 Exportação & Relatórios
+- ✅ Exportação para Excel (XLSX)
+- ✅ Histórico de atividades
+
+## 🛠️ Scripts Disponíveis
 
 ```bash
-cp .env.example .env
-# Edite o arquivo .env com suas configurações
+# Desenvolvimento
+npm run dev              # Inicia servidor de desenvolvimento com Turbopack
+
+# Database
+npm run migrate          # Executa migrações do Prisma
+npm run reset            # Reseta o banco de dados
+npm run studio           # Abre Prisma Studio
+npm run db:generate      # Gera Prisma Client
+npm run db:migrate:deploy # Deploy de migrações em produção
+
+# Build & Deploy
+npm run build            # Build de produção
+npm run start            # Inicia servidor de produção
+
+# Qualidade de Código
+npm run lint             # Executa ESLint
+npm run lint:fix         # Corrige problemas do ESLint
+npm run format           # Formata código com Prettier
+npm run format:check     # Verifica formatação
 ```
 
-## 🔧 Configurações de Produção
+## 🚀 Como Executar
 
-### Banco de Dados
+### Pré-requisitos
+- Node.js 20+
+- PostgreSQL
+- npm ou yarn
 
-- **Desenvolvimento:** SQLite (local)
-- **Produção:** PostgreSQL (Neon, PlanetScale, Supabase)
+### Instalação
 
-### Upload de Arquivos
+1. Clone o repositório:
+```bash
+git clone <url-do-repositorio>
+cd chabra-task
+```
 
-- **Desenvolvimento:** Sistema de arquivos local
-- **Produção:** Recomendado usar Cloudinary ou AWS S3
+2. Instale as dependências:
+```bash
+npm install
+```
 
-### Monitoramento
+3. Configure as variáveis de ambiente:
+```env
+DATABASE_URL='postgresql://user:password@host:port/database'
+BETTER_AUTH_SECRET='seu-secret-aqui'
+```
 
-- Logs disponíveis no dashboard da Vercel
-- Analytics integrado da Vercel
-- Headers de segurança configurados
+4. Execute as migrações do banco:
+```bash
+npm run migrate
+```
 
-## 🤝 Contributing
+5. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+6. Acesse `http://localhost:3000`
 
-## 📝 License
+## 📊 Análise de Código
 
-This project is open source and available under the [MIT License](LICENSE).
+O projeto utiliza:
+- **ESLint** - Linting com configuração Next.js e Prettier
+- **Prettier** - Formatação de código
+- **TypeScript strict mode** - Tipagem rigorosa
+- **Prisma** - Type-safe database client
 
-## 🙏 Acknowledgments
+## 🌟 Funcionalidades Avançadas
 
-- Built with [Next.js](https://nextjs.org/)
-- UI components from [Shadcn UI](https://ui.shadcn.com/)
-- Icons from [Lucide React](https://lucide.dev/)
-- Database ORM with [Prisma](https://www.prisma.io/)
+- 📱 **PWA Ready** - Ícones e Service Worker configurados
+- 🔄 **Real-time** - Atualizações em tempo real com TanStack Query
+- 🎨 **Themes** - Sistema de temas personalizável
+- 📊 **Analytics** - Integração com Vercel Analytics
+- 🔔 **Push Notifications** - Notificações web push
+- 🖼️ **Image Cropper** - Recorte de imagens de perfil
+- 📱 **Responsive** - Design adaptável a todos os dispositivos
+
+## 📝 Licença
+
+Este projeto é privado e não possui licença pública.
 
 ---
 
-**Happy Stock Managing! 📦✨**
+Desenvolvido com ❤️ usando Next.js e TypeScript
