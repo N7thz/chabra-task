@@ -4,10 +4,22 @@ import { prisma } from "@/lib/prisma"
 import { Prisma } from "@prisma/client"
 import { findUserById } from "../users/find-user-by-id"
 
-export async function findNotificationsByUserId(
+export type ReadFilter = "all" | "read" | "unread"
+
+export async function findNotificationsByUserId<T>(
 	recipientId: string,
-	props: Prisma.NotificationFindManyArgs = {}
+	options?: {
+		includeDeleted?: boolean
+		read?: ReadFilter
+		props?: Prisma.NotificationFindManyArgs
+	}
 ) {
+	const {
+		includeDeleted = false,
+		read = "all",
+		props = {}
+	} = options ?? {}
+
 	await findUserById(recipientId)
 
 	return await prisma.notification.findMany({
@@ -15,7 +27,16 @@ export async function findNotificationsByUserId(
 			recipients: {
 				some: {
 					userId: recipientId,
-					deletedAt: null
+
+					// filtro de deletadas (soft delete)
+					...(includeDeleted ? {} : { deletedAt: null }),
+
+					// filtro de lidas / não lidas
+					...(read === "read"
+						? { readAt: { not: null } }
+						: read === "unread"
+							? { readAt: null }
+							: {})
 				}
 			}
 		},
@@ -23,5 +44,5 @@ export async function findNotificationsByUserId(
 			recipients: true
 		},
 		...props
-	})
+	}) as T
 }

@@ -1,28 +1,43 @@
 "use client"
 
-import { findNotificationsByUserId } from "@/actions/notifications/find-many-notifications"
+import {
+	findNotificationsByUserId,
+	ReadFilter
+} from "@/actions/notifications/find-many-notifications"
 import { Animation } from "@/components/animation"
 import { toast } from "@/components/toast"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardAction, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import {
+	Card,
+	CardDescription,
+	CardHeader
+} from "@/components/ui/card"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
+	DropdownMenuGroup
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import {
+	SidebarMenuButton,
+	SidebarMenuItem,
+	useSidebar
+} from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
-import { formatDate } from "date-fns"
-import { ptBR } from "date-fns/locale"
-import { Bell, Ellipsis, RotateCw } from "lucide-react"
-import { Button } from "../ui/button"
+import { Bell, RotateCw } from "lucide-react"
 import { NotificationItem } from "./notification-item"
-import { ButtonGroup } from "../ui/button-group"
+import { NotificationRecipient, Notification } from "@prisma/client"
+import { useState } from "react"
+import { NotifcationRadioGroup } from "./notifcation-radio-group"
+
+type NotificationWithRecipients = Notification & {
+	recipients: NotificationRecipient[]
+}
 
 type NotificationsContainerProps = { recipientId: string }
 
@@ -30,7 +45,10 @@ export const NotificationsContainer = ({
 	recipientId
 }: NotificationsContainerProps) => {
 
-	const { open } = useSidebar()
+	const [open, setOpen] = useState(false)
+	const [includeRead, setIncludeRead] = useState<ReadFilter>("all")
+
+	const { open: openSidebar } = useSidebar()
 
 	const {
 		data: notifications,
@@ -38,8 +56,16 @@ export const NotificationsContainer = ({
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: ["find-many-notifications-by-recipient-id", recipientId],
-		queryFn: () => findNotificationsByUserId(recipientId),
+		queryKey: [
+			"find-many-notifications-by-recipient-id",
+			recipientId,
+			includeRead,
+		],
+		queryFn: () =>
+			findNotificationsByUserId<NotificationWithRecipients[]>(recipientId, {
+				includeDeleted: false,
+				read: includeRead
+			}),
 	})
 
 	if (error) {
@@ -69,14 +95,17 @@ export const NotificationsContainer = ({
 						<Bell className="size-4" />
 						<span>Notificações</span>
 					</div>
-					<Badge>99</Badge>
+					<Badge>+99</Badge>
 				</SidebarMenuButton>
 			</SidebarMenuItem>
 		)
 	}
 
 	return (
-		<DropdownMenu>
+		<DropdownMenu
+			open={open}
+			onOpenChange={setOpen}
+		>
 			<DropdownMenuTrigger asChild>
 				<SidebarMenuItem>
 					<SidebarMenuButton className="justify-between">
@@ -91,10 +120,11 @@ export const NotificationsContainer = ({
 			<DropdownMenuContent
 				asChild
 				align="end"
-				className={cn(open ? "translate-x-50" : "translate-x-16")}
+				className={cn(
+					openSidebar ? "translate-x-50" : "translate-x-16"
+				)}
 			>
 				<div className="w-100">
-
 					<DropdownMenuLabel className="text-base flex gap-2 justify-between">
 						<div className="flex gap-2 items-center">
 							<Bell className="size-4" />
@@ -103,21 +133,29 @@ export const NotificationsContainer = ({
 						<Badge>{notifications.length}</Badge>
 					</DropdownMenuLabel>
 					<DropdownMenuSeparator />
-					<ButtonGroup
-						className="w-full my-2"
-						orientation={"vertical"}
-					>
+					<DropdownMenuGroup className="my-2.5 space-y-1.5">
 						<Button
 							className="w-full"
-							variant={"outline"}>
+							variant={"secondary"}
+						>
 							Marcar todas como lidas
 						</Button>
 						<Button
 							className="w-full"
-							variant={"outline"}>
+							variant={"destructive"}
+						>
 							Excluir todas
 						</Button>
-					</ButtonGroup>
+					</DropdownMenuGroup>
+					<DropdownMenuSeparator />
+					<DropdownMenuGroup className="my-2">
+						<NotifcationRadioGroup
+							includeRead={includeRead}
+							setIncludeRead={setIncludeRead}
+							setOpen={setOpen}
+						/>
+					</DropdownMenuGroup>
+					<DropdownMenuSeparator />
 					<ScrollArea className="h-104 w-full">
 						<ScrollBar />
 						<DropdownMenuGroup className="space-y-2">
@@ -144,7 +182,7 @@ export const NotificationsContainer = ({
 													delay: i * 0.3,
 												}}>
 												<NotificationItem
-													notification={notification}
+													{...notification}
 												/>
 											</Animation>
 										))

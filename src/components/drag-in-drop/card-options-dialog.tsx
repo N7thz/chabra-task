@@ -23,6 +23,7 @@ export const CardOptionsDialog = ({
 	listId,
 	space,
 }: CardOptionsDialogProps) => {
+	
 	const { push } = useRouter()
 
 	return (
@@ -36,7 +37,7 @@ export const CardOptionsDialog = ({
 				<DropdownMenuLabel>Opções</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem onClick={() => push(`/${space}/card/${id}`)}>
+					<DropdownMenuItem onClick={() => push(`/cards/${id}`)}>
 						Abrir cartão
 					</DropdownMenuItem>
 					<DropdownMenuItem>Excluir cartão</DropdownMenuItem>

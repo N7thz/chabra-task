@@ -1,37 +1,66 @@
-import { 
-    Card, 
-    CardAction, 
-    CardDescription, 
-    CardHeader, 
-    CardTitle 
-} from "@/components/ui/card"
-import { Notification } from "@prisma/client"
+import {
+    Alert,
+    AlertAction,
+    AlertDescription,
+    AlertTitle
+} from "@/components/ui/alert"
+import { authClient } from "@/lib/auth-client"
+import { cn } from "@/lib/utils"
+import { Notification, NotificationRecipient } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { Ellipsis } from "lucide-react"
-import { Button } from "../ui/button"
+import { NotificationsOptionsDialog } from "./notifications-options-dialog"
+import { Bookmark, BookmarkCheck } from "lucide-react"
+
+type NotificationWithRecipients = Notification & {
+    recipients: NotificationRecipient[]
+}
 
 export const NotificationItem = ({
-    notification: {
-        message,
-        createdAt,
-    }
-}: { notification: Notification }) => {
+    id,
+    message,
+    createdAt,
+    recipients
+}: NotificationWithRecipients) => {
+
+    const { data } = authClient.useSession()
+
+    const myNotification = recipients.find(recipients => recipients.userId === data?.user.id)
+
+    const notificationIsReaded = (
+        myNotification !== undefined &&
+        myNotification.readAt !== null
+    )
+
     return (
-        <Card className="rounded-sm">
-            <CardHeader>
-                <CardAction>
-                    <Button>
-                        <Ellipsis />
-                    </Button>
-                </CardAction>
-                <CardTitle className="text-sm">
-                    {message}
-                </CardTitle>
-                <CardDescription className="ml-auto text-xs">
-                    {formatDate(createdAt, "PPP", { locale: ptBR })}
-                </CardDescription>
-            </CardHeader>
-        </Card>
+        <Alert
+            className={cn(
+                "rounded-sm",
+                notificationIsReaded
+                    ? "bg-secondary border-primary"
+                    : "bg-card"
+            )}
+        >
+            {
+                notificationIsReaded 
+                ? <BookmarkCheck />
+                : <Bookmark />
+            }
+            <AlertTitle className={cn(
+                "text-sm flex",
+                notificationIsReaded && "line-through"
+            )}>
+                {message}
+            </AlertTitle>
+            <AlertAction>
+                <NotificationsOptionsDialog
+                    notificationId={id}
+                    recipients={recipients}
+                />
+            </AlertAction>
+            <AlertDescription className="ml-auto text-xs">
+                {formatDate(createdAt, "PPP", { locale: ptBR })}
+            </AlertDescription>
+        </Alert>
     )
 }

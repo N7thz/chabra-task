@@ -1,15 +1,21 @@
 "use server"
 
+import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { headers } from "next/headers"
 
-type ReadNotificationForUserProps = {
-    notificationId: string
-    userId: string
-}
+export async function readNotificationForUser(notificationId: string) {
 
-export async function deleteNotificationForUser({
-    notificationId, userId
-}: ReadNotificationForUserProps) {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    })
+
+    if (!session) {
+        throw new Error("Não foi possivel encontrar a sessão, tente logar novamente.")
+    }
+
+    const userId = session.user.id
+
     return await prisma.notificationRecipient.update({
         where: {
             notificationId_userId: {
