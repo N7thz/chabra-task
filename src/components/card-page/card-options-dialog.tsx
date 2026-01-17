@@ -9,7 +9,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { FormChangeCardList } from "../forms/form-change-card-to-list"
 
 type CardOptionsDialogProps = {
@@ -24,8 +23,6 @@ export const CardOptionsDialog = ({
 	space,
 }: CardOptionsDialogProps) => {
 
-	const { push } = useRouter()
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -37,11 +34,11 @@ export const CardOptionsDialog = ({
 				<DropdownMenuLabel>Opções</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem onClick={() => push(`/cards/${id}`)}>
-						Abrir cartão
-					</DropdownMenuItem>
 					<DropdownMenuItem>
 						Excluir cartão
+					</DropdownMenuItem>
+					<DropdownMenuItem>
+						Duplicar cartão
 					</DropdownMenuItem>
 					<FormChangeCardList
 						cardId={id}

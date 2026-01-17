@@ -30,8 +30,13 @@ export const CardInfoTask = ({
 }: {
 	card: CardComplete
 }) => {
-	const { control, setValue, register, watch } =
-		useFormContext<CreateCardProps>()
+
+	const {
+		control,
+		setValue,
+		register,
+		watch
+	} = useFormContext<CreateCardProps>()
 
 	const term = watch("term")
 
@@ -49,8 +54,6 @@ export const CardInfoTask = ({
 		name: "tasks",
 		control,
 	})
-
-	console.log(fields)
 
 	function appendTasks() {
 		append({

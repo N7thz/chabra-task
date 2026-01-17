@@ -73,7 +73,7 @@ export const CardPage = ({ id, space }: { id: string; space: string }) => {
 		)
 	}
 
-	const { title, cnpj, color, createdAt, activities, comments } = card
+	const { color } = card
 
 	return (
 		<Card

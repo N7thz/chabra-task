@@ -6,6 +6,7 @@ import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 export default async function PrivateLayout({ children }: LayoutProps) {
+	
 	const cookieStore = await cookies()
 	const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
 

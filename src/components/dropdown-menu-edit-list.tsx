@@ -17,6 +17,7 @@ import { FormEditListDialog } from "./forms/form-edit-list-dialog"
 import { usePathname } from "next/navigation"
 
 export const DropdownMenuEditDialog = ({ id }: { id: string }) => {
+	
 	const pathname = usePathname().slice(7)
 
 	const space = decodeURI(pathname)

@@ -1,5 +1,7 @@
 import { updateCard } from "@/actions/cards/update-card"
-import { CardCommentsActivity } from "@/components/card-page/card-comments-activity"
+import {
+	CardCommentsActivity
+} from "@/components/card-page/card-comments-activity"
 import { CardInfoTask } from "@/components/card-page/card-info-task"
 import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
@@ -25,20 +27,43 @@ import {
 	CreateTaskProps,
 } from "@/schemas/create-card-schema"
 import { CardComplete } from "@/types"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Prisma } from "@prisma/client"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { formatDate } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Clock, Ellipsis } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { FormProvider, useForm } from "react-hook-form"
+import { CardOptionsDialog } from "@/components/card-page/card-options-dialog"
+import { findSpaceByListId } from "@/actions/spaces/find-space-by-list-id"
 
 export const FormUpdateCard = ({ card }: { card: CardComplete }) => {
+
 	const { back } = useRouter()
 
-	const { id, title, tasks, createdAt, cnpj, activities, comments } = card
+	const {
+		id,
+		title,
+		tasks,
+		createdAt,
+		cnpj,
+		activities,
+		comments,
+		listId,
+	} = card
+
+	const {
+		data: space,
+		isLoading
+	} = useQuery({
+		queryKey: ["find-space-by-list-id"],
+		queryFn: () => findSpaceByListId(listId, {
+			select: {
+				name: true
+			}
+		})
+	})
 
 	const { mutate, isPending, isSuccess } = useMutation({
 		mutationKey: ["form-edit-card"],
@@ -87,12 +112,7 @@ export const FormUpdateCard = ({ card }: { card: CardComplete }) => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
 	} = form
-
-	if (errors) {
-		console.log(errors)
-	}
 
 	async function onSubmit({ tasks, ...card }: CreateCardProps) {
 		console.log(tasks)
@@ -103,12 +123,27 @@ export const FormUpdateCard = ({ card }: { card: CardComplete }) => {
 	return (
 		<>
 			<FormProvider {...form}>
-				<form id="form-update-card" onSubmit={handleSubmit(onSubmit)}>
+				<form
+					id="form-update-card"
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					<CardHeader className="space-y-1 mb-2">
 						<CardAction>
-							<Button variant={"ghost"}>
-								<Ellipsis />
-							</Button>
+							{
+								!space || isLoading
+									? (
+										<Button disabled variant="ghost">
+											<Ellipsis />
+										</Button>
+									)
+									: (
+										<CardOptionsDialog
+											id={id}
+											listId={listId}
+											space={space.name}
+										/>
+									)
+							}
 						</CardAction>
 						<CardTitle>
 							<Input

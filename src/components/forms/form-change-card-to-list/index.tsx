@@ -42,6 +42,7 @@ export const FormChangeCardList = ({
 	cardId,
 	space,
 }: FormChangeCardListProps) => {
+	
 	const [open, setOpen] = useState(false)
 
 	const { data: list } = useQuery({
@@ -49,7 +50,7 @@ export const FormChangeCardList = ({
 		queryFn: () => findListById(listId),
 	})
 
-	const { mutate, isPending, isSuccess } = useMutation({
+	const { mutate, isPending } = useMutation({
 		mutationKey: ["change-card-list"],
 		mutationFn: ({
 			cardId,
@@ -60,7 +61,7 @@ export const FormChangeCardList = ({
 			newListId: string
 			cardId: string
 		}) => changeListCard({ cardId, currentListId, newListId }),
-		onSuccess: ({ card, oldListId, newListId }) => {
+		onSuccess: ({ card }) => {
 			toast({
 				title: `O cartão foi movido para a lista ${card.list?.name}`,
 				onAutoClose: () => {
@@ -88,6 +89,7 @@ export const FormChangeCardList = ({
 	const { watch, handleSubmit } = form
 
 	function onSubmit({ currentListId, newListId }: ChangeCardListProps) {
+		
 		if (currentListId === newListId) return
 
 		mutate({ cardId, currentListId, newListId })

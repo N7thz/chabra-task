@@ -21,6 +21,7 @@ import { queryClient } from "@/providers/theme-provider"
 import { toast } from "@/components/toast"
 import { cn } from "@/lib/utils"
 import { CreateTaskProps } from "@/schemas/create-card-schema"
+import { useState } from "react"
 
 type CardTaskProps = {
 	index: number
@@ -33,37 +34,21 @@ export const CardTask = ({
 	index,
 	remove,
 }: CardTaskProps) => {
+
+	const [checked, setChecked] = useState(false)
+
 	const { register, setValue, watch } = useFormContext<CreateCardProps>()
 
 	const term = watch(`tasks.${index}.term`)
 	const ownersId = watch(`tasks.${index}.ownersId`)
 
-	const { mutate } = useMutation({
-		mutationKey: ["change-completed-task"],
-		mutationFn: (completed: boolean) =>
-			changeCompletedTask({
-				id,
-				completed,
-			}),
-		onSuccess: ({ id }) => {
-			queryClient.invalidateQueries({
-				queryKey: ["find-card-by-id", id],
-			})
-		},
-		onError: err => {
-			toast({
-				title: err.name,
-				description: err.message,
-				variant: "destructive",
-			})
-		},
-	})
-
 	return (
 		<Card
 			className={cn(
 				"my-4 transition-all",
-				completed ? "bg-muted border-primary/60" : "bg-transparent"
+				(completed || checked)
+					? "bg-muted border-primary/60"
+					: "bg-transparent"
 			)}>
 			<CardHeader className="items-center justify-center">
 				<CardAction className="row-span-3">
@@ -72,20 +57,20 @@ export const CardTask = ({
 						defaultChecked={completed}
 						className="scale-150 translate-y-2 translate-x-1"
 						onCheckedChange={value => {
+
 							const checked = value === true
 
 							console.log(checked)
 
 							setValue(`tasks.${index}.completed`, checked)
-
-							mutate(checked)
+							setChecked(checked)
 						}}
 					/>
 				</CardAction>
 				<CardTitle className="text-sm">
 					<Input
 						defaultValue={name}
-						className={cn(completed && "line-through")}
+						className={cn((completed || checked) && "line-through")}
 						{...register(`tasks.${index}.name`)}
 					/>
 				</CardTitle>
@@ -105,7 +90,7 @@ export const CardTask = ({
 			<CardFooter className="justify-end">
 				<Button
 					type="button"
-					variant={completed ? "default" : "secondary"}
+					variant={(completed || checked) ? "default" : "secondary"}
 					onClick={() => remove(index)}>
 					<Trash />
 					Excluir tarefa
