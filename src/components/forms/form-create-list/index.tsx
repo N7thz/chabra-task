@@ -45,7 +45,7 @@ export const FormCreateList = () => {
 			})
 
 			queryClient.setQueryData<List[]>(
-				queryKeys.list.findMany(space),
+				["find-many-spaces", space],
 				oldData => {
 					if (!oldData) return [{ name, ...rest }]
 
@@ -54,8 +54,9 @@ export const FormCreateList = () => {
 			)
 
 			queryClient.setQueryData<Notification[]>(
-				queryKeys.notification.findMany(),
+				["find-many-notifications-by-recipient-id"],
 				oldData => {
+					
 					if (!oldData) return [notification]
 
 					return [...oldData, notification]

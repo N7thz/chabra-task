@@ -19,8 +19,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Space, Notification } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
+import { authClient } from "@/lib/auth-client"
 
 export const FormCreateSpace = () => {
+
+	const session = authClient.useSession()
+
+	const recipientId = session.data?.user.id ?? ""
+
 	const { mutate, isPending } = useMutation({
 		mutationKey: ["create-Space"],
 		mutationFn: (name: string) => createSpace(name),
@@ -31,15 +37,18 @@ export const FormCreateSpace = () => {
 					"Você já pode usar essa região para organizar suas listas de tarefas.",
 			})
 
-			queryClient.setQueryData<Space[]>(queryKeys.space.findMany(), oldData => {
-				if (!oldData) return [{ name, ...rest }]
+			queryClient.setQueryData<Space[]>(
+				["find-many-spaces"],
+				oldData => {
+					if (!oldData) return [{ name, ...rest }]
 
-				return [...oldData, { name, ...rest }]
-			})
+					return [...oldData, { name, ...rest }]
+				})
 
 			queryClient.setQueryData<Notification[]>(
-				queryKeys.notification.findMany(),
+				["find-many-notifications-by-recipient-id", recipientId],
 				oldData => {
+
 					if (!oldData) return [notification]
 
 					return [...oldData, notification]
