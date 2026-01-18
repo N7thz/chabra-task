@@ -16,6 +16,8 @@ export const AvatarGroup = ({ usersId }: { usersId: string[] }) => {
 		queryFn: () => findImageByUserId(usersId)
 	})
 
+	console.log(users)
+
 	if (error) {
 		return toast({
 			title: error.name,

@@ -15,8 +15,13 @@ import { Ellipsis, RotateCw } from "lucide-react"
 import { DropdownMenuEditDialog } from "./dropdown-menu-edit-list"
 import { toast } from "./toast"
 import { Button } from "./ui/button"
+import { ComponentProps } from "react"
+import { cn } from "@/lib/utils"
 
-export const SpaceList = () => {
+export const SpaceList = ({
+	className, ...props
+}: ComponentProps<typeof Card>) => {
+
 	const {
 		data: spaces,
 		isLoading,
@@ -62,7 +67,10 @@ export const SpaceList = () => {
 		)
 
 	return (
-		<Card className="w-2/3 bg-background">
+		<Card
+			className={cn("w-2/3 bg-background", className)}
+			{...props}
+		>
 			<CardHeader>
 				<CardTitle>Regiões</CardTitle>
 				<CardDescription>

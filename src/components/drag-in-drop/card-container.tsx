@@ -21,19 +21,21 @@ import { CardOptionsDialog } from "./card-options-dialog"
 import { SortableCard } from "./sortable-card"
 import { CardComplete } from "@/types"
 
-const images: string[] = [
-	"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=96&h=96&dpr=2&q=80",
-	"https://images.unsplash.com/photo-1628157588553-5eeea00af15c?w=96&h=96&dpr=2&q=80",
-	"https://images.unsplash.com/photo-1655874819398-c6dfbec68ac7?w=96&h=96&dpr=2&q=80",
-]
-
 export const CardContainer = ({
 	space,
-	card: { id, title, description, term, listId, tasks = [] },
+	card: {
+		id,
+		title,
+		description,
+		term,
+		listId,
+		ownersId,
+		tasks = [],
+	},
 }: {
 	card: CardComplete
 	space: string
-}) => {	
+}) => {
 
 	const tasksCompleteds = tasks.filter(task => task.completed).length
 
@@ -77,7 +79,7 @@ export const CardContainer = ({
 						<Clock className="size-3" />
 						{formatDate(term, "dd 'de' MMM", { locale: ptBR })}
 					</div>
-					<AvatarGroup usersId={images} />
+					<AvatarGroup usersId={ownersId} />
 				</div>
 				<div className="space-y-2.5">
 					<div className="text-sm">

@@ -16,6 +16,8 @@ import { toast } from "../toast"
 import { queryClient } from "@/providers/theme-provider"
 import { Notification } from "@prisma/client"
 import { useRouter } from "next/navigation"
+import { DeleteCardDialog } from "./delete-card-dialog"
+import { CardComplete } from "@/types"
 
 type CardOptionsDialogProps = {
 	id: string
@@ -31,10 +33,7 @@ export const CardOptionsDialog = ({
 
 	const { push } = useRouter()
 
-	const {
-		mutate,
-		isPending
-	} = useMutation({
+	const { mutate } = useMutation({
 		mutationKey: ["duplicate-card"],
 		mutationFn: () => duplicateCard(id),
 		onSuccess: ({ cardDuplicated, notification }) => {
@@ -54,6 +53,10 @@ export const CardOptionsDialog = ({
 					return [...oldData, notification]
 				}
 			)
+
+			queryClient.invalidateQueries({
+				queryKey: ["find-many-lists"]
+			})
 		},
 		onError: error => {
 			toast({
@@ -75,9 +78,7 @@ export const CardOptionsDialog = ({
 				<DropdownMenuLabel>Opções</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuItem>
-						Excluir cartão
-					</DropdownMenuItem>
+					<DeleteCardDialog cardId={id} />
 					<DropdownMenuItem onClick={() => mutate()}>
 						Duplicar cartão
 					</DropdownMenuItem>

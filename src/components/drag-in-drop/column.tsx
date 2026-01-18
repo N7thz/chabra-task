@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import Link from "next/link"
 import { DropdownMenuEditDialog } from "../dropdown-menu-edit-list"
+import { ScrollArea } from "../ui/scroll-area"
 
 type ColumnProps = {
 	list: List
@@ -26,7 +27,7 @@ export function Column({
 	space,
 	list: { id, name, cards, color },
 }: ColumnProps) {
-	
+
 	const { setNodeRef, isOver } = useDroppable({ id })
 
 	return (
@@ -46,21 +47,30 @@ export function Column({
 					<DropdownMenuEditDialog id={id} />
 				</CardAction>
 			</CardHeader>
-			<CardContent className="space-y-4">
-				{cards.length === 0 ? (
-					<CardDescription>
-						Você ainda não possui cartões nesta lista.
-					</CardDescription>
-				) : (
-					cards.map(card => (
-						<CardContainer
-							key={card.id}
-							card={card as CardComplete}
-							space={space}
-						/>
-					))
-				)}
-			</CardContent>
+			{
+				cards.length === 0
+					? (
+						<CardContent className="space-y-4 px-4">
+							<CardDescription>
+								Você ainda não possui cartões nesta lista.
+							</CardDescription>
+						</CardContent>
+					) : (
+						<ScrollArea className="h-180 border-b pb-2">
+							<CardContent className="space-y-4 px-4">
+								{
+									cards.map(card => (
+										<CardContainer
+											key={card.id}
+											card={card as CardComplete}
+											space={space}
+										/>
+									))
+								}
+							</CardContent>
+						</ScrollArea>
+					)
+			}
 			<CardFooter>
 				<Button asChild className="w-full">
 					<Link href={`/${space}/${id}/create-card`}>Adicionar cartão</Link>

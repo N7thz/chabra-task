@@ -16,7 +16,6 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { auth } from "@/lib/auth"
-import { User } from "@prisma/client"
 import {
 	Calendar,
 	ChevronUp,
@@ -28,11 +27,12 @@ import {
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { Avatar } from "../avatar"
 import { NotificationsContainer } from "../notifications"
 import { SidebarTrigger } from "./sidebar-trigger"
 import { SignOutButton } from "./sign-out-button"
 import { SpaceListSidebar } from "./space-list-sidebar"
+import { ModeToggle } from "../mode-toogle"
+import { SidebarModeToggle } from "./sidebar-mode-toogle"
 
 export const AppSidebar = async () => {
 
@@ -43,7 +43,10 @@ export const AppSidebar = async () => {
 	if (!session) redirect("/sign-in")
 
 	return (
-		<Sidebar variant="floating" collapsible="icon">
+		<Sidebar
+			variant="floating"
+			collapsible="icon"
+		>
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel className="text-primary text-xl mb-4">
@@ -97,15 +100,20 @@ export const AppSidebar = async () => {
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<SidebarMenuButton>
-									<UserCircle2 className="size-10"/>
+									<UserCircle2 className="size-10" />
 									<span>{session.user.name}</span>
 									<ChevronUp className="ml-auto" />
 								</SidebarMenuButton>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent side="top">
-								<DropdownMenuItem>
-									<Cog />
-									<span>Opções</span>
+								<DropdownMenuItem asChild>
+									<Link href={"/settings"}>
+										<Cog />
+										<span>Opções</span>
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<SidebarModeToggle />
 								</DropdownMenuItem>
 								<SignOutButton />
 							</DropdownMenuContent>
